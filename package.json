@@ -1,0 +1,16 @@
+{
+  "name": "gh-labels-machine",
+  "version": "1.0.0",
+  "main": "scrape-labels.js",
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "got": "^11.8.1",
+    "jsdom": "^16.4.0"
+  }
+}
