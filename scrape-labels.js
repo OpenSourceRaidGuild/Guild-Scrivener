@@ -5,7 +5,7 @@ import chalk from "chalk";
 import ora from "ora";
 
 const spinner = ora(chalk.cyanBright("Retrieving Labels From GitHub")).start();
-
+spinner.color = chalk.greenBright();
 export async function dumpGitHubLabelIntoDB() {
   return await got(
     "https://api.github.com/repos/OpenSourceRaidGuild/website/labels"

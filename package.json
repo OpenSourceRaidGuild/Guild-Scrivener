@@ -7,8 +7,8 @@
   "type": "module",
   "description": "",
   "scripts": {
-    "getLabel": "node ./scrape-labels.js",
-    "ucLabels": "node --experimental-json-modules update-create-labels.js "
+    "get": "node ./scrape-labels.js",
+    "uc": "node --experimental-json-modules update-create-labels.js "
   },
   "dependencies": {
     "@octokit/auth-token": "^2.4.4",
