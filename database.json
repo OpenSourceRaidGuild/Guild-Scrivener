@@ -1,1 +1,272 @@
-[{"name":"CTA: Help Wanted","description":"CALL TO ACTION: Rally to Aid a fellow Raid Member!!!"},{"name":"Good First Issue","description":"Good for Noobs to Raiding!!"},{"name":"Priority: Critical","description":"Critical to Defeat Raid Boss"},{"name":"Priority: High","description":"This could slow down other Raid/Guild members OR effect Raid completion!!!"},{"name":"Priority: Low","description":"Nice to have, won't effect Raid completion or how fast members move through the dungeons!"},{"name":"Priority: Medium","description":"Won't deeply affect other members or has moderate impact on Raid completion"},{"name":"Status: Abandoned","description":null},{"name":"Status: Blocked","description":null},{"name":"Status: Completed","description":null},{"name":"Status: Duplicate","description":null},{"name":"Status: In Progress","description":"Currently taking out the trash mobs or cleaning up the dungeon"},{"name":"Status: Invalid","description":"This doesn't seem right"},{"name":"Status: Pending","description":null},{"name":"Status: Revision Needed","description":"Was your sword bent or shield cracked!? It's ok we got you, we defeat or are defeated AS ONE!!!"},{"name":"Type: Bug","description":"Something isn't working"},{"name":"Type: Documentation","description":"Improvements or additions to documentation"},{"name":"Type: Enhancement","description":"New feature or request"},{"name":"Type: Feature","description":"Additional Feature and/or functionality - significant code rewrite or additions"},{"name":"Type: Question","description":"We are all here to defeat the Raids TOGETHER! Don't be afraid to ask anything"},{"name":"Type: Refactor","description":"Code Changes - No Feature & No significant rewrite"},{"name":"Type: Toolchain","description":"Developer Experience related"}]
+[
+  {
+    "id": 2626594252,
+    "node_id": "MDU6TGFiZWwyNjI2NTk0MjUy",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/CTA:%20Help%20Wanted",
+    "name": "CTA: Help Wanted",
+    "color": "008672",
+    "default": false,
+    "description": "CALL TO ACTION: Rally to Aid a fellow Raid Member!!!"
+  },
+  {
+    "id": 2668511678,
+    "node_id": "MDU6TGFiZWwyNjY4NTExNjc4",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Items:%20Common",
+    "name": "Items: Common",
+    "color": "2A0DE1",
+    "default": false,
+    "description": ""
+  },
+  {
+    "id": 2668511688,
+    "node_id": "MDU6TGFiZWwyNjY4NTExNjg4",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Items:%20Epic",
+    "name": "Items: Epic",
+    "color": "2A0DE1",
+    "default": false,
+    "description": ""
+  },
+  {
+    "id": 2668511683,
+    "node_id": "MDU6TGFiZWwyNjY4NTExNjgz",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Items:%20Fabled",
+    "name": "Items: Fabled",
+    "color": "2A0DE1",
+    "default": false,
+    "description": ""
+  },
+  {
+    "id": 2668511682,
+    "node_id": "MDU6TGFiZWwyNjY4NTExNjgy",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Items:%20Legendary",
+    "name": "Items: Legendary",
+    "color": "2A0DE1",
+    "default": false,
+    "description": ""
+  },
+  {
+    "id": 2668511674,
+    "node_id": "MDU6TGFiZWwyNjY4NTExNjc0",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Items:%20Rare",
+    "name": "Items: Rare",
+    "color": "2A0DE1",
+    "default": false,
+    "description": ""
+  },
+  {
+    "id": 2668511692,
+    "node_id": "MDU6TGFiZWwyNjY4NTExNjky",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Items:%20Uncommon",
+    "name": "Items: Uncommon",
+    "color": "2A0DE1",
+    "default": false,
+    "description": ""
+  },
+  {
+    "id": 2626594256,
+    "node_id": "MDU6TGFiZWwyNjI2NTk0MjU2",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Priority:%20Critical",
+    "name": "Priority: Critical",
+    "color": "FF0000",
+    "default": false,
+    "description": "Critical to Defeat Raid Boss"
+  },
+  {
+    "id": 2626594258,
+    "node_id": "MDU6TGFiZWwyNjI2NTk0MjU4",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Priority:%20High",
+    "name": "Priority: High",
+    "color": "B60205",
+    "default": false,
+    "description": "This could slow down other Raid/Guild members OR effect Raid completion!!!"
+  },
+  {
+    "id": 2626594262,
+    "node_id": "MDU6TGFiZWwyNjI2NTk0MjYy",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Priority:%20Low",
+    "name": "Priority: Low",
+    "color": "C76BD1",
+    "default": false,
+    "description": "Nice to have, won't effect Raid completion or how fast members move through the dungeons!"
+  },
+  {
+    "id": 2626594264,
+    "node_id": "MDU6TGFiZWwyNjI2NTk0MjY0",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Priority:%20Medium",
+    "name": "Priority: Medium",
+    "color": "CD477F",
+    "default": false,
+    "description": "Won't deeply affect other members or has moderate impact on Raid completion"
+  },
+  {
+    "id": 2668511673,
+    "node_id": "MDU6TGFiZWwyNjY4NTExNjcz",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Quest:%20Board",
+    "name": "Quest: Board",
+    "color": "95D19D",
+    "default": false,
+    "description": "Need to generate an issue/ticket"
+  },
+  {
+    "id": 2668511686,
+    "node_id": "MDU6TGFiZWwyNjY4NTExNjg2",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Quest:%20Hard",
+    "name": "Quest: Hard",
+    "color": "2A0DE1",
+    "default": false,
+    "description": ""
+  },
+  {
+    "id": 2668511675,
+    "node_id": "MDU6TGFiZWwyNjY4NTExNjc1",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Quest:%20Main",
+    "name": "Quest: Main",
+    "color": "2A0DE1",
+    "default": false,
+    "description": ""
+  },
+  {
+    "id": 2668511679,
+    "node_id": "MDU6TGFiZWwyNjY4NTExNjc5",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Raid:%20Boss",
+    "name": "Raid: Boss",
+    "color": "2A0DE1",
+    "default": false,
+    "description": ""
+  },
+  {
+    "id": 2626594254,
+    "node_id": "MDU6TGFiZWwyNjI2NTk0MjU0",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Raid:%20Newbs%20:nerd_face:",
+    "name": "Raid: Newbs :nerd_face:",
+    "color": "ff6ec7",
+    "default": false,
+    "description": "Good for newbie to start Raiding!!"
+  },
+  {
+    "id": 2668511676,
+    "node_id": "MDU6TGFiZWwyNjY4NTExNjc2",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Raid:%20Party",
+    "name": "Raid: Party",
+    "color": "2A0DE1",
+    "default": false,
+    "description": ""
+  },
+  {
+    "id": 2668511681,
+    "node_id": "MDU6TGFiZWwyNjY4NTExNjgx",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Raid:%20Trash%20Mobs",
+    "name": "Raid: Trash Mobs",
+    "color": "2A0DE1",
+    "default": false,
+    "description": ""
+  },
+  {
+    "id": 2668511684,
+    "node_id": "MDU6TGFiZWwyNjY4NTExNjg0",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Side%20Quest:%20Daily",
+    "name": "Side Quest: Daily",
+    "color": "2A0DE1",
+    "default": false,
+    "description": ""
+  },
+  {
+    "id": 2668511677,
+    "node_id": "MDU6TGFiZWwyNjY4NTExNjc3",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Side%20Quest:%20Group",
+    "name": "Side Quest: Group",
+    "color": "2A0DE1",
+    "default": false,
+    "description": ""
+  },
+  {
+    "id": 2668511687,
+    "node_id": "MDU6TGFiZWwyNjY4NTExNjg3",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Side%20Quest:%20Solo",
+    "name": "Side Quest: Solo",
+    "color": "2A0DE1",
+    "default": false,
+    "description": ""
+  },
+  {
+    "id": 2626594268,
+    "node_id": "MDU6TGFiZWwyNjI2NTk0MjY4",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Status:%20Abandoned",
+    "name": "Status: Abandoned",
+    "color": "464749",
+    "default": false,
+    "description": ""
+  },
+  {
+    "id": 2626594271,
+    "node_id": "MDU6TGFiZWwyNjI2NTk0Mjcx",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Status:%20Blocked",
+    "name": "Status: Blocked",
+    "color": "B60205",
+    "default": false,
+    "description": ""
+  },
+  {
+    "id": 2626594275,
+    "node_id": "MDU6TGFiZWwyNjI2NTk0Mjc1",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Status:%20Completed",
+    "name": "Status: Completed",
+    "color": "16B5FA",
+    "default": false,
+    "description": ""
+  },
+  {
+    "id": 2626594279,
+    "node_id": "MDU6TGFiZWwyNjI2NTk0Mjc5",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Status:%20Duplicate",
+    "name": "Status: Duplicate",
+    "color": "BFD4F2",
+    "default": false,
+    "description": ""
+  },
+  {
+    "id": 2626594282,
+    "node_id": "MDU6TGFiZWwyNjI2NTk0Mjgy",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Status:%20In%20Progress",
+    "name": "Status: In Progress",
+    "color": "0E8A16",
+    "default": false,
+    "description": "Currently taking out the trash mobs or cleaning up the dungeon"
+  },
+  {
+    "id": 2626594284,
+    "node_id": "MDU6TGFiZWwyNjI2NTk0Mjg0",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Status:%20Invalid",
+    "name": "Status: Invalid",
+    "color": "e4e669",
+    "default": false,
+    "description": "This doesn't seem right"
+  },
+  {
+    "id": 2668198984,
+    "node_id": "MDU6TGFiZWwyNjY4MTk4OTg0",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Status:%20Merge%20Conflict",
+    "name": "Status: Merge Conflict",
+    "color": "FD5F06",
+    "default": false,
+    "description": ""
+  },
+  {
+    "id": 2626594285,
+    "node_id": "MDU6TGFiZWwyNjI2NTk0Mjg1",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Status:%20Pending",
+    "name": "Status: Pending",
+    "color": "FBCA04",
+    "default": false,
+    "description": ""
+  },
+  {
+    "id": 2626594286,
+    "node_id": "MDU6TGFiZWwyNjI2NTk0Mjg2",
+    "url": "https://api.github.com/repos/OpenSourceRaidGuild/website/labels/Status:%20Revision%20Needed",
+    "name": "Status: Revision Needed",
+    "color": "D93F0B",
+    "default": false,
+    "description": "Was your sword bent or shield cracked!? It's ok we got you, we defeat or are defeated AS ONE!!!"
+  }
+]

@@ -1,44 +1,25 @@
-#!/usr/bin/env node
+// #!/usr/bin/env node
 import fsp from "fs/promises";
 import got from "got";
-import jsdom from "jsdom";
-const { JSDOM } = jsdom;
+import chalk from "chalk";
+import ora from "ora";
 
-async function getDOMFromWebsite() {
-  const site = await got(
-    "https://github.com/OpenSourceRaidGuild/website/issues/labels"
+const spinner = ora(chalk.cyanBright("Retrieving Labels From GitHub")).start();
+
+export async function dumpGitHubLabelIntoDB() {
+  return await got(
+    "https://api.github.com/repos/OpenSourceRaidGuild/website/labels"
+  ).json();
+}
+
+try {
+  fsp.writeFile(
+    "./database.json",
+    JSON.stringify(await dumpGitHubLabelIntoDB(), null, 2)
   );
-  return new JSDOM(site.body).window;
+  spinner.succeed(chalk.green("Label Fetching Successful!"));
+  spinner.succeed(chalk.green("Labels Written to Database"));
+} catch (err) {
+  spinner.fail(chalk.redBright("Label Fetching/Writing Failed!!!"));
+  console.error("ERROR", err);
 }
-
-async function exportGitHubLabels() {
-  const DOM = (await getDOMFromWebsite()).document;
-  let labels = [];
-  [].slice.call(DOM.querySelectorAll(".js-label-link")).forEach((element) => {
-    labels.push({
-      name: element.textContent.trim(),
-      description: element.getAttribute("title"),
-      // color: element.style.backgroundColor
-      //   .substring(4, element.style.backgroundColor.length - 1)
-      //   .split(",")
-      //   .reduce((hexValue, rgbValue) => {
-      //     return hexValue + Number(rgbValue).toString(16).padStart(2, "0");
-      //   }, ""),
-    });
-  });
-  return labels;
-}
-fsp.writeFile(
-  "./database.json",
-  JSON.stringify(await exportGitHubLabels(), { space: 2 })
-);
-
-// function saveDataAsJSON(data, filename) {
-//   const blob = new Blob([JSON.stringify(data, null, 4)], { type: "text/json" });
-//   const a = document.createElement("a");
-//   a.download = filename;
-//   a.href = window.URL.createObjectURL(blob);
-//   a.dataset.downloadurl = ["text/json", a.download, a.href].join(":");
-//   a.click();
-// }
-// saveDataAsJSON(exportGitHubLabels(), document.title + ".json");
