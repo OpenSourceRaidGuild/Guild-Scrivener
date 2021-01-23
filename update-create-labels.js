@@ -13,6 +13,7 @@ const octokit = new Octokit({
 });
 // * if 404 comes back (later set up a redundant GET call to verify label doesnt exist if ID is available. No ID assumes it is completely new) for label name the createLabel
 // ! Update local DB after updates and creates finish -> would overwrite DB changes if update failed
+// TODO  certain messages are repeated due to happening in forEach
 database.forEach(
   async ({
     name = "",
