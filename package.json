@@ -1,0 +1,22 @@
+{
+  "name": "gh-labels-machine",
+  "version": "1.0.0",
+  "main": "scrape-labels.js",
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "description": "",
+  "scripts": {
+    "get": "node ./scrape-labels.js",
+    "uc": "node --experimental-json-modules update-create-labels.js "
+  },
+  "dependencies": {
+    "@octokit/auth-token": "^2.4.4",
+    "@octokit/rest": "^18.0.12",
+    "chalk": "^4.1.0",
+    "dotenv": "^8.2.0",
+    "got": "^11.8.1",
+    "jsdom": "^16.4.0",
+    "ora": "^5.2.0"
+  }
+}
