@@ -12,6 +12,7 @@ export async function dumpGitHubLabelIntoDB() {
   ).json();
 }
 
+//TODO convert to Firebase RTDB
 try {
   fsp.writeFile(
     "./database.json",
