@@ -3,24 +3,33 @@ import fsp from 'fs/promises';
 import got from 'got';
 import chalk from 'chalk';
 import ora from 'ora';
-import { db } from './firebase.ts';
+import { db } from './firebase.js';
 import database from '../database.json';
 
 const spinner = ora(chalk.cyanBright('Retrieving Labels From GitHub')).start();
 spinner.color = chalk.greenBright();
+//! Website will be source of label truth for all Org repos
 export async function dumpGitHubLabelIntoDB() {
-  return await got(
-    'https://api.github.com/repos/OpenSourceRaidGuild/website/labels'
-  ).json();
+  let response = [];
+  try {
+    response = await got(
+      'https://api.github.com/repos/OpenSourceRaidGuild/website/labels'
+    ).json();
+  } finally {
+    return response;
+  }
 }
 
 try {
-  JSON.stringify(await dumpGitHubLabelIntoDB(), null, 2).forEach(
+  await dumpGitHubLabelIntoDB().forEach(
     async (label) =>
       await db
         .collection('labels')
         .doc(label.name)
-        .set(label, { merge: true })
+        .set(
+          { ...label, timestamp: FieldValue.serverTimestamp() },
+          { merge: true }
+        )
         .then(() => console.log('Label in DB'))
   );
 } catch (err) {
