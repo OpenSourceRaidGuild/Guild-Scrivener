@@ -18,23 +18,23 @@ const listOfRepos =  await octokit.repos.listForOrg({
   }).then(res => res.data)
 
 listOfRepos.forEach(async repo => {
+      const spinner = ora(
+        chalk.yellowBright('NO ID FOUND ATTEMPING TO CREATE LABEL')
+      ).start();
+      spinner.color = chalk.redBright();
+      return await octokit.issues
+        .updateLabel({
+          owner,
+          repo,
+          name: repo.name,
+          new_name,
+          color,
+          description,
+        })
 (await db.collection('labels').get()).forEach(
-  async (res) => {
+  async (document) => {
     console.log(res)
-  //   if (!!id) {
-  //     const spinner = ora(
-  //       chalk.yellowBright('NO ID FOUND ATTEMPING TO CREATE LABEL')
-  //     ).start();
-  //     spinner.color = chalk.redBright();
-  //     return await octokit.issues
-  //       .updateLabel({
-  //         owner,
-  //         repo,
-  //         name,
-  //         new_name,
-  //         color,
-  //         description,
-  //       })
+
   //       .then((res) => {
   //         if (res.status === 200)
   //           spinner.succeed(
