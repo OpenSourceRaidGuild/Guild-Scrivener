@@ -1,10 +1,8 @@
 // #!/usr/bin/env node
-import fsp from 'fs/promises';
 import got from 'got';
 import chalk from 'chalk';
 import ora from 'ora';
 import { db } from './firebase.js';
-import database from '../database.json';
 
 const spinner = ora(chalk.cyanBright('Retrieving Labels From GitHub')).start();
 spinner.color = chalk.greenBright();
