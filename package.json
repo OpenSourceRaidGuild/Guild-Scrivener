@@ -7,7 +7,7 @@
   "type": "module",
   "description": "",
   "scripts": {
-    "get": "node ./scrape-labels.js",
+    "get": "node --experimental-json-modules  ./scrape-labels.js ",
     "uc": "node --experimental-json-modules update-create-labels.js "
   },
   "dependencies": {
@@ -15,6 +15,7 @@
     "@octokit/rest": "^18.0.12",
     "chalk": "^4.1.0",
     "dotenv": "^8.2.0",
+    "firebase-admin": "^9.4.2",
     "got": "^11.8.1",
     "jsdom": "^16.4.0",
     "ora": "^5.2.0"
