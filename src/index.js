@@ -6,12 +6,14 @@ import { db } from './firebase.js';
 
 const spinner = ora(chalk.cyanBright('Retrieving Labels From GitHub')).start();
 spinner.color = chalk.greenBright();
+
 //! Website will be source of label truth for all Org repos
+//TODO: Convert to Server that either polls while running OR listen for an event (Labels changing)
 export async function dumpGitHubLabelIntoDB() {
   let response = [];
   try {
     response = await got(
-      'https://api.github.com/repos/OpenSourceRaidGuild/website/labels'
+      `https://api.github.com/repos/${process.env.OWNER}/${process.env.LABEL_REPO}/labels`
     ).json();
   } finally {
     return response;
