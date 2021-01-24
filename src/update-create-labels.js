@@ -1,6 +1,6 @@
 import { Octokit } from '@octokit/rest';
 import dotenv from 'dotenv';
-import database from './database.json';
+import database from '../database.json';
 import chalk from 'chalk';
 import ora from 'ora';
 // import { db } from './firebase.ts';
