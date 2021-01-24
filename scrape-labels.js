@@ -1,41 +1,31 @@
 // #!/usr/bin/env node
-import fsp from "fs/promises";
-import got from "got";
-import chalk from "chalk";
-import ora from "ora";
-import { db } from "./firebase.js";
-import database from "./database.json";
+import fsp from 'fs/promises';
+import got from 'got';
+import chalk from 'chalk';
+import ora from 'ora';
+import { db } from './firebase.ts';
+import database from './database.json';
+
+const spinner = ora(chalk.cyanBright('Retrieving Labels From GitHub')).start();
+spinner.color = chalk.greenBright();
+export async function dumpGitHubLabelIntoDB() {
+  return await got(
+    'https://api.github.com/repos/OpenSourceRaidGuild/website/labels'
+  ).json();
+}
 
 try {
-  database.forEach(
+  JSON.stringify(await dumpGitHubLabelIntoDB(), null, 2).forEach(
     async (label) =>
       await db
-        .collection("labels")
+        .collection('labels')
         .doc(label.name)
-        .set(label)
-        .then(() => console.log("Label in DB"))
+        .set(label, { merge: true })
+        .then(() => console.log('Label in DB'))
   );
 } catch (err) {
-  console.log(err);
+  spinner.fail(chalk.redBright('Label Fetching/Writing Failed!!!'));
+  console.error('ERROR', err);
 }
-// const spinner = ora(chalk.cyanBright("Retrieving Labels From GitHub")).start();
-// spinner.color = chalk.greenBright();
-// export async function dumpGitHubLabelIntoDB() {
-//   return await got(
-//     "https://api.github.com/repos/OpenSourceRaidGuild/website/labels"
-//   ).json();
-// }
 
-// //TODO convert to Firebase Firestore
-// const docRef = db.collection("labels");
-// try {
-//   fsp.writeFile(
-//     "./database.json",
-//     JSON.stringify(await dumpGitHubLabelIntoDB(), null, 2)
-//   );
-//   spinner.succeed(chalk.green("Label Fetching Successful!"));
-//   spinner.succeed(chalk.green("Labels Written to Database"));
-// } catch (err) {
-//   spinner.fail(chalk.redBright("Label Fetching/Writing Failed!!!"));
-//   console.error("ERROR", err);
-// }
+spinner.succeed(chalk.green('Labels Written to Database'));

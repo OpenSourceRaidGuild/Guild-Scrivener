@@ -1,8 +1,8 @@
 {
-  "name": "gh-labels-machine",
+  "name": "guild-scrivener",
   "version": "1.0.0",
   "main": "scrape-labels.js",
-  "author": "",
+  "author": "JacobMGEvans",
   "license": "ISC",
   "type": "module",
   "description": "",
