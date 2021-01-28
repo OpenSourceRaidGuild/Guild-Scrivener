@@ -11,32 +11,30 @@ const octokit = new Octokit({
   auth: process.env.AUTH,
 });
 
-const listOfRepos = await octokit.repos
-  .listForOrg({
-    type: 'all',
-    org: OWNER,
-  })
-  .then((res) => res.data);
+const listOfReposResponse = await octokit.repos.listForOrg({
+  type: 'all',
+  org: OWNER,
+});
 
 // TODO FIX certain messages are repeated due to happening in forEach
-listOfRepos.forEach(async (repo) => {
+listOfReposResponse.data.forEach(async (repo) => {
   db.collection('labels').onSnapshot((snapshot) => {
     snapshot.docChanges().forEach((documentChange) => {
       if (!documentChange.doc.exists) continue;
       const docData = document.data();
 
       if (documentChange.type === 'added') {
-        createLabelInRepos({ label: { ...docData }, repo: repo.name });
+        createLabelInRepos({ label: { ...docData }, repoName: repo.name });
       }
 
       if (documentChange.type === 'modified') {
-        updateLabelsInRepos({ label: { ...docData }, repo: repo.name });
+        updateLabelsInRepos({ label: { ...docData }, repoName: repo.name });
       }
     });
   });
 });
 
-async function createLabelInRepos({ label, repo }) {
+async function createLabelInRepos({ label = {}, repoName = '' }) {
   const spinner = ora(
     chalk.yellowBright('NO ID FOUND ATTEMPING TO CREATE LABEL')
   ).start();
@@ -46,7 +44,7 @@ async function createLabelInRepos({ label, repo }) {
   return await octokit.issues
     .createLabel({
       owner,
-      repo,
+      repo: repoName,
       ...label,
     })
     .then((res) => {
@@ -62,7 +60,7 @@ async function createLabelInRepos({ label, repo }) {
     });
 }
 
-async function updateLabelsInRepos({ label, repo }) {
+async function updateLabelsInRepos({ label = {}, repoName = '' }) {
   const spinner = ora(
     chalk.yellowBright('NO ID FOUND ATTEMPING TO CREATE LABEL')
   ).start();
@@ -70,7 +68,7 @@ async function updateLabelsInRepos({ label, repo }) {
   return await octokit.issues
     .updateLabel({
       owner,
-      repo,
+      repo: repoName,
       ...label,
     })
     .then((res) => {

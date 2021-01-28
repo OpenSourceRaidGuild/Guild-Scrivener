@@ -1,6 +1,6 @@
 {
   "name": "guild-scrivener",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "src/scrape-labels.js",
   "author": "JacobMGEvans",
   "license": "GNU GPLv3",
@@ -10,8 +10,9 @@
     "src"
   ],
   "scripts": {
-    "scrape": "node --experimental-json-modules  ./src/index.js ",
-    "scribe": "node --experimental-json-modules ./src/scribing.js "
+    "local": "nodemon --experimental-json-modules ./src/index.js",
+    "start": "node --experimental-json-modules ./src/index.js",
+    "scribe-only": "node --experimental-json-modules ./src/scribing.js "
   },
   "prettier": {
     "printWidth": 80,
@@ -22,11 +23,14 @@
   "dependencies": {
     "@octokit/auth-token": "^2.4.4",
     "@octokit/rest": "^18.0.12",
+    "@octokit/webhooks": "^7.21.0",
     "chalk": "^4.1.0",
     "dotenv": "^8.2.0",
+    "fastify": "^3.10.1",
     "firebase-admin": "^9.4.2",
     "got": "^11.8.1",
     "jsdom": "^16.4.0",
+    "nodemon": "^2.0.7",
     "ora": "^5.2.0"
   },
   "devDependencies": {
@@ -34,5 +38,13 @@
     "husky": "^4.3.8",
     "prettier": "^2.2.1",
     "size-limit": "^4.9.1"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "test/*",
+      "node_modules/*",
+      ".github"
+    ],
+    "delay": "1000"
   }
 }
