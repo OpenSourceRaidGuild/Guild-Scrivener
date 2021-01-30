@@ -1,29 +1,38 @@
 // #!/usr/bin/env node
 import fastify from 'fastify';
+import fastifyExpress from 'fastify-express';
 import { Webhooks } from '@octokit/webhooks';
-import got from 'got';
+import dotenv from 'dotenv';
 import chalk from 'chalk';
-import ora from 'ora';
-import { db } from './firebase.js';
+
+import statCompactor from './raids/stat-compactor.js';
+
+dotenv.config();
+
 const webhooks = new Webhooks({
   secret: process.env.WEBHOOK_SECRET,
+  path: '/github',
 });
+// Handle push events for stat compacting
+webhooks.on('push', statCompactor);
 
-webhooks.onAny(({ id, name, payload }) => {
-  console.log(name, 'event received');
-});
+const server = fastify();
 
 const start = async () => {
-  try {
-    await fastify(webhooks.middleware).listen(4321);
-  } catch (err) {
-    fastify().log.error(err);
-    process.exit(1);
-  }
+  // Setup middleware
+  await server.register(fastifyExpress);
+  server.use(webhooks.middleware);
+
+  server.listen(process.env.PORT ?? 4321, (error, address) => {
+    if (error) {
+      server.log.error(error);
+      process.exit(1);
+    } else {
+      console.log(chalk.greenBright(`Server started on ${address}`));
+    }
+  });
 };
-start().then(() =>
-  ora().succeed(chalk.greenBright(`Server Running on ${4321}`))
-);
+start();
 
 // const spinner = ora(chalk.cyanBright('Retrieving Labels From GitHub')).start();
 // spinner.color = chalk.greenBright();
