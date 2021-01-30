@@ -8,17 +8,12 @@ const owner = process.env.OWNER;
 const octokit = new Octokit({
   auth: process.env.AUTH,
 });
-
 const spinner = ora(chalk.cyanBright('Retrieving Labels From GitHub \n'));
 export async function labelWebhookhandler(event) {
   const listOfReposResponse = await octokit.repos.listForOrg({
     type: 'all',
     org: owner,
   });
-  const filteredResponse = listOfReposResponse.data.filter(
-    (repo) => repo.name !== 'website'
-  );
-
   spinner.start();
   switch (event.payload.action) {
     case 'created': {
