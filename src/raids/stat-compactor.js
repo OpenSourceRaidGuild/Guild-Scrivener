@@ -100,6 +100,7 @@ async function fetchAndFilterCommitData(
   const results = [];
 
   // TODO: Refactor to be parallel requests instead of sequential
+  // Maybe Promise.settleAll or something can help?
   for (const commitId of commitIds) {
     const commitData = await fetch(
       `https://api.github.com/repos/${raidRepoNameWithOwner}/commits/${commitId}`
