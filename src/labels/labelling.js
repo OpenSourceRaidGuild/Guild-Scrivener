@@ -39,7 +39,7 @@ export async function labelWebhookhandler(event) {
     }
     case 'edited': {
       spinner.succeed();
-      console.log(event.payload.label);
+      console.log(event);
       return filteredResponse.forEach(async (repo) => {
         const {
           id,
@@ -69,7 +69,6 @@ async function createLabelInRepos({ label = {}, repoName = '' }) {
   const spinner = ora(
     chalk.yellowBright('NO ID FOUND ATTEMPING TO CREATE LABEL \n')
   ).start();
-  console.log(repoName, 'IM THE REPO');
   return await octokit.issues
     .createLabel({
       owner,
@@ -103,6 +102,7 @@ async function updateLabelsInRepos({ label = {}, repoName = '' }) {
       ...label,
     })
     .then((res) => {
+      // console.log('UPDATE RESPONSE', res);
       if (res.status === 200)
         spinner.succeed(
           chalk.greenBright(
@@ -110,5 +110,10 @@ async function updateLabelsInRepos({ label = {}, repoName = '' }) {
           )
         );
     })
-    .catch((err) => chalk.redBright(`${err} Label Update Failed`));
+    .catch((err) => {
+      console.log('ERROR', err.status);
+      if (err.status === 404) return createLabelInRepos();
+      if (err.status === 403)
+        return chalk.redBright(`${err} Label Update Failed`);
+    });
 }
