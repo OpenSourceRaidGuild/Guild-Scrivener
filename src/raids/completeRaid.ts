@@ -1,7 +1,8 @@
 import chalk from 'chalk';
 import ora from 'ora';
-import fetch from 'node-fetch';
+import got from 'got';
 import { db as firestore } from '../firebase.js';
+import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
 
 /*
  * Steps:
@@ -9,7 +10,10 @@ import { db as firestore } from '../firebase.js';
  * - Check if Raid exists
  * - Update Raid to 'completed' status
  */
-async function completeRaid({ id, payload }) {
+async function completeRaid({
+  id,
+  payload,
+}: WebhookEvent<EventPayloads.WebhookPayloadRepository>) {
   const spinner = ora(`Processing repository archived event '${id}'`).start();
 
   try {
@@ -24,9 +28,7 @@ async function completeRaid({ id, payload }) {
 
     const {
       parent: { full_name: dungeonRepoNameWithOwner },
-    } = await fetch(
-      `https://api.github.com/repos/${repoNameWithOwner}`
-    ).then((r) => r.json());
+    } = await got(`https://api.github.com/repos/${repoNameWithOwner}`).json();
 
     /*
      * Step 2 - Check if Raid exists
@@ -41,7 +43,7 @@ async function completeRaid({ id, payload }) {
     } else if (snapshot.docs.length > 1) {
       // Unlikely to actually hit this, but just in case
       throw `Found more than one active Raid for ${dungeonRepoNameWithOwner} - did you forget to complete a Raid? Found: ${JSON.stringify(
-        raids.map((r) => r.data().title)
+        snapshot.docs.map((r) => r.data().title)
       )}`;
     }
 

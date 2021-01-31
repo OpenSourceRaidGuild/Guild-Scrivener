@@ -20,7 +20,7 @@ const start = async () => {
 
   server.listen(process.env.PORT ?? 5000, '0.0.0.0', (error, address) => {
     if (error) {
-      server.log.error(error);
+      server.log.error(String(error));
       process.exit(1);
     } else {
       console.log(chalk.green(`Server started on ${address}`));

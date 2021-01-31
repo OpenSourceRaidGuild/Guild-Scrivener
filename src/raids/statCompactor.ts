@@ -1,7 +1,8 @@
 import chalk from 'chalk';
 import ora from 'ora';
-import fetch from 'node-fetch';
+import got from 'got';
 import { db as firestore } from '../firebase.js';
+import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
 
 // TODO: Refactor to use octokit with OSRG-bot-user's PAT
 
@@ -12,7 +13,10 @@ import { db as firestore } from '../firebase.js';
  * - Compact stats from filtered commit data
  * - Write stats to firestore
  */
-async function statCompactor({ id, payload }) {
+async function statCompactor({
+  id,
+  payload,
+}: WebhookEvent<EventPayloads.WebhookPayloadPush>) {
   const spinner = ora(`Processing push event '${id}'`).start();
 
   try {
@@ -56,14 +60,14 @@ async function statCompactor({ id, payload }) {
     // Get parent repo name with owner so we can check if the commit exists upstream
     const {
       parent: { full_name: dungeonRepoNameWithOwner },
-    } = await fetch(
+    } = await got(
       `https://api.github.com/repos/${raidRepoNameWithOwner}`
-    ).then((r) => r.json());
+    ).json();
 
     /*
      * Step 2 - Fetch and filter commit data
      */
-    const commitIds = commits.map((c) => c.id);
+    const commitIds: string[] = commits.map((c) => c.id);
     const filteredCommitData = await fetchAndFilterCommitData(
       raidRepoNameWithOwner,
       dungeonRepoNameWithOwner,
@@ -95,18 +99,29 @@ export default statCompactor;
  * HELPERS
  */
 async function fetchAndFilterCommitData(
-  raidRepoNameWithOwner,
-  dungeonRepoNameWithOwner,
-  commitIds
-) {
-  const results = [];
+  raidRepoNameWithOwner: string,
+  dungeonRepoNameWithOwner: string,
+  commitIds: string[]
+): Promise<FetchedCommitData[]> {
+  const results: FetchedCommitData[] = [];
 
   // TODO: Refactor to be parallel requests instead of sequential
   // Maybe Promise.settleAll or something can help?
   for (const commitId of commitIds) {
-    const commitData = await fetch(
+    const commitData: {
+      stats: {
+        additions: number;
+        deletions: number;
+      };
+      parents: unknown[];
+      author: {
+        login: string;
+        id: number;
+        avatar_url: string;
+      };
+    } = await got(
       `https://api.github.com/repos/${raidRepoNameWithOwner}/commits/${commitId}`
-    ).then((r) => r.json());
+    ).json();
 
     const isRaidCommit = !new RegExp(dungeonRepoNameWithOwner).test(
       await fetch(
@@ -134,10 +149,10 @@ async function fetchAndFilterCommitData(
   return results;
 }
 
-function compactStatsFromCommitData(commitData) {
+function compactStatsFromCommitData(commitData: FetchedCommitData[]) {
   if (!commitData) return [];
 
-  return commitData.reduce((stats, commit) => {
+  return commitData.reduce<CompactedStats>((stats, commit) => {
     if (
       !commit.user || // Exclude null users
       !commit.isRaidCommit || // Exclude non raid commits
@@ -165,7 +180,10 @@ function compactStatsFromCommitData(commitData) {
   }, {});
 }
 
-async function updateRaidStats(compactedStatsToAdd, dungeonRepoNameWithOwner) {
+async function updateRaidStats(
+  compactedStatsToAdd: CompactedStats,
+  dungeonRepoNameWithOwner: string
+) {
   const raidsQuery = firestore
     .collection('raid-stats')
     .where('status', '==', 'active')
@@ -193,7 +211,7 @@ async function updateRaidStats(compactedStatsToAdd, dungeonRepoNameWithOwner) {
 
       const raidRef = raids[0].ref;
       const raidData = raids[0].data();
-      const updates = {
+      const updates: DocUpdates = {
         commits: raidData.commits,
         additions: raidData.additions,
         deletions: raidData.deletions,
@@ -233,3 +251,33 @@ async function updateRaidStats(compactedStatsToAdd, dungeonRepoNameWithOwner) {
     });
   });
 }
+
+/*
+ * TYPES
+ */
+type FetchedCommitData = {
+  user: string;
+  userId: number;
+  avatarUrl: string;
+  additions: number;
+  deletions: number;
+  parentCount: number;
+  isRaidCommit: boolean;
+};
+
+type UserStats = {
+  userId: number;
+  user: string;
+  avatarUrl: string;
+  additions: number;
+  deletions: number;
+  commits: number;
+};
+
+type CompactedStats = {
+  [key: number]: UserStats;
+};
+
+type DocUpdates = {
+  [filePath: string]: any;
+};

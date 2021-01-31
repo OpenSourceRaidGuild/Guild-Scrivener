@@ -1,7 +1,8 @@
 import chalk from 'chalk';
 import ora from 'ora';
-import fetch from 'node-fetch';
+import got from 'got';
 import { db as firestore } from '../firebase.js';
+import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
 
 /*
  * Steps:
@@ -9,7 +10,10 @@ import { db as firestore } from '../firebase.js';
  * - Check if Raid already exists
  * - Create new Raid in firestore
  */
-async function createNewRaid({ id, payload }) {
+async function createNewRaid({
+  id,
+  payload,
+}: WebhookEvent<EventPayloads.WebhookPayloadRepository>) {
   const spinner = ora(`Processing repository created event '${id}'`).start();
 
   try {
@@ -24,9 +28,7 @@ async function createNewRaid({ id, payload }) {
 
     const {
       parent: { full_name: dungeonRepoNameWithOwner },
-    } = await fetch(
-      `https://api.github.com/repos/${repoNameWithOwner}`
-    ).then((r) => r.json());
+    } = await got(`https://api.github.com/repos/${repoNameWithOwner}`).json();
 
     /*
      * Step 2 - Check if Raid already exists
