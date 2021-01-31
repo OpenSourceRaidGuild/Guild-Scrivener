@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import ora from 'ora';
 import got from 'got';
+import { octokit } from '../octokit.js';
 import { db as firestore } from '../firebase.js';
 import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
 
@@ -24,6 +25,8 @@ async function statCompactor({
     const {
       fork: isFork,
       archived: isArchived,
+      owner: { login: raidRepoOwner },
+      name: raidRepoName,
       full_name: raidRepoNameWithOwner,
     } = repository;
     const isDefaultBranch =
@@ -58,18 +61,21 @@ async function statCompactor({
     });
 
     // Get parent repo name with owner so we can check if the commit exists upstream
-    const {
-      parent: { full_name: dungeonRepoNameWithOwner },
-    } = await got(
-      `https://api.github.com/repos/${raidRepoNameWithOwner}`
-    ).json();
+    const parentRepository = await octokit.repos
+      .get({
+        owner: raidRepoOwner,
+        repo: raidRepoName,
+      })
+      .then((r) => r.data.parent);
+    const dungeonRepoNameWithOwner = String(parentRepository?.full_name);
 
     /*
      * Step 2 - Fetch and filter commit data
      */
     const commitIds: string[] = commits.map((c) => c.id);
     const filteredCommitData = await fetchAndFilterCommitData(
-      raidRepoNameWithOwner,
+      raidRepoOwner,
+      raidRepoName,
       dungeonRepoNameWithOwner,
       commitIds
     );
@@ -101,7 +107,8 @@ export default statCompactor;
  * HELPERS
  */
 async function fetchAndFilterCommitData(
-  raidRepoNameWithOwner: string,
+  raidRepoOwner: string,
+  raidRepoName: string,
   dungeonRepoNameWithOwner: string,
   commitIds: string[]
 ): Promise<FetchedCommitData[]> {
@@ -110,20 +117,13 @@ async function fetchAndFilterCommitData(
   // TODO: Refactor to be parallel requests instead of sequential
   // Maybe Promise.settleAll or something can help?
   for (const commitId of commitIds) {
-    const commitData: {
-      stats: {
-        additions: number;
-        deletions: number;
-      };
-      parents: unknown[];
-      author: {
-        login: string;
-        id: number;
-        avatar_url: string;
-      };
-    } = await got(
-      `https://api.github.com/repos/${raidRepoNameWithOwner}/commits/${commitId}`
-    ).json();
+    const commitData = await octokit.repos
+      .getCommit({
+        owner: raidRepoOwner,
+        repo: raidRepoName,
+        ref: commitId,
+      })
+      .then((r) => r.data);
 
     const isRaidCommit = !new RegExp(dungeonRepoNameWithOwner).test(
       await got(
@@ -131,11 +131,12 @@ async function fetchAndFilterCommitData(
       ).text()
     );
 
-    const {
-      stats: { additions, deletions },
-      parents,
-      author: { login: user, id: userId, avatar_url: avatarUrl },
-    } = commitData;
+    const additions = commitData.stats?.additions ?? 0;
+    const deletions = commitData.stats?.deletions ?? 0;
+    const parents = commitData.parents;
+    const user = commitData.author?.login;
+    const userId = commitData.author?.id;
+    const avatarUrl = commitData.author?.avatar_url;
 
     results.push({
       user,
@@ -155,11 +156,7 @@ function compactStatsFromCommitData(commitData: FetchedCommitData[]) {
   if (!commitData) return [];
 
   return commitData.reduce<CompactedStats>((stats, commit) => {
-    if (
-      !commit.user || // Exclude null users
-      !commit.isRaidCommit || // Exclude non raid commits
-      commit.parentCount > 1 // Exclude Merge commits
-    ) {
+    if (!isCompactableCommit(commit)) {
       return stats;
     }
 
@@ -178,8 +175,19 @@ function compactStatsFromCommitData(commitData: FetchedCommitData[]) {
       };
     }
 
+    console.log(stats);
+
     return stats;
   }, {});
+}
+
+function isCompactableCommit(
+  commit: FetchedCommitData
+): commit is CompactableCommitData {
+  // Exclude null/undefined users
+  // Exclude non raid commits
+  // Exclude Merge commits
+  return !!commit.user || !!commit.isRaidCommit || !(commit.parentCount > 1);
 }
 
 async function updateRaidStats(
@@ -249,6 +257,8 @@ async function updateRaidStats(
         updates.deletions += newStats.deletions;
       });
 
+      console.log('Updating stats with:', updates);
+
       transaction.update(raidRef, updates);
     });
   });
@@ -258,13 +268,19 @@ async function updateRaidStats(
  * TYPES
  */
 type FetchedCommitData = {
-  user: string;
-  userId: number;
-  avatarUrl: string;
+  user?: string;
+  userId?: number;
+  avatarUrl?: string;
   additions: number;
   deletions: number;
   parentCount: number;
   isRaidCommit: boolean;
+};
+
+type CompactableCommitData = FetchedCommitData & {
+  user: string;
+  userId: number;
+  avatarUrl: string;
 };
 
 type UserStats = {
