@@ -12,7 +12,7 @@ create a `.env` file
 
 ```sh
 AUTH= <GitHub Personal Access Token>
-FIREBASE_URL=<https://stackoverflow.com/a/40168644/8367146>
+FIREBASE_URL=<URL>
 OWNER=<Organization>
 LABEL_REPO=<Main Repo For Label Control>
 LABEL_HOOK_SECRET=<Webhook Secret>
@@ -20,8 +20,9 @@ RAID_HOOK_SECRET=<Webhook Secret>
 PORT=<Any available port i.e. 8080>
 ```
 
-- Create [GitHub Personal Access Token instructions](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token)
-- Create [GitHub Webhook instructions](https://docs.github.com/en/developers/webhooks-and-events/creating-webhooks)
+- `Auth` Create [GitHub Personal Access Token instructions](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token)
+- `Webhook Secret` Create [GitHub Webhook instructions](https://docs.github.com/en/developers/webhooks-and-events/creating-webhooks)
+- `FIREBASE_URL` Get [Firebase URL from console](https://stackoverflow.com/a/40168644/8367146)
 
 ## Commands
 
