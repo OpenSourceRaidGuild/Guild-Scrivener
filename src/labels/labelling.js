@@ -11,10 +11,6 @@ const octokit = new Octokit({
 
 const spinner = ora(chalk.cyanBright('Retrieving Labels From GitHub \n'));
 export async function labelWebhookhandler(event) {
-  const listOfReposResponse = await octokit.repos.listForOrg({
-    type: 'all',
-    org: owner,
-  });
   const filteredResponse = listOfReposResponse.data.filter(
     (repo) => repo.name !== 'website'
   );
