@@ -27,7 +27,6 @@ async function statCompactor({
       archived: isArchived,
       owner: { login: raidRepoOwner },
       name: raidRepoName,
-      full_name: raidRepoNameWithOwner,
     } = repository;
     const isDefaultBranch =
       ref.replace(/^refs\/heads\//, '') === repository.default_branch;

@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import ora from 'ora';
-import got from 'got';
+import { octokit } from '../octokit.js';
 import { db as firestore } from '../firebase.js';
 import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
 
@@ -17,7 +17,11 @@ async function completeRaid({
   const spinner = ora(`Processing repository archived event '${id}'`).start();
 
   try {
-    const { fork: isFork, full_name: repoNameWithOwner } = payload.repository;
+    const {
+      fork: isFork,
+      owner: { login: raidRepoOwner },
+      name: raidRepoName,
+    } = payload.repository;
 
     /*
      * Step 1 - Check flags
@@ -26,9 +30,14 @@ async function completeRaid({
       throw `Repository was not a fork`;
     }
 
-    const {
-      parent: { full_name: dungeonRepoNameWithOwner },
-    } = await got(`https://api.github.com/repos/${repoNameWithOwner}`).json();
+    // Get parent repo name with owner so we can check if the commit exists upstream
+    const parentRepository = await octokit.repos
+      .get({
+        owner: raidRepoOwner,
+        repo: raidRepoName,
+      })
+      .then((r) => r.data.parent);
+    const dungeonRepoNameWithOwner = String(parentRepository?.full_name);
 
     /*
      * Step 2 - Check if Raid exists
