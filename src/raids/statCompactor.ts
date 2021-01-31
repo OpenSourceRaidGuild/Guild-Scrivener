@@ -53,7 +53,7 @@ async function statCompactor({
     checkFlags.forEach((flag) => {
       // Throw if check was not successful
       if (!flag.check) {
-        throw `Event did not meet criteria for stat compacting: ${flag.message}`;
+        throw `Event '${id}' did not meet criteria for stat compacting: ${flag.message}`;
       }
     });
 
@@ -89,8 +89,10 @@ async function statCompactor({
         `Successfully updated Raid stats for ${dungeonRepoNameWithOwner}!`
       )
     );
-  } catch (error) {
-    spinner.fail(chalk.redBright(error.replace('$$event$$', `event (${id})`)));
+  } catch (error: unknown) {
+    spinner.fail(
+      chalk.redBright(String(error).replace('$$event$$', `event '${id}'`))
+    );
   }
 }
 export default statCompactor;
@@ -124,9 +126,9 @@ async function fetchAndFilterCommitData(
     ).json();
 
     const isRaidCommit = !new RegExp(dungeonRepoNameWithOwner).test(
-      await fetch(
+      await got(
         `https://github.com/${dungeonRepoNameWithOwner}/branch_commits/${commitId}`
-      ).then(async (r) => r.text())
+      ).text()
     );
 
     const {
