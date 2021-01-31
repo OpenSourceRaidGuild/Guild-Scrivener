@@ -18,7 +18,7 @@ const start = async () => {
   server.use(raidsWebhook.middleware);
   server.use(labelsWebhook.middleware);
 
-  server.listen(process.env.PORT || 5000, (error, address) => {
+  server.listen(process.env.PORT ?? 5000, '0.0.0.0', (error, address) => {
     if (error) {
       server.log.error(error);
       process.exit(1);
