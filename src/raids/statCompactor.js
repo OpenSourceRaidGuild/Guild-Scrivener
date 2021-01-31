@@ -3,14 +3,16 @@ import ora from 'ora';
 import fetch from 'node-fetch';
 import { db as firestore } from '../firebase.js';
 
+// TODO: Refactor to use octokit with OSRG-bot-user's PAT
+
 /*
- * 4 Steps:
+ * Steps:
  * - Check flags to either ignore or proceed
  * - Fetch and filter commit data
  * - Compact stats from filtered commit data
  * - Write stats to firestore
  */
-const handlePush = async ({ id, payload }) => {
+async function statCompactor({ id, payload }) {
   const spinner = ora(`Processing push event '${id}'`).start();
 
   try {
@@ -23,6 +25,9 @@ const handlePush = async ({ id, payload }) => {
     const isDefaultBranch =
       ref.replace(/^refs\/heads\//, '') === repository.default_branch;
 
+    /*
+     * Step 1 - Check flags
+     */
     const checkFlags = [
       {
         // If the commits are not on a fork, then it isn't a raid repo
@@ -41,9 +46,6 @@ const handlePush = async ({ id, payload }) => {
       },
     ];
 
-    /*
-     * Step 1 - Check flags
-     */
     checkFlags.forEach((flag) => {
       // Throw if check was not successful
       if (!flag.check) {
@@ -56,7 +58,7 @@ const handlePush = async ({ id, payload }) => {
       parent: { full_name: dungeonRepoNameWithOwner },
     } = await fetch(
       `https://api.github.com/repos/${raidRepoNameWithOwner}`
-    ).then(async (r) => r.json());
+    ).then((r) => r.json());
 
     /*
      * Step 2 - Fetch and filter commit data
@@ -86,8 +88,8 @@ const handlePush = async ({ id, payload }) => {
   } catch (error) {
     spinner.fail(chalk.redBright(error.replace('$$event$$', `event (${id})`)));
   }
-};
-export default handlePush;
+}
+export default statCompactor;
 
 /*
  * HELPERS
