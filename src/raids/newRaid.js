@@ -18,9 +18,9 @@ async function createNewRaid({ id, payload }) {
     /*
      * Step 1 - Check flags
      */
-    // if (!isFork) {
-    //   throw `Repository did not meet criteria for Raid creation`
-    // }
+    if (!isFork) {
+      throw `Repository did not meet criteria for Raid creation`;
+    }
 
     const {
       parent: { full_name: dungeonRepoNameWithOwner },
