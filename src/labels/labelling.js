@@ -8,22 +8,50 @@ const owner = process.env.OWNER;
 const octokit = new Octokit({
   auth: process.env.AUTH,
 });
-const listOfReposResponse = await octokit.repos.listForOrg({
-  type: 'all',
-  org: owner,
-});
+
 const spinner = ora(chalk.cyanBright('Retrieving Labels From GitHub \n'));
 export async function labelWebhookhandler(event) {
+  const listOfReposResponse = await octokit.repos.listForOrg({
+    type: 'all',
+    org: owner,
+  });
+  const filteredResponse = listOfReposResponse.data.filter(
+    (repo) => repo.name !== 'website'
+  );
+
   spinner.start();
   switch (event.payload.action) {
     case 'created': {
-      return listOfReposResponse.data.forEach(async (repo) => {
-        createLabelInRepos({ label: { ...docData }, repoName: repo.name });
+      spinner.succeed();
+      return filteredResponse.forEach(async (repo) => {
+        const {
+          id,
+          node_id,
+          url,
+          default: some,
+          ...label
+        } = event.payload.label;
+        createLabelInRepos({
+          label,
+          repoName: repo.name,
+        });
       });
     }
     case 'edited': {
-      return listOfReposResponse.data.forEach(async (repo) => {
-        updateLabelsInRepos({ label: { ...docData }, repoName: repo.name });
+      spinner.succeed();
+      console.log(event.payload.label);
+      return filteredResponse.forEach(async (repo) => {
+        const {
+          id,
+          node_id,
+          url,
+          default: some,
+          ...label
+        } = event.payload.label;
+        updateLabelsInRepos({
+          label,
+          repoName: repo.name,
+        });
       });
     }
     case 'deleted':
@@ -41,9 +69,7 @@ async function createLabelInRepos({ label = {}, repoName = '' }) {
   const spinner = ora(
     chalk.yellowBright('NO ID FOUND ATTEMPING TO CREATE LABEL \n')
   ).start();
-  setTimeout(() => {
-    spinner.color = chalk.hex(`#${Number(Math.random()).toString(16)}`);
-  }, 3000);
+  console.log(repoName, 'IM THE REPO');
   return await octokit.issues
     .createLabel({
       owner,
@@ -67,7 +93,7 @@ async function createLabelInRepos({ label = {}, repoName = '' }) {
  */
 async function updateLabelsInRepos({ label = {}, repoName = '' }) {
   const spinner = ora(
-    chalk.yellowBright('NO ID FOUND ATTEMPING TO CREATE LABEL \n')
+    chalk.yellowBright(`Attempting to update labels in ${repoName} \n`)
   ).start();
   spinner.color = chalk.redBright();
   return await octokit.issues
@@ -79,7 +105,10 @@ async function updateLabelsInRepos({ label = {}, repoName = '' }) {
     .then((res) => {
       if (res.status === 200)
         spinner.succeed(
-          chalk.greenBright(`${docName.name} Label Updated Successfully \n`)
+          chalk.greenBright(
+            `${label.name} Label Updated Successfully ${repoName} \n`
+          )
         );
-    });
+    })
+    .catch((err) => chalk.redBright(`${err} Label Update Failed`));
 }

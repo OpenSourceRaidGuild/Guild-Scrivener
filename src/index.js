@@ -11,7 +11,6 @@ dotenv.config();
 
 const server = fastify();
 const start = async () => {
-  // Setup middleware
   await server.register(middie);
   server.use(raidsWebhook.middleware);
   server.use(labelsWebhook.middleware);
@@ -21,7 +20,7 @@ const start = async () => {
       server.log.error(error);
       process.exit(1);
     } else {
-      console.log(chalk.greenBright(`Server started on ${address}`));
+      console.log(chalk.green(`Server started on ${address}`));
     }
   });
 };
