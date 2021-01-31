@@ -112,6 +112,7 @@ async function updateLabelsInRepos({ label = {}, repoName = '' }) {
     })
     .catch((err) => {
       console.log('ERROR', err.status);
+      //TODO this doesnt work yet, not passing back the data for create attempt
       if (err.status === 404) return createLabelInRepos();
       if (err.status === 403)
         return chalk.redBright(`${err} Label Update Failed`);
