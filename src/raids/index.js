@@ -6,7 +6,7 @@ import completeRaid from './completeRaid.js';
 
 export const raidsWebhook = new Webhooks({
   secret: process.env.RAID_HOOK_SECRET,
-  path: '/github',
+  path: '/raid-hooks',
 });
 
 raidsWebhook.on('repository.created', createNewRaid);
