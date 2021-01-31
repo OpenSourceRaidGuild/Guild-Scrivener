@@ -8,17 +8,20 @@ Currently
 
 ### Environment Setup
 
-create a `.env` file and add in the [GitHub Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token)
+create a `.env` file
 
 ```sh
-AUTH=
-FIREBASE_URL=
-OWNER=
-LABEL_REPO=
-LABEL_HOOK_SECRET=
-RAID_HOOK_SECRET=
-PORT=
+AUTH= <GitHub Personal Access Token>
+FIREBASE_URL=<https://stackoverflow.com/a/40168644/8367146>
+OWNER=<Organization>
+LABEL_REPO=<Main Repo For Label Control>
+LABEL_HOOK_SECRET=<Webhook Secret>
+RAID_HOOK_SECRET=<Webhook Secret>
+PORT=<Any available port i.e. 8080>
 ```
+
+- Create [GitHub Personal Access Token instructions](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token)
+- Create [GitHub Webhook instructions](https://docs.github.com/en/developers/webhooks-and-events/creating-webhooks)
 
 ## Commands
 
