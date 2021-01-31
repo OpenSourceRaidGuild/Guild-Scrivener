@@ -171,6 +171,10 @@ async function updateRaidStats(compactedStatsToAdd, dungeonRepoNameWithOwner) {
     .where('status', '==', 'active')
     .where('dungeon', '==', dungeonRepoNameWithOwner);
 
+  /*
+   * TODO: It is possible for the transaction to fail after it is retried X times. Probably a good idea to have some sort of
+   * "unable to apply" queue with a part of the website that allows for a "Retry" of applying these failed stat updates.
+   */
   // Use transactions to avoid incorrect data when multiple events occur near to each other
   await firestore.runTransaction((transaction) => {
     return transaction.get(raidsQuery).then((raidsSnapshot) => {
@@ -181,7 +185,8 @@ async function updateRaidStats(compactedStatsToAdd, dungeonRepoNameWithOwner) {
       const raids = raidsSnapshot.docs;
 
       if (raids.length > 1) {
-        throw `Found more than one Raid - did you forget to complete a Raid? Found: ${JSON.stringify(
+        // Unlikely to actually hit this, but just in case
+        throw `Found more than one active Raid for ${dungeonRepoNameWithOwner} - did you forget to complete a Raid? Found: ${JSON.stringify(
           raids.map((r) => r.data().title)
         )}`;
       }

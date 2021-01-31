@@ -5,7 +5,7 @@ import { db as firestore } from '../firebase.js';
 
 /*
  * Steps:
- * - Check flags to either ignore or proceed
+ * - Check flag(s) to either ignore or proceed
  * - Check if Raid already exists
  * - Create new Raid in firestore
  */
@@ -37,7 +37,7 @@ async function createNewRaid({ id, payload }) {
       .where('dungeon', '==', dungeonRepoNameWithOwner)
       .get();
     if (!snapshot.empty) {
-      throw `A Raid already exists for ${dungeonRepoNameWithOwner}`;
+      throw `An active Raid already exists for ${dungeonRepoNameWithOwner}`;
     }
 
     /*
