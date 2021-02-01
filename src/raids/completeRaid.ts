@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import ora from 'ora';
-import got from 'got';
+import { octokit } from '../octokit.js';
 import { db as firestore } from '../firebase.js';
 import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
 
@@ -17,18 +17,27 @@ async function completeRaid({
   const spinner = ora(`Processing repository archived event '${id}'`).start();
 
   try {
-    const { fork: isFork, full_name: repoNameWithOwner } = payload.repository;
+    const {
+      fork: isFork,
+      owner: { login: raidRepoOwner },
+      name: raidRepoName,
+    } = payload.repository;
 
     /*
      * Step 1 - Check flags
      */
     if (!isFork) {
-      throw `Repository was not a fork`;
+      throw `Event '${id}' did not meet criteria for Raid creation: Repository was not a fork`;
     }
 
-    const {
-      parent: { full_name: dungeonRepoNameWithOwner },
-    } = await got(`https://api.github.com/repos/${repoNameWithOwner}`).json();
+    // Get parent repo name with owner so we can check if the commit exists upstream
+    const parentRepository = await octokit.repos
+      .get({
+        owner: raidRepoOwner,
+        repo: raidRepoName,
+      })
+      .then((r) => r.data.parent);
+    const dungeonRepoNameWithOwner = String(parentRepository?.full_name);
 
     /*
      * Step 2 - Check if Raid exists
@@ -39,10 +48,10 @@ async function completeRaid({
       .where('dungeon', '==', dungeonRepoNameWithOwner)
       .get();
     if (snapshot.empty) {
-      throw `No active Raid exists for ${dungeonRepoNameWithOwner}`;
+      throw `No active Raid exists for ${dungeonRepoNameWithOwner} associated with event '${id}'`;
     } else if (snapshot.docs.length > 1) {
       // Unlikely to actually hit this, but just in case
-      throw `Found more than one active Raid for ${dungeonRepoNameWithOwner} - did you forget to complete a Raid? Found: ${JSON.stringify(
+      throw `Found more than one active Raid for ${dungeonRepoNameWithOwner} associated with event '${id}':  ${JSON.stringify(
         snapshot.docs.map((r) => r.data().title)
       )}`;
     }

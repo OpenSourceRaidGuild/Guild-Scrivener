@@ -1,10 +1,9 @@
 import chalk from 'chalk';
 import ora from 'ora';
 import got from 'got';
+import { octokit } from '../octokit.js';
 import { db as firestore } from '../firebase.js';
 import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
-
-// TODO: Refactor to use octokit with OSRG-bot-user's PAT
 
 /*
  * Steps:
@@ -24,7 +23,8 @@ async function statCompactor({
     const {
       fork: isFork,
       archived: isArchived,
-      full_name: raidRepoNameWithOwner,
+      owner: { login: raidRepoOwner },
+      name: raidRepoName,
     } = repository;
     const isDefaultBranch =
       ref.replace(/^refs\/heads\//, '') === repository.default_branch;
@@ -53,23 +53,26 @@ async function statCompactor({
     checkFlags.forEach((flag) => {
       // Throw if check was not successful
       if (!flag.check) {
-        throw `Event did not meet criteria for stat compacting: ${flag.message}`;
+        throw `Event '${id}' did not meet criteria for stat compacting: ${flag.message}`;
       }
     });
 
     // Get parent repo name with owner so we can check if the commit exists upstream
-    const {
-      parent: { full_name: dungeonRepoNameWithOwner },
-    } = await got(
-      `https://api.github.com/repos/${raidRepoNameWithOwner}`
-    ).json();
+    const parentRepository = await octokit.repos
+      .get({
+        owner: raidRepoOwner,
+        repo: raidRepoName,
+      })
+      .then((r) => r.data.parent);
+    const dungeonRepoNameWithOwner = String(parentRepository?.full_name);
 
     /*
      * Step 2 - Fetch and filter commit data
      */
     const commitIds: string[] = commits.map((c) => c.id);
     const filteredCommitData = await fetchAndFilterCommitData(
-      raidRepoNameWithOwner,
+      raidRepoOwner,
+      raidRepoName,
       dungeonRepoNameWithOwner,
       commitIds
     );
@@ -79,6 +82,10 @@ async function statCompactor({
      */
     const compactedStatsToAdd = compactStatsFromCommitData(filteredCommitData);
 
+    if (Object.keys(compactedStatsToAdd).length === 0) {
+      throw `Event '${id}' had no commits that affect stats`;
+    }
+
     /*
      * Step 4 - Write stats to firestore
      */
@@ -86,11 +93,13 @@ async function statCompactor({
 
     spinner.succeed(
       chalk.greenBright(
-        `Successfully updated Raid stats for ${dungeonRepoNameWithOwner}!`
+        `Successfully updated ${dungeonRepoNameWithOwner} Raid stats on event '${id}'!`
       )
     );
-  } catch (error) {
-    spinner.fail(chalk.redBright(error.replace('$$event$$', `event (${id})`)));
+  } catch (error: unknown) {
+    spinner.fail(
+      chalk.redBright(String(error).replace('$$event$$', `event '${id}'`))
+    );
   }
 }
 export default statCompactor;
@@ -99,41 +108,37 @@ export default statCompactor;
  * HELPERS
  */
 async function fetchAndFilterCommitData(
-  raidRepoNameWithOwner: string,
+  raidRepoOwner: string,
+  raidRepoName: string,
   dungeonRepoNameWithOwner: string,
   commitIds: string[]
 ): Promise<FetchedCommitData[]> {
   const results: FetchedCommitData[] = [];
 
-  // TODO: Refactor to be parallel requests instead of sequential
-  // Maybe Promise.settleAll or something can help?
   for (const commitId of commitIds) {
-    const commitData: {
-      stats: {
-        additions: number;
-        deletions: number;
-      };
-      parents: unknown[];
-      author: {
-        login: string;
-        id: number;
-        avatar_url: string;
-      };
-    } = await got(
-      `https://api.github.com/repos/${raidRepoNameWithOwner}/commits/${commitId}`
-    ).json();
+    const commitData = await octokit.repos
+      .getCommit({
+        owner: raidRepoOwner,
+        repo: raidRepoName,
+        ref: commitId,
+      })
+      .then((r) => r.data);
 
+    /*
+     * TODO: Find a better way to do this with the API, as it is subject to breaking at some point in the future
+     */
     const isRaidCommit = !new RegExp(dungeonRepoNameWithOwner).test(
-      await fetch(
+      await got(
         `https://github.com/${dungeonRepoNameWithOwner}/branch_commits/${commitId}`
-      ).then(async (r) => r.text())
+      ).text()
     );
 
-    const {
-      stats: { additions, deletions },
-      parents,
-      author: { login: user, id: userId, avatar_url: avatarUrl },
-    } = commitData;
+    const additions = commitData.stats?.additions ?? 0;
+    const deletions = commitData.stats?.deletions ?? 0;
+    const parents = commitData.parents;
+    const user = commitData.author?.login;
+    const userId = commitData.author?.id;
+    const avatarUrl = commitData.author?.avatar_url;
 
     results.push({
       user,
@@ -153,11 +158,7 @@ function compactStatsFromCommitData(commitData: FetchedCommitData[]) {
   if (!commitData) return [];
 
   return commitData.reduce<CompactedStats>((stats, commit) => {
-    if (
-      !commit.user || // Exclude null users
-      !commit.isRaidCommit || // Exclude non raid commits
-      commit.parentCount > 1 // Exclude Merge commits
-    ) {
+    if (!isCompactableCommit(commit)) {
       return stats;
     }
 
@@ -180,6 +181,15 @@ function compactStatsFromCommitData(commitData: FetchedCommitData[]) {
   }, {});
 }
 
+function isCompactableCommit(
+  commit: FetchedCommitData
+): commit is CompactableCommitData {
+  // Exclude null/undefined users
+  // Exclude non raid commits
+  // Exclude Merge commits
+  return !!commit.user || !!commit.isRaidCommit || !(commit.parentCount > 1);
+}
+
 async function updateRaidStats(
   compactedStatsToAdd: CompactedStats,
   dungeonRepoNameWithOwner: string
@@ -197,14 +207,14 @@ async function updateRaidStats(
   await firestore.runTransaction((transaction) => {
     return transaction.get(raidsQuery).then((raidsSnapshot) => {
       if (raidsSnapshot.empty) {
-        throw `No active Raid associated with this $$event$$ - did you forget to create a Raid, or close it out early? ${dungeonRepoNameWithOwner}`;
+        throw `No active Raid for ${dungeonRepoNameWithOwner} associated with $$event$$`;
       }
 
       const raids = raidsSnapshot.docs;
 
       if (raids.length > 1) {
         // Unlikely to actually hit this, but just in case
-        throw `Found more than one active Raid for ${dungeonRepoNameWithOwner} - did you forget to complete a Raid? Found: ${JSON.stringify(
+        throw `Found more than one active Raid for ${dungeonRepoNameWithOwner} associated with $$event$$: ${JSON.stringify(
           raids.map((r) => r.data().title)
         )}`;
       }
@@ -217,7 +227,6 @@ async function updateRaidStats(
         deletions: raidData.deletions,
       };
 
-      // Update User stats
       Object.values(compactedStatsToAdd).forEach((newStats) => {
         // User Stats
         const key = `contributors.${newStats.userId}`;
@@ -256,13 +265,19 @@ async function updateRaidStats(
  * TYPES
  */
 type FetchedCommitData = {
-  user: string;
-  userId: number;
-  avatarUrl: string;
+  user?: string;
+  userId?: number;
+  avatarUrl?: string;
   additions: number;
   deletions: number;
   parentCount: number;
   isRaidCommit: boolean;
+};
+
+type CompactableCommitData = FetchedCommitData & {
+  user: string;
+  userId: number;
+  avatarUrl: string;
 };
 
 type UserStats = {

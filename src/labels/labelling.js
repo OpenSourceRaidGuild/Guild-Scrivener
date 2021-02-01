@@ -1,13 +1,8 @@
-import { Octokit } from '@octokit/rest';
+import { octokit } from '../octokit.js';
 import chalk from 'chalk';
 import ora from 'ora';
-import dotenv from 'dotenv';
-dotenv.config();
 
 const owner = process.env.OWNER;
-const octokit = new Octokit({
-  auth: process.env.AUTH,
-});
 
 const spinner = ora(chalk.cyanBright('Retrieving Labels From GitHub \n'));
 export async function labelWebhookhandler(event) {
