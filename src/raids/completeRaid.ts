@@ -27,7 +27,7 @@ async function completeRaid({
      * Step 1 - Check flags
      */
     if (!isFork) {
-      throw `Repository was not a fork`;
+      throw `Event '${id}' did not meet criteria for Raid creation: Repository was not a fork`;
     }
 
     // Get parent repo name with owner so we can check if the commit exists upstream
@@ -48,10 +48,10 @@ async function completeRaid({
       .where('dungeon', '==', dungeonRepoNameWithOwner)
       .get();
     if (snapshot.empty) {
-      throw `No active Raid exists for ${dungeonRepoNameWithOwner}`;
+      throw `No active Raid exists for ${dungeonRepoNameWithOwner} associated with event '${id}'`;
     } else if (snapshot.docs.length > 1) {
       // Unlikely to actually hit this, but just in case
-      throw `Found more than one active Raid for ${dungeonRepoNameWithOwner} - did you forget to complete a Raid? Found: ${JSON.stringify(
+      throw `Found more than one active Raid for ${dungeonRepoNameWithOwner} associated with event '${id}':  ${JSON.stringify(
         snapshot.docs.map((r) => r.data().title)
       )}`;
     }

@@ -27,7 +27,7 @@ async function createNewRaid({
      * Step 1 - Check flags
      */
     if (!isFork) {
-      throw `Repository did not meet criteria for Raid creation`;
+      throw `Event '${id}' did not meet criteria for Raid creation: Repository was not a fork`;
     }
 
     // Get parent repo name with owner so we can check if the commit exists upstream
