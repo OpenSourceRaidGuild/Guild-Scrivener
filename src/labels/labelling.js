@@ -86,6 +86,7 @@ async function createLabelInRepos({ label = {}, repoName = '' }) {
  * @Helper
  */
 async function updateLabelsInRepos({ label = {}, repoName = '' }) {
+  const memory = { label, repoName };
   const spinner = ora(
     chalk.yellowBright(`Attempting to update labels in ${repoName} \n`)
   ).start();
@@ -97,7 +98,6 @@ async function updateLabelsInRepos({ label = {}, repoName = '' }) {
       ...label,
     })
     .then((res) => {
-      // console.log('UPDATE RESPONSE', res);
       if (res.status === 200)
         spinner.succeed(
           chalk.greenBright(
@@ -107,8 +107,7 @@ async function updateLabelsInRepos({ label = {}, repoName = '' }) {
     })
     .catch((err) => {
       console.log('ERROR', err.status);
-      //TODO this doesnt work yet, not passing back the data for create attempt
-      if (err.status === 404) return createLabelInRepos();
+      if (err.status === 404) return createLabelInRepos(...memory);
       if (err.status === 403)
         return chalk.redBright(`${err} Label Update Failed`);
     });
