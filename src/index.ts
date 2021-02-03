@@ -11,7 +11,7 @@ dotenv.config();
 
 const server = fastify();
 
-server.get('/ping', async (req, res) => 'Pong!');
+server.get('/ping', async () => 'Pong!');
 
 const start = async () => {
   await server.register(middie);
