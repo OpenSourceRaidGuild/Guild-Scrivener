@@ -1,11 +1,12 @@
 import { octokit } from '../octokit.js';
 import chalk from 'chalk';
 import ora from 'ora';
+import { WebhookEvent } from '@octokit/webhooks';
 
-const owner = process.env.OWNER;
+const owner = process.env.OWNER as string;
 
 const spinner = ora(chalk.cyanBright('Retrieving Labels From GitHub \n'));
-export async function labelWebhookhandler(event) {
+export async function labelWebhookhandler(event: WebhookEvent<any>) {
   const listOfReposResponse = await octokit.repos.listForOrg({
     type: 'all',
     org: owner,
@@ -69,7 +70,7 @@ async function createLabelInRepos({ label = {}, repoName = '' }) {
       owner,
       repo: repoName,
       ...label,
-    })
+    } as any)
     .then((res) => {
       if (res.status === 201) {
         spinner.succeed(chalk.greenBright(`${res.status} Status \n`));
@@ -85,18 +86,23 @@ async function createLabelInRepos({ label = {}, repoName = '' }) {
 /**
  * @Helper
  */
-async function updateLabelsInRepos({ label = {}, repoName = '' }) {
+async function updateLabelsInRepos({
+  label,
+  repoName,
+}: {
+  label: Record<string, any>;
+  repoName: string;
+}) {
   const memory = { label, repoName };
   const spinner = ora(
     chalk.yellowBright(`Attempting to update labels in ${repoName} \n`)
   ).start();
-  spinner.color = chalk.redBright();
   return await octokit.issues
     .updateLabel({
       owner,
       repo: repoName,
       ...label,
-    })
+    } as any)
     .then((res) => {
       if (res.status === 200)
         spinner.succeed(
@@ -105,10 +111,9 @@ async function updateLabelsInRepos({ label = {}, repoName = '' }) {
           )
         );
     })
-    .catch((err) => {
+    .catch((err: any): Promise<void> | void => {
       console.log('ERROR', err.status);
-      if (err.status === 404) return createLabelInRepos(...memory);
-      if (err.status === 403)
-        return chalk.redBright(`${err} Label Update Failed`);
+      if (err.status === 404) return createLabelInRepos(memory);
+      if (err.status === 403) chalk.redBright(`${err} Label Update Failed`);
     });
 }
