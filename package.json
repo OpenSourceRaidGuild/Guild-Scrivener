@@ -13,7 +13,6 @@
     "local": "tsc -w & nodemon --experimental-json-modules ./dist/index.js",
     "local:emulator": "cross-env FIRESTORE_EMULATOR_HOST=\"localhost:8080\" npm run local",
     "start": "node --experimental-json-modules ./dist/index.js",
-    "scribe-only": "node --experimental-json-modules ./src/scribing.js",
     "build": "tsc"
   },
   "prettier": {

@@ -59,9 +59,17 @@ export async function labelWebhookhandler(event: WebhookEvent<any>) {
 }
 
 /**
- * @Helper
+ * @Helpers
  */
-async function createLabelInRepos({ label = {}, repoName = '' }) {
+interface IUpdateCreateParams {
+  label: Record<string, any>;
+  repoName: string;
+}
+
+async function createLabelInRepos({
+  label,
+  repoName = '',
+}: IUpdateCreateParams) {
   const spinner = ora(
     chalk.yellowBright('NO ID FOUND ATTEMPING TO CREATE LABEL \n')
   ).start();
@@ -83,16 +91,8 @@ async function createLabelInRepos({ label = {}, repoName = '' }) {
       spinner.fail(`Label Creation ${chalk.red('FAILED!')} \n`);
     });
 }
-/**
- * @Helper
- */
-async function updateLabelsInRepos({
-  label,
-  repoName,
-}: {
-  label: Record<string, any>;
-  repoName: string;
-}) {
+
+async function updateLabelsInRepos({ label, repoName }: IUpdateCreateParams) {
   const memory = { label, repoName };
   const spinner = ora(
     chalk.yellowBright(`Attempting to update labels in ${repoName} \n`)
