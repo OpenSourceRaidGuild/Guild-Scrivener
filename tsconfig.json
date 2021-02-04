@@ -1,6 +1,8 @@
 {
   "include": ["src"],
+  "exclude": ["src/**/*.test.ts"],
   "compilerOptions": {
+    "types": ["jest"],
     "module": "esnext",
     "target": "ES5",
     "outDir": "dist",
