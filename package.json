@@ -1,27 +1,20 @@
 {
   "name": "guild-scrivener",
   "version": "0.0.1",
-  "main": "src/scrape-labels.js",
+  "main": "dist/index.js",
   "author": "JacobMGEvans",
   "license": "GNU GPLv3",
-  "type": "module",
   "description": "",
   "files": [
     "src"
   ],
   "scripts": {
-    "local": "tsc -w & nodemon --experimental-json-modules ./dist/index.js",
+    "local": "nodemon ./src/index.ts",
     "local:emulator": "cross-env FIRESTORE_EMULATOR_HOST=\"localhost:8080\" npm run local",
-    "start": "node --experimental-json-modules ./dist/index.js",
+    "start": "node ./dist/index.js",
     "build": "tsc",
     "test": "jest --watch",
     "test:ci": "jest --coverage"
-  },
-  "prettier": {
-    "printWidth": 80,
-    "semi": true,
-    "singleQuote": true,
-    "trailingComma": "es5"
   },
   "dependencies": {
     "@octokit/auth-token": "^2.4.4",
@@ -44,9 +37,15 @@
     "ts-node": "^9.1.1",
     "typescript": "^4.1.3"
   },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
   "nodemonConfig": {
     "ignore": [
-      "test/*",
+      "**/*.test.*",
       "node_modules/*",
       ".github"
     ],

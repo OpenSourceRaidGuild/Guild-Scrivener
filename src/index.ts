@@ -3,8 +3,8 @@ import fastify from 'fastify';
 import middie from 'middie';
 import chalk from 'chalk';
 
-import { labelsWebhook } from './labels/index.js';
-import { raidsWebhook } from './raids/index.js';
+import { labelsWebhook } from './labels/index';
+import { raidsWebhook } from './raids/index';
 
 import dotenv from 'dotenv';
 dotenv.config();

@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import got from 'got';
-import { octokit } from '../octokit.js';
-import { db as firestore } from '../firebase.js';
+import { octokit } from '../octokit';
+import { db as firestore } from '../firebase';
 import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
 
 /*
@@ -143,7 +143,7 @@ async function fetchAndFilterCommitData(
   return results;
 }
 
-function compactStatsFromCommitData(commitData: FetchedCommitData[]) {
+export function compactStatsFromCommitData(commitData: FetchedCommitData[]) {
   if (!commitData) return [];
 
   return commitData.reduce<CompactedStats>((stats, commit) => {

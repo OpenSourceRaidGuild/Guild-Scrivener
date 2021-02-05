@@ -1,3 +1,5 @@
+import { compactStatsFromCommitData } from '../raids/statCompactor';
+
 it('can run', async () => {
-  expect('a').toBe('a');
+  const result = compactStatsFromCommitData([]);
 });

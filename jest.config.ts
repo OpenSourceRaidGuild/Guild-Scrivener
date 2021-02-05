@@ -1,8 +1,14 @@
 import type { Config } from '@jest/types';
 
 const config: Config.InitialOptions = {
-  preset: 'ts-jest',
+  rootDir: 'src',
+  verbose: true,
   testEnvironment: 'node',
-  setupFilesAfterEnv: ['./src/setupTests.ts'],
+  moduleDirectories: ['node_modules', 'src'],
+  transform: {
+    '^.+\\.ts$': 'ts-jest',
+  },
+  setupFilesAfterEnv: ['./setupTests.ts'],
+  moduleFileExtensions: ['js', 'ts'],
 };
 export default config;

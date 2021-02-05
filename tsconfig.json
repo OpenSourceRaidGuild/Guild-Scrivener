@@ -1,19 +1,18 @@
 {
   "include": ["src"],
-  "exclude": ["src/**/*.test.ts"],
+  "exclude": ["src/**/*.test.ts", "src/setupTests.ts"],
   "compilerOptions": {
     "types": ["jest"],
-    "module": "esnext",
-    "target": "ES5",
+    "module": "CommonJS",
+    "target": "ES2019",
     "outDir": "dist",
     "moduleResolution": "node",
     "strict": true,
-    "allowJs": true,
+    "allowJs": false,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
     "removeComments": true,
     "declaration": false
   }
