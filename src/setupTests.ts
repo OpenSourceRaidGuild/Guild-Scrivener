@@ -3,7 +3,7 @@ import { server } from './testUtils/msw';
 
 dotenv.config();
 
-beforeAll(() => server.listen());
+beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
 
 afterEach(() => server.resetHandlers());
 

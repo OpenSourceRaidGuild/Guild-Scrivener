@@ -13,7 +13,9 @@ async function createNewRaid({
   id,
   payload,
 }: WebhookEvent<EventPayloads.WebhookPayloadRepository>) {
-  console.log(chalk.cyanBright(`Processing repository created event '${id}'`));
+  console.log(
+    chalk.cyanBright(`- Processing repository created event '${id}'`)
+  );
 
   try {
     const {
@@ -70,10 +72,10 @@ async function createNewRaid({
       });
 
     console.log(
-      chalk.greenBright(`Created new Raid for ${dungeonRepoNameWithOwner}`)
+      chalk.greenBright(`✔ Created new Raid for ${dungeonRepoNameWithOwner}`)
     );
   } catch (error) {
-    console.log(chalk.redBright(error));
+    console.log(chalk.redBright('✖ ' + error));
   }
 }
 export default createNewRaid;

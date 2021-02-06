@@ -13,8 +13,8 @@
     "local:emulator": "cross-env FIRESTORE_EMULATOR_HOST=\"localhost:8080\" npm run local",
     "start": "node ./dist/index.js",
     "build": "tsc",
-    "test": "jest --watch",
-    "test:ci": "jest --coverage"
+    "test": "cross-env FIRESTORE_EMULATOR_HOST=\"localhost:8080\" jest --watch",
+    "test:ci": "cross-env FIRESTORE_EMULATOR_HOST=\"localhost:8080\" jest --coverage"
   },
   "dependencies": {
     "@octokit/auth-token": "^2.4.4",
@@ -30,7 +30,9 @@
   },
   "devDependencies": {
     "@types/connect": "^3.4.34",
+    "@types/faker": "^5.1.6",
     "cross-env": "^7.0.3",
+    "faker": "^5.3.1",
     "jest": "^26.6.3",
     "msw": "^0.26.1",
     "prettier": "^2.2.1",
