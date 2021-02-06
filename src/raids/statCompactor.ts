@@ -143,7 +143,7 @@ async function fetchAndFilterCommitData(
   return results;
 }
 
-export function compactStatsFromCommitData(commitData: FetchedCommitData[]) {
+function compactStatsFromCommitData(commitData: FetchedCommitData[]) {
   if (!commitData) return [];
 
   return commitData.reduce<CompactedStats>((stats, commit) => {

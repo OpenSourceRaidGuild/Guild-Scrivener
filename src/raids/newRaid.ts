@@ -1,6 +1,6 @@
 import chalk from 'chalk';
-import { octokit } from '../octokit.js';
-import { db as firestore } from '../firebase.js';
+import { octokit } from '../octokit';
+import { db as firestore } from '../firebase';
 import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
 
 /*
@@ -13,6 +13,8 @@ async function createNewRaid({
   id,
   payload,
 }: WebhookEvent<EventPayloads.WebhookPayloadRepository>) {
+  console.log(chalk.cyanBright(`Processing repository created event '${id}'`));
+
   try {
     const {
       fork: isFork,
@@ -66,8 +68,12 @@ async function createNewRaid({
       .catch((error) => {
         throw error;
       });
+
+    console.log(
+      chalk.greenBright(`Created new Raid for ${dungeonRepoNameWithOwner}`)
+    );
   } catch (error) {
-    return error;
+    console.log(chalk.redBright(error));
   }
 }
 export default createNewRaid;

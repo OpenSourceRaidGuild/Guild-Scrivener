@@ -32,6 +32,7 @@
     "@types/connect": "^3.4.34",
     "cross-env": "^7.0.3",
     "jest": "^26.6.3",
+    "msw": "^0.26.1",
     "prettier": "^2.2.1",
     "ts-jest": "^26.5.0",
     "ts-node": "^9.1.1",
@@ -46,6 +47,7 @@
   "nodemonConfig": {
     "ignore": [
       "**/*.test.*",
+      "src/testUtils/*",
       "node_modules/*",
       ".github"
     ],
