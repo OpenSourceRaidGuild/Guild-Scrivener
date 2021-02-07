@@ -1,5 +1,4 @@
 import chalk from 'chalk';
-import ora from 'ora';
 import { octokit } from '../octokit.js';
 import { db as firestore } from '../firebase.js';
 import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
@@ -14,8 +13,6 @@ async function completeRaid({
   id,
   payload,
 }: WebhookEvent<EventPayloads.WebhookPayloadRepository>) {
-  const spinner = ora(`Processing repository archived event '${id}'`).start();
-
   try {
     const {
       fork: isFork,
@@ -63,12 +60,8 @@ async function completeRaid({
     await raidRef.update({
       status: 'completed',
     });
-
-    spinner.succeed(
-      chalk.greenBright(`Completed Raid ${dungeonRepoNameWithOwner}`)
-    );
   } catch (error) {
-    spinner.fail(chalk.redBright(error));
+    return error;
   }
 }
 export default completeRaid;

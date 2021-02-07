@@ -1,38 +1,20 @@
 import { octokit } from '../octokit.js';
 import chalk from 'chalk';
-import ora from 'ora';
-import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
+import { WebhookEvent } from '@octokit/webhooks';
 import dotenv from 'dotenv';
+import { TPayload, TLabelReqObject, IOctoLabelParams } from './types';
 dotenv.config();
-
-const OWNER = process.env.OWNER as string;
 const LOG = console.log;
-
-type TPayload = {
-  action: string;
-  label: ILabel;
-};
-
-interface ILabelObject {
-  name: string;
-  color?: string;
-  description?: string;
-}
-interface ILabel extends ILabelObject {
-  id: number;
-  node_id: string;
-  url: string;
-  default: boolean;
-}
 
 export async function labelWebhookhandler(event: WebhookEvent<TPayload>) {
   const rateLimitCheck = await octokit.request('GET /rate_limit');
   LOG(chalk`
   Rate: {yellow ${JSON.stringify(rateLimitCheck.data.rate, null, 2)}}
   `);
+
   const listOfReposResponse = await octokit.repos.listForOrg({
     type: 'all',
-    org: OWNER,
+    org: event.payload.organization.login,
   });
   const filteredRepos = listOfReposResponse.data.filter(
     (repo) => repo.name !== 'website' && repo.archived !== true
@@ -41,28 +23,30 @@ export async function labelWebhookhandler(event: WebhookEvent<TPayload>) {
   switch (event.payload.action) {
     case 'created': {
       return filteredRepos.forEach(async (repo) => {
-        const label: ILabelObject = {
+        const label: TLabelReqObject = {
           name: event.payload.label.name,
           color: event.payload.label.color,
           description: event.payload.label.description,
         };
 
-        await createLabelInRepos({
+        return await createLabelInRepos({
           label,
-          repoName: repo.name,
+          repo: repo.name,
+          owner: event.payload.organization.login,
         });
       });
     }
     case 'edited': {
       return filteredRepos.forEach(async (repo) => {
-        const label: ILabelObject = {
+        const label: TLabelReqObject = {
           name: event.payload.label.name,
           color: event.payload.label.color,
           description: event.payload.label.description,
         };
-        await updateLabelsInRepos({
+        return await updateLabelsInRepos({
           label,
-          repoName: repo.name,
+          repo: repo.name,
+          owner: event.payload.organization.login,
         });
       });
     }
@@ -74,20 +58,15 @@ export async function labelWebhookhandler(event: WebhookEvent<TPayload>) {
   }
 }
 
-/**
- * @Helpers
- */
-interface IOctoLabelParams {
-  label: ILabelObject;
-  repoName: string;
-}
-async function createLabelInRepos({ label, repoName }: IOctoLabelParams) {
+async function createLabelInRepos({ label, repo, owner }: IOctoLabelParams) {
   return await octokit.issues
     .createLabel({
-      owner: OWNER,
-      repo: repoName,
-      ...label,
-    } as any)
+      owner,
+      repo,
+      name: label.name,
+      color: label.color,
+      description: label.description,
+    })
     .then((res) => {
       if (res.status === 201) {
         LOG(chalk.greenBright(`${res.status} Status \n`));
@@ -97,7 +76,7 @@ async function createLabelInRepos({ label, repoName }: IOctoLabelParams) {
     .catch((err) =>
       LOG(
         `${chalk.red(
-          `${label.name} in ${repoName} Label Creation FAILED! \n
+          `${label.name} in ${repo} Label Creation FAILED! \n
           ${err}
         `
         )}`
@@ -105,28 +84,29 @@ async function createLabelInRepos({ label, repoName }: IOctoLabelParams) {
     );
 }
 
-async function updateLabelsInRepos({ label, repoName }: IOctoLabelParams) {
-  const memory = { label, repoName };
-  const spinner = ora(
-    chalk.yellowBright(`Attempting to update labels in ${repoName} \n`)
-  ).start();
+async function updateLabelsInRepos({ label, repo, owner }: IOctoLabelParams) {
+  const memory = { label, repo, owner };
   return await octokit.issues
     .updateLabel({
-      OWNER,
-      repo: repoName,
-      ...label,
-    } as any)
+      owner,
+      repo,
+      name: label.name,
+      new_name: label.new_name,
+      color: label.color,
+      description: label.description,
+    })
     .then((res) => {
       if (res.status === 200)
-        spinner.succeed(
+        LOG(
           chalk.greenBright(
-            `${label.name} Label Updated Successfully ${repoName} \n`
+            `${label.name} Label Updated Successfully ${repo} \n`
           )
         );
     })
     .catch((err: any): Promise<void> | void => {
       LOG('ERROR', err.status);
       if (err.status === 404) return createLabelInRepos(memory);
-      if (err.status === 403) chalk.redBright(`${err} Label Update Failed`);
+      if (err.status === 403)
+        LOG(chalk.redBright(`${err} Label Update Failed`));
     });
 }
