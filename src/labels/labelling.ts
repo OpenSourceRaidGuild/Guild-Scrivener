@@ -2,6 +2,8 @@ import { octokit } from '../octokit.js';
 import chalk from 'chalk';
 import ora from 'ora';
 import { WebhookEvent } from '@octokit/webhooks';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const owner = process.env.OWNER as string;
 
@@ -12,7 +14,7 @@ export async function labelWebhookhandler(event: WebhookEvent<any>) {
     org: owner,
   });
   const filteredResponse = listOfReposResponse.data.filter(
-    (repo) => repo.name !== 'website'
+    (repo) => repo.name !== 'website' && repo.archived !== true
   );
 
   spinner.start();
@@ -27,7 +29,7 @@ export async function labelWebhookhandler(event: WebhookEvent<any>) {
           default: some,
           ...label
         } = event.payload.label;
-        createLabelInRepos({
+        await createLabelInRepos({
           label,
           repoName: repo.name,
         });
@@ -44,7 +46,7 @@ export async function labelWebhookhandler(event: WebhookEvent<any>) {
           default: some,
           ...label
         } = event.payload.label;
-        updateLabelsInRepos({
+        await updateLabelsInRepos({
           label,
           repoName: repo.name,
         });
@@ -70,9 +72,7 @@ async function createLabelInRepos({
   label,
   repoName = '',
 }: IUpdateCreateParams) {
-  const spinner = ora(
-    chalk.yellowBright('NO ID FOUND ATTEMPING TO CREATE LABEL \n')
-  ).start();
+  const spinner = ora(chalk.yellow('ATTEMPING TO CREATE LABEL \n')).start();
   return await octokit.issues
     .createLabel({
       owner,
@@ -83,12 +83,17 @@ async function createLabelInRepos({
       if (res.status === 201) {
         spinner.succeed(chalk.greenBright(`${res.status} Status \n`));
         spinner.succeed(
-          chalk.greenBright(`${name} Label Created Successfully!!\n`)
+          chalk.greenBright(`${label.name} Label Created Successfully!!\n`)
         );
       }
     })
-    .catch(() => {
-      spinner.fail(`Label Creation ${chalk.red('FAILED!')} \n`);
+    .catch((err) => {
+      spinner.fail(
+        `${chalk.red(
+          `${label.name} in ${repoName} Label Creation FAILED! \n`
+        )} `
+      );
+      console.log(err);
     });
 }
 
