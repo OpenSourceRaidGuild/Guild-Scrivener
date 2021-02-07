@@ -1,52 +1,52 @@
 import { octokit } from '../octokit.js';
 import chalk from 'chalk';
-import ora from 'ora';
 import { WebhookEvent } from '@octokit/webhooks';
+import dotenv from 'dotenv';
+import { TPayload, TLabelReqObject, IOctoLabelParams } from './types';
+dotenv.config();
+const LOG = console.log;
 
-const owner = process.env.OWNER as string;
+export async function labelWebhookhandler(event: WebhookEvent<TPayload>) {
+  const rateLimitCheck = await octokit.request('GET /rate_limit');
+  LOG(chalk`
+  Rate: {yellow ${JSON.stringify(rateLimitCheck.data.rate, null, 2)}}
+  `);
 
-const spinner = ora(chalk.cyanBright('Retrieving Labels From GitHub \n'));
-export async function labelWebhookhandler(event: WebhookEvent<any>) {
   const listOfReposResponse = await octokit.repos.listForOrg({
     type: 'all',
-    org: owner,
+    org: event.payload.organization.login,
   });
-  const filteredResponse = listOfReposResponse.data.filter(
-    (repo) => repo.name !== 'website'
+  const filteredRepos = listOfReposResponse.data.filter(
+    (repo) => repo.name !== 'website' && repo.archived !== true
   );
 
-  spinner.start();
   switch (event.payload.action) {
     case 'created': {
-      spinner.succeed();
-      return filteredResponse.forEach(async (repo) => {
-        const {
-          id,
-          node_id,
-          url,
-          default: some,
-          ...label
-        } = event.payload.label;
-        createLabelInRepos({
+      return filteredRepos.forEach(async (repo) => {
+        const label: TLabelReqObject = {
+          name: event.payload.label.name,
+          color: event.payload.label.color,
+          description: event.payload.label.description,
+        };
+
+        return await createLabelInRepos({
           label,
-          repoName: repo.name,
+          repo: repo.name,
+          owner: event.payload.organization.login,
         });
       });
     }
     case 'edited': {
-      spinner.succeed();
-      console.log(event);
-      return filteredResponse.forEach(async (repo) => {
-        const {
-          id,
-          node_id,
-          url,
-          default: some,
-          ...label
-        } = event.payload.label;
-        updateLabelsInRepos({
+      return filteredRepos.forEach(async (repo) => {
+        const label: TLabelReqObject = {
+          name: event.payload.label.name,
+          color: event.payload.label.color,
+          description: event.payload.label.description,
+        };
+        return await updateLabelsInRepos({
           label,
-          repoName: repo.name,
+          repo: repo.name,
+          owner: event.payload.organization.login,
         });
       });
     }
@@ -54,66 +54,59 @@ export async function labelWebhookhandler(event: WebhookEvent<any>) {
       break;
 
     default:
-      spinner.fail(chalk.redBright('Label Fetching/Writing Failed!!! \n'));
+      LOG(chalk.redBright('Label Fetching/Writing Failed!!! \n'));
   }
 }
 
-/**
- * @Helpers
- */
-interface IUpdateCreateParams {
-  label: Record<string, any>;
-  repoName: string;
-}
-
-async function createLabelInRepos({
-  label,
-  repoName = '',
-}: IUpdateCreateParams) {
-  const spinner = ora(
-    chalk.yellowBright('NO ID FOUND ATTEMPING TO CREATE LABEL \n')
-  ).start();
+async function createLabelInRepos({ label, repo, owner }: IOctoLabelParams) {
   return await octokit.issues
     .createLabel({
       owner,
-      repo: repoName,
-      ...label,
-    } as any)
+      repo,
+      name: label.name,
+      color: label.color,
+      description: label.description,
+    })
     .then((res) => {
       if (res.status === 201) {
-        spinner.succeed(chalk.greenBright(`${res.status} Status \n`));
-        spinner.succeed(
-          chalk.greenBright(`${name} Label Created Successfully!!\n`)
-        );
+        LOG(chalk.greenBright(`${res.status} Status \n`));
+        LOG(chalk.greenBright(`${label.name} Label Created Successfully!!\n`));
       }
     })
-    .catch(() => {
-      spinner.fail(`Label Creation ${chalk.red('FAILED!')} \n`);
-    });
+    .catch((err) =>
+      LOG(
+        `${chalk.red(
+          `${label.name} in ${repo} Label Creation FAILED! \n
+          ${err}
+        `
+        )}`
+      )
+    );
 }
 
-async function updateLabelsInRepos({ label, repoName }: IUpdateCreateParams) {
-  const memory = { label, repoName };
-  const spinner = ora(
-    chalk.yellowBright(`Attempting to update labels in ${repoName} \n`)
-  ).start();
+async function updateLabelsInRepos({ label, repo, owner }: IOctoLabelParams) {
+  const memory = { label, repo, owner };
   return await octokit.issues
     .updateLabel({
       owner,
-      repo: repoName,
-      ...label,
-    } as any)
+      repo,
+      name: label.name,
+      new_name: label.new_name,
+      color: label.color,
+      description: label.description,
+    })
     .then((res) => {
       if (res.status === 200)
-        spinner.succeed(
+        LOG(
           chalk.greenBright(
-            `${label.name} Label Updated Successfully ${repoName} \n`
+            `${label.name} Label Updated Successfully ${repo} \n`
           )
         );
     })
     .catch((err: any): Promise<void> | void => {
-      console.log('ERROR', err.status);
+      LOG('ERROR', err.status);
       if (err.status === 404) return createLabelInRepos(memory);
-      if (err.status === 403) chalk.redBright(`${err} Label Update Failed`);
+      if (err.status === 403)
+        LOG(chalk.redBright(`${err} Label Update Failed`));
     });
 }

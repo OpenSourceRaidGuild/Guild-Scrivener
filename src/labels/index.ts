@@ -8,4 +8,4 @@ export const labelsWebhook = new Webhooks({
   path: '/labels',
 });
 
-labelsWebhook.on('label', labelWebhookhandler);
+labelsWebhook.on('label', labelWebhookhandler as any);

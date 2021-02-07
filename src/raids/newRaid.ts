@@ -1,5 +1,4 @@
 import chalk from 'chalk';
-import ora from 'ora';
 import { octokit } from '../octokit.js';
 import { db as firestore } from '../firebase.js';
 import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
@@ -14,8 +13,6 @@ async function createNewRaid({
   id,
   payload,
 }: WebhookEvent<EventPayloads.WebhookPayloadRepository>) {
-  const spinner = ora(`Processing repository created event '${id}'`).start();
-
   try {
     const {
       fork: isFork,
@@ -69,12 +66,8 @@ async function createNewRaid({
       .catch((error) => {
         throw error;
       });
-
-    spinner.succeed(
-      chalk.greenBright(`Created new Raid for ${dungeonRepoNameWithOwner}`)
-    );
   } catch (error) {
-    spinner.fail(chalk.redBright(error));
+    return error;
   }
 }
 export default createNewRaid;

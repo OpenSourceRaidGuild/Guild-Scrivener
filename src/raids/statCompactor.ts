@@ -1,5 +1,4 @@
 import chalk from 'chalk';
-import ora from 'ora';
 import got from 'got';
 import { octokit } from '../octokit.js';
 import { db as firestore } from '../firebase.js';
@@ -16,8 +15,6 @@ async function statCompactor({
   id,
   payload,
 }: WebhookEvent<EventPayloads.WebhookPayloadPush>) {
-  const spinner = ora(`Processing push event '${id}'`).start();
-
   try {
     const { ref, repository, commits } = payload;
     const {
@@ -90,16 +87,8 @@ async function statCompactor({
      * Step 4 - Write stats to firestore
      */
     await updateRaidStats(compactedStatsToAdd, dungeonRepoNameWithOwner);
-
-    spinner.succeed(
-      chalk.greenBright(
-        `Successfully updated ${dungeonRepoNameWithOwner} Raid stats on event '${id}'!`
-      )
-    );
   } catch (error: unknown) {
-    spinner.fail(
-      chalk.redBright(String(error).replace('$$event$$', `event '${id}'`))
-    );
+    return error;
   }
 }
 export default statCompactor;
