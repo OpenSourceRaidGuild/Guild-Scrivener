@@ -122,3 +122,5 @@ async function updateLabelsInRepos({ label, repoName }: IUpdateCreateParams) {
       if (err.status === 403) chalk.redBright(`${err} Label Update Failed`);
     });
 }
+
+// Test
