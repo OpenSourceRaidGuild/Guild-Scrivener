@@ -13,14 +13,14 @@ type BuildRepositoryEventProps = {
     | 'renamed'
     | 'transferred'
     | 'unarchived';
-  isFork: boolean;
+  isFork?: boolean;
   ownerName?: string;
   repoName?: string;
 };
 
 export const buildRepositoryEvent = ({
   eventType,
-  isFork = false,
+  isFork,
   ownerName,
   repoName,
 }: BuildRepositoryEventProps): WebhookEvent<EventPayloads.WebhookPayloadRepository> => {
@@ -28,11 +28,11 @@ export const buildRepositoryEvent = ({
     repoName ??
     faker.random.word().toLowerCase() + '-' + faker.random.word().toLowerCase();
   const owner = ownerName ?? faker.internet.userName().toLowerCase();
-  const ownerId = faker.random.number(20) + 1; // Avoid 0
+  const ownerId = faker.random.number({ min: 1, max: 200 });
   const repoNameWithOwner = `${owner}/${repository}`;
 
   const sender = faker.internet.userName();
-  const senderId = faker.random.number(20) + 21; // Avoid clashing with ownerId
+  const senderId = faker.random.number({ min: 1, max: 200 });
 
   return {
     id: faker.random.uuid(),
@@ -68,7 +68,7 @@ export const buildRepositoryEvent = ({
         },
         html_url: `https://github.com/${repoNameWithOwner}`,
         description: '',
-        fork: isFork,
+        fork: isFork ?? true,
         url: `https://api.github.com/repos/${repoNameWithOwner}`,
         forks_url: `https://api.github.com/repos/${repoNameWithOwner}/forks`,
         keys_url: `https://api.github.com/repos/${repoNameWithOwner}/keys{/key_id}`,
@@ -177,28 +177,30 @@ type BuildRepositoryProps = Omit<BuildRepositoryEventProps, 'eventType'> & {
   parentRepoName?: string;
 };
 
-export const buildRepository = ({
-  isFork = false,
-  ownerName,
-  repoName,
-  parentOwnerName,
-  parentRepoName,
-}: BuildRepositoryProps) => {
+export const buildRepository = (
+  {
+    isFork,
+    ownerName,
+    repoName,
+    parentOwnerName,
+    parentRepoName,
+  }: BuildRepositoryProps = { isFork: true }
+) => {
   const repository =
     repoName ??
     faker.random.word().toLowerCase() + '-' + faker.random.word().toLowerCase();
-  const repositoryId = faker.random.number(200) + 1;
+  const repositoryId = faker.random.number({ min: 1, max: 200 });
   const owner = ownerName ?? faker.internet.userName().toLowerCase();
-  const ownerId = faker.random.number(20) + 1; // Avoid 0
+  const ownerId = faker.random.number({ min: 1, max: 200 });
   const repoNameWithOwner = `${owner}/${repository}`;
 
   const parentRepository =
     parentRepoName ??
     faker.random.word().toLowerCase() + '-' + faker.random.word().toLowerCase();
-  const parentRepositoryId = faker.random.number(200) + 201;
+  const parentRepositoryId = faker.random.number({ min: 1, max: 200 });
   const parentOwner =
     parentOwnerName ?? faker.internet.userName().toLowerCase();
-  const parentOwnerId = faker.random.number(20) + 21;
+  const parentOwnerId = faker.random.number({ min: 1, max: 200 });
   const parentRepoNameWithOwner = `${parentOwner}/${parentRepository}`;
 
   const repositoryData: RestEndpointMethodTypes['repos']['get']['response']['data'] = {
@@ -221,7 +223,7 @@ export const buildRepository = ({
     disabled: false,
     downloads_url: `https://api.github.com/repos/${repoNameWithOwner}/downloads`,
     events_url: `https://api.github.com/repos/${repoNameWithOwner}/events`,
-    fork: isFork,
+    fork: isFork ?? true,
     forks: 0,
     forks_count: 0,
     forks_url: `https://api.github.com/repos/${repoNameWithOwner}/forks`,

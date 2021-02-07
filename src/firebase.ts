@@ -8,3 +8,8 @@ admin.initializeApp({
 });
 
 export const db = admin.firestore();
+
+export const collections = {
+  raidStats: 'raid-stats',
+  labels: 'labels',
+};
