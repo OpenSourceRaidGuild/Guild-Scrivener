@@ -10,5 +10,6 @@ const config: Config.InitialOptions = {
   },
   setupFilesAfterEnv: ['./setupTests.ts'],
   moduleFileExtensions: ['js', 'ts'],
+  coveragePathIgnorePatterns: ['/node_modules/', '/src/testUtils/'],
 };
 export default config;

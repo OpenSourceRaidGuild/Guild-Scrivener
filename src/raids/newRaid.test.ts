@@ -66,6 +66,7 @@ it(`does not create a raid if an active raid already exists for the dungeon`, as
     .get();
   // Only have the one document we setup earlier
   expect(raidDocsSnapshot.docs).toHaveLength(1);
+  expect(raidDocsSnapshot.docs.map((d) => d.data())).toStrictEqual([raidStats]);
 
   const sanitizedStdOut = result.stdOut
     .replace(new RegExp(repositoryCreatedEvent.id, 'g'), 'EVENT_ID')

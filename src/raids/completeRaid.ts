@@ -13,6 +13,10 @@ async function completeRaid({
   id,
   payload,
 }: WebhookEvent<EventPayloads.WebhookPayloadRepository>) {
+  console.log(
+    chalk.cyanBright(`- Processing repository archived event '${id}'`)
+  );
+
   try {
     const {
       fork: isFork,
@@ -60,8 +64,12 @@ async function completeRaid({
     await raidRef.update({
       status: 'completed',
     });
+
+    console.log(
+      chalk.greenBright(`✔ Completed Raid ${dungeonRepoNameWithOwner}`)
+    );
   } catch (error) {
-    return error;
+    console.log(chalk.redBright('✖ ' + error));
   }
 }
 export default completeRaid;

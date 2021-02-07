@@ -24,9 +24,8 @@ export const buildRepositoryEvent = ({
   ownerName,
   repoName,
 }: BuildRepositoryEventProps): WebhookEvent<EventPayloads.WebhookPayloadRepository> => {
-  const repository =
-    repoName ??
-    faker.random.word().toLowerCase() + '-' + faker.random.word().toLowerCase();
+  const repository = repoName ?? faker.fake('{{random.word}}-{{random.word}}');
+  const repositoryId = faker.random.number({ min: 1, max: 200 });
   const owner = ownerName ?? faker.internet.userName().toLowerCase();
   const ownerId = faker.random.number({ min: 1, max: 200 });
   const repoNameWithOwner = `${owner}/${repository}`;
@@ -41,7 +40,7 @@ export const buildRepositoryEvent = ({
     payload: {
       action: eventType,
       repository: {
-        id: faker.random.number(1000) + 1,
+        id: repositoryId,
         node_id: 'MDEwOlJlcG9zaXRvcnkxMTg=',
         name: faker.random.word() + ' ' + faker.random.word(),
         full_name: repoNameWithOwner,
@@ -152,7 +151,7 @@ export const buildRepositoryEvent = ({
         login: sender,
         id: senderId,
         node_id: 'MDQ6VXNlcjIzMDI5OTAz',
-        avatar_url: `https://avatars.githubusercontent.com/u/23029903?v=4`,
+        avatar_url: `https://avatars.githubusercontent.com/u/${senderId}?v=4`,
         gravatar_id: '',
         url: `https://api.github.com/users/${sender}`,
         html_url: `https://github.com/${sender}`,
@@ -186,17 +185,14 @@ export const buildRepository = (
     parentRepoName,
   }: BuildRepositoryProps = { isFork: true }
 ) => {
-  const repository =
-    repoName ??
-    faker.random.word().toLowerCase() + '-' + faker.random.word().toLowerCase();
+  const repository = repoName ?? faker.fake('{{random.word}}-{{random.word}}');
   const repositoryId = faker.random.number({ min: 1, max: 200 });
   const owner = ownerName ?? faker.internet.userName().toLowerCase();
   const ownerId = faker.random.number({ min: 1, max: 200 });
   const repoNameWithOwner = `${owner}/${repository}`;
 
   const parentRepository =
-    parentRepoName ??
-    faker.random.word().toLowerCase() + '-' + faker.random.word().toLowerCase();
+    parentRepoName ?? faker.fake('{{random.word}}-{{random.word}}');
   const parentRepositoryId = faker.random.number({ min: 1, max: 200 });
   const parentOwner =
     parentOwnerName ?? faker.internet.userName().toLowerCase();
@@ -431,4 +427,235 @@ export const buildRepository = (
   }
 
   return repositoryData;
+};
+
+type BuildPushEventProps = {
+  isFork?: boolean;
+  isDefaultBranch?: boolean;
+  isArchived?: boolean;
+  ownerName?: string;
+  repoName?: string;
+};
+
+export const buildPushEvent = ({
+  isFork,
+  isDefaultBranch,
+  isArchived,
+  ownerName,
+  repoName,
+}: BuildPushEventProps = {}): WebhookEvent<EventPayloads.WebhookPayloadPush> => {
+  const branch = isDefaultBranch ?? true ? 'main' : faker.git.branch();
+  const branchRef = `refs/heads/${branch}`;
+  const repository = repoName ?? faker.fake('{{random.word}}-{{random.word}}');
+  const repositoryId = faker.random.number({ min: 1, max: 200 });
+  const owner = ownerName ?? faker.internet.userName().toLowerCase();
+  const ownerId = faker.random.number({ min: 1, max: 200 });
+  const repoNameWithOwner = `${owner}/${repository}`;
+
+  const sender = faker.internet.userName();
+  const senderEmail = faker.internet.exampleEmail();
+  const senderId = faker.random.number({ min: 1, max: 200 });
+
+  const beforeSha = faker.git.commitSha();
+  const afterSha = faker.git.commitSha();
+
+  const pushData: WebhookEvent<EventPayloads.WebhookPayloadPush> = {
+    id: faker.random.uuid(),
+    name: 'push',
+    payload: {
+      ref: branchRef,
+      before: beforeSha,
+      after: afterSha,
+      repository: {
+        id: repositoryId,
+        node_id: 'MDEwOlJlcG9zaXRvcnkzMzU0NTgwMDA=',
+        name: repository,
+        full_name: repoNameWithOwner,
+        private: false,
+        owner: {
+          name: owner,
+          email: faker.internet.exampleEmail(),
+          login: owner,
+          id: ownerId,
+          node_id: 'MDEyOk9yZ2FuaXphdGlvbjc1NzUxMTIw',
+          avatar_url: `https://avatars.githubusercontent.com/u/${ownerId}?v=4`,
+          gravatar_id: '',
+          url: `https://api.github.com/users/${owner}`,
+          html_url: `https://github.com/${owner}`,
+          followers_url: `https://api.github.com/users/${owner}/followers`,
+          following_url: `https://api.github.com/users/${owner}/following{/other_user}`,
+          gists_url: `https://api.github.com/users/${owner}/gists{/gist_id}`,
+          starred_url: `https://api.github.com/users/${owner}/starred{/owner}{/repo}`,
+          subscriptions_url: `https://api.github.com/users/${owner}/subscriptions`,
+          organizations_url: `https://api.github.com/users/${owner}/orgs`,
+          repos_url: `https://api.github.com/users/${owner}/repos`,
+          events_url: `https://api.github.com/users/${owner}/events{/privacy}`,
+          received_events_url: `https://api.github.com/users/${owner}/received_events`,
+          type: 'Organization',
+          site_admin: false,
+        },
+        html_url: `https://github.com/${repoNameWithOwner}`,
+        description: '',
+        fork: isFork ?? true,
+        url: `https://github.com/${repoNameWithOwner}`,
+        forks_url: `https://api.github.com/repos/${repoNameWithOwner}/forks`,
+        keys_url: `https://api.github.com/repos/${repoNameWithOwner}/keys{/key_id}`,
+        collaborators_url: `https://api.github.com/repos/${repoNameWithOwner}/collaborators{/collaborator}`,
+        teams_url: `https://api.github.com/repos/${repoNameWithOwner}/teams`,
+        hooks_url: `https://api.github.com/repos/${repoNameWithOwner}/hooks`,
+        issue_events_url: `https://api.github.com/repos/${repoNameWithOwner}/issues/events{/number}`,
+        events_url: `https://api.github.com/repos/${repoNameWithOwner}/events`,
+        assignees_url: `https://api.github.com/repos/${repoNameWithOwner}/assignees{/user}`,
+        branches_url: `https://api.github.com/repos/${repoNameWithOwner}/branches{/branch}`,
+        tags_url: `https://api.github.com/repos/${repoNameWithOwner}/tags`,
+        blobs_url: `https://api.github.com/repos/${repoNameWithOwner}/git/blobs{/sha}`,
+        git_tags_url: `https://api.github.com/repos/${repoNameWithOwner}/git/tags{/sha}`,
+        git_refs_url: `https://api.github.com/repos/${repoNameWithOwner}/git/refs{/sha}`,
+        trees_url: `https://api.github.com/repos/${repoNameWithOwner}/git/trees{/sha}`,
+        statuses_url: `https://api.github.com/repos/${repoNameWithOwner}/statuses/{sha}`,
+        languages_url: `https://api.github.com/repos/${repoNameWithOwner}/languages`,
+        stargazers_url: `https://api.github.com/repos/${repoNameWithOwner}/stargazers`,
+        contributors_url: `https://api.github.com/repos/${repoNameWithOwner}/contributors`,
+        subscribers_url: `https://api.github.com/repos/${repoNameWithOwner}/subscribers`,
+        subscription_url: `https://api.github.com/repos/${repoNameWithOwner}/subscription`,
+        commits_url: `https://api.github.com/repos/${repoNameWithOwner}/commits{/sha}`,
+        git_commits_url: `https://api.github.com/repos/${repoNameWithOwner}/git/commits{/sha}`,
+        comments_url: `https://api.github.com/repos/${repoNameWithOwner}/comments{/number}`,
+        issue_comment_url: `https://api.github.com/repos/${repoNameWithOwner}/issues/comments{/number}`,
+        contents_url: `https://api.github.com/repos/${repoNameWithOwner}/contents/{+path}`,
+        compare_url: `https://api.github.com/repos/${repoNameWithOwner}/compare/{base}...{head}`,
+        merges_url: `https://api.github.com/repos/${repoNameWithOwner}/merges`,
+        archive_url: `https://api.github.com/repos/${repoNameWithOwner}/{archive_format}{/ref}`,
+        downloads_url: `https://api.github.com/repos/${repoNameWithOwner}/downloads`,
+        issues_url: `https://api.github.com/repos/${repoNameWithOwner}/issues{/number}`,
+        pulls_url: `https://api.github.com/repos/${repoNameWithOwner}/pulls{/number}`,
+        milestones_url: `https://api.github.com/repos/${repoNameWithOwner}/milestones{/number}`,
+        notifications_url: `https://api.github.com/repos/${repoNameWithOwner}/notifications{?since,all,participating}`,
+        labels_url: `https://api.github.com/repos/${repoNameWithOwner}/labels{/name}`,
+        releases_url: `https://api.github.com/repos/${repoNameWithOwner}/releases{/id}`,
+        deployments_url: `https://api.github.com/repos/${repoNameWithOwner}/deployments`,
+        created_at: 1612310729,
+        updated_at: '2021-02-06T09:47:00Z',
+        pushed_at: 1612649715,
+        git_url: `git://github.com/${repoNameWithOwner}.git`,
+        ssh_url: `git@github.com:${repoNameWithOwner}.git`,
+        clone_url: `https://github.com/${repoNameWithOwner}.git`,
+        svn_url: `https://github.com/${repoNameWithOwner}`,
+        homepage: '',
+        size: 259,
+        stargazers_count: 0,
+        watchers_count: 0,
+        language: 'TypeScript',
+        has_issues: true,
+        has_projects: true,
+        has_downloads: true,
+        has_wiki: true,
+        has_pages: false,
+        forks_count: 0,
+        mirror_url: null,
+        archived: isArchived ?? false,
+        disabled: false,
+        open_issues_count: 0,
+        license: {
+          key: 'mit',
+          name: 'MIT License',
+          spdx_id: 'MIT',
+          url: 'https://api.github.com/licenses/mit',
+          node_id: 'MDc6TGljZW5zZTEz',
+        },
+        forks: 0,
+        open_issues: 0,
+        watchers: 0,
+        default_branch: branch,
+        stargazers: 0,
+        master_branch: branch,
+      },
+      pusher: {
+        name: sender,
+        email: senderEmail,
+      },
+      organization: {
+        login: owner,
+        id: ownerId,
+        node_id: 'MDEyOk9yZ2FuaXphdGlvbjc1NzUxMTIw',
+        url: `https://api.github.com/orgs/${owner}`,
+        repos_url: `https://api.github.com/orgs/${owner}/repos`,
+        events_url: `https://api.github.com/orgs/${owner}/events`,
+        hooks_url: `https://api.github.com/orgs/${owner}/hooks`,
+        issues_url: `https://api.github.com/orgs/${owner}/issues`,
+        members_url: `https://api.github.com/orgs/${owner}/members{/member}`,
+        public_members_url: `https://api.github.com/orgs/${owner}/public_members{/member}`,
+        avatar_url: `https://avatars.githubusercontent.com/u/${ownerId}?v=4`,
+        description: '',
+      } as EventPayloads.WebhookPayloadPushOrganization,
+      sender: {
+        login: sender,
+        id: senderId,
+        node_id: 'MDQ6VXNlcjIzMDI5OTAz',
+        avatar_url: `https://avatars.githubusercontent.com/u/${senderId}?v=4`,
+        gravatar_id: '',
+        url: `https://api.github.com/users/${sender}`,
+        html_url: `https://github.com/${sender}`,
+        followers_url: `https://api.github.com/users/${sender}/followers`,
+        following_url: `https://api.github.com/users/${sender}/following{/other_user}`,
+        gists_url: `https://api.github.com/users/${sender}/gists{/gist_id}`,
+        starred_url: `https://api.github.com/users/${sender}/starred{/owner}{/repo}`,
+        subscriptions_url: `https://api.github.com/users/${sender}/subscriptions`,
+        organizations_url: `https://api.github.com/users/${sender}/orgs`,
+        repos_url: `https://api.github.com/users/${sender}/repos`,
+        events_url: `https://api.github.com/users/${sender}/events{/privacy}`,
+        received_events_url: `https://api.github.com/users/${sender}/received_events`,
+        type: 'User',
+        site_admin: false,
+      },
+      created: false,
+      deleted: false,
+      forced: false,
+      base_ref: null,
+      compare: `https://github.com/${repoNameWithOwner}/compare/${beforeSha.substr(
+        0,
+        12
+      )}...${afterSha.substr(0, 12)}`,
+      commits: [],
+      head_commit: null,
+    },
+  };
+
+  const commits = [];
+
+  for (let i = 0; i < faker.random.number({ min: 1, max: 10 }); ++i) {
+    const user = {
+      name: faker.fake('{{name.firstName}} {{name.lastName}}'),
+      email: faker.internet.exampleEmail(),
+      username: faker.internet.userName(),
+    };
+    const commitId = faker.git.commitSha();
+
+    commits.push({
+      id: commitId,
+      tree_id: faker.git.commitSha(),
+      distinct: false,
+      message:
+        faker.random.arrayElement(['chore', 'fix', 'test', 'feat', 'docs']) +
+        ': ' +
+        faker.git.commitMessage(),
+      timestamp: '2021-02-06T23:07:08+01:00',
+      url: `https://github.com/${repoNameWithOwner}/commit/${commitId}`,
+      author: user,
+      committer: user,
+      added: new Array(faker.random.number(5)).map((_) =>
+        faker.system.filePath()
+      ),
+      removed: new Array(faker.random.number(5)).map((_) =>
+        faker.system.filePath()
+      ),
+      modified: new Array(faker.random.number(5)).map((_) =>
+        faker.system.filePath()
+      ),
+    });
+  }
+
+  pushData.payload.commits = commits;
+
+  return pushData;
 };

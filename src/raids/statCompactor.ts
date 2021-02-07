@@ -15,6 +15,8 @@ async function statCompactor({
   id,
   payload,
 }: WebhookEvent<EventPayloads.WebhookPayloadPush>) {
+  console.log(chalk.cyanBright(`- Processing push event '${id}'`));
+
   try {
     const { ref, repository, commits } = payload;
     const {
@@ -87,8 +89,18 @@ async function statCompactor({
      * Step 4 - Write stats to firestore
      */
     await updateRaidStats(compactedStatsToAdd, dungeonRepoNameWithOwner);
+
+    console.log(
+      chalk.greenBright(
+        `✔ Successfully updated ${dungeonRepoNameWithOwner} Raid stats on event '${id}'!`
+      )
+    );
   } catch (error: unknown) {
-    return error;
+    console.log(
+      chalk.redBright(
+        String('✖ ' + error).replace('$$event$$', `event '${id}'`)
+      )
+    );
   }
 }
 export default statCompactor;
