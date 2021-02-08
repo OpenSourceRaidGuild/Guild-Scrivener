@@ -1,17 +1,17 @@
 import admin from 'firebase-admin';
 
-const serviceAccountKey = JSON.parse(
-  String(process.env.FIREBASE_SERVICE_ACCOUNT_KEY)
-);
-const projectId = process.env.FIREBASE_PROJECT_ID;
-if (typeof projectId === 'string') {
-  serviceAccountKey.project_id = projectId;
+/* istanbul ignore else */
+if (process.env.NODE_ENV !== 'production') {
+  admin.initializeApp({
+    projectId: process.env.FIREBASE_PROJECT_ID,
+  });
+} else {
+  admin.initializeApp({
+    credential: admin.credential.cert(
+      JSON.parse(String(process.env.FIREBASE_SERVICE_ACCOUNT_KEY))
+    ),
+  });
 }
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccountKey),
-  databaseURL: process.env.FIREBASE_URL,
-});
 
 export const db = admin.firestore();
 
