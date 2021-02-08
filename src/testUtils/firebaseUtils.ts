@@ -1,19 +1,22 @@
 import * as firebaseUtils from '@firebase/testing';
+import faker from 'faker';
 
-const PROJECT_ID = 'raid-stats-c1d5a';
+const PROJECT_ID = 'test-' + faker.git.shortSha();
 
-const firebase = firebaseUtils.initializeAdminApp({
-  projectId: PROJECT_ID,
-});
+process.env.FIREBASE_PROJECT_ID = PROJECT_ID;
 
-export const firestore = firebase.firestore();
+export const firestore = firebaseUtils
+  .initializeAdminApp({
+    projectId: PROJECT_ID,
+  })
+  .firestore();
 
-export function resetFirestore() {
-  return firebaseUtils.clearFirestoreData({
+export async function resetFirestore() {
+  await firebaseUtils.clearFirestoreData({
     projectId: PROJECT_ID,
   });
 }
 
-export async function cleanupApps() {
-  firebaseUtils.apps().map(async (a) => await a.delete());
+export async function cleanupFirebaseApps() {
+  await Promise.all(firebaseUtils.apps().map(async (a) => await a.delete()));
 }
