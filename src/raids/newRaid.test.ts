@@ -28,8 +28,8 @@ it(`does not create a raid if repository is not a fork`, async () => {
     'EVENT_ID'
   );
   expect(sanitizedStdOut).toMatchInlineSnapshot(`
-    "[96m- Processing repository created event 'EVENT_ID'[39m
-    [91m✖ Event 'EVENT_ID' did not meet criteria for Raid creation: Repository was not a fork[39m"
+    "- Processing repository created event 'EVENT_ID'
+    ✖ Event 'EVENT_ID' did not meet criteria for Raid creation: Repository was not a fork"
   `);
 });
 
@@ -72,8 +72,8 @@ it(`does not create a raid if an active raid already exists for the dungeon`, as
     .replace(new RegExp(repositoryCreatedEvent.id, 'g'), 'EVENT_ID')
     .replace(/(\w+|\w+\.\w+)\/((\w+(-\w+)+)|\w+)/g, 'OWNER/REPO');
   expect(sanitizedStdOut).toMatchInlineSnapshot(`
-    "[96m- Processing repository created event 'EVENT_ID'[39m
-    [91m✖ An active Raid already exists for OWNER/REPO[39m"
+    "- Processing repository created event 'EVENT_ID'
+    ✖ An active Raid already exists for OWNER/REPO"
   `);
 });
 
@@ -113,7 +113,7 @@ it(`creates a raid when called`, async () => {
     .replace(new RegExp(repositoryCreatedEvent.id, 'g'), 'EVENT_ID')
     .replace(/(\w+|\w+\.\w+)\/((\w+(-\w+)+)|\w+)/g, 'OWNER/REPO');
   expect(sanitizedStdOut).toMatchInlineSnapshot(`
-    "[96m- Processing repository created event 'EVENT_ID'[39m
-    [92m✔ Created new Raid for OWNER/REPO[39m"
+    "- Processing repository created event 'EVENT_ID'
+    ✔ Created new Raid for OWNER/REPO"
   `);
 });

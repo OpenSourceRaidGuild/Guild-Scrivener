@@ -28,8 +28,8 @@ it(`does not complete a raid if repository is not a fork`, async () => {
     'EVENT_ID'
   );
   expect(sanitizedStdOut).toMatchInlineSnapshot(`
-    "[96m- Processing repository archived event 'EVENT_ID'[39m
-    [91m✖ Event 'EVENT_ID' did not meet criteria for Raid creation: Repository was not a fork[39m"
+    "- Processing repository archived event 'EVENT_ID'
+    ✖ Event 'EVENT_ID' did not meet criteria for Raid creation: Repository was not a fork"
   `);
 });
 
@@ -50,8 +50,8 @@ it(`does not complete a raid if no active raid exists for the dungeon`, async ()
     .replace(new RegExp(repositoryArchivedEvent.id, 'g'), 'EVENT_ID')
     .replace(/(\w+|\w+\.\w+)\/((\w+(-\w+)+)|\w+)/g, 'OWNER/REPO');
   expect(sanitizedStdOut).toMatchInlineSnapshot(`
-    "[96m- Processing repository archived event 'EVENT_ID'[39m
-    [91m✖ No active Raid exists for OWNER/REPO associated with event 'EVENT_ID'[39m"
+    "- Processing repository archived event 'EVENT_ID'
+    ✖ No active Raid exists for OWNER/REPO associated with event 'EVENT_ID'"
   `);
 });
 
@@ -97,8 +97,8 @@ it(`does not complete a raid if more than one active raid exists for the dungeon
     .replace(new RegExp(repositoryArchivedEvent.id, 'g'), 'EVENT_ID')
     .replace(/(\w+|\w+\.\w+)\/((\w+(-\w+)+)|\w+)/g, 'OWNER/REPO');
   expect(sanitizedStdOut).toMatchInlineSnapshot(`
-    "[96m- Processing repository archived event 'EVENT_ID'[39m
-    [91m✖ Found more than one active Raid for OWNER/REPO associated with event 'EVENT_ID':  [\\"Potato\\",\\"Potato\\"][39m"
+    "- Processing repository archived event 'EVENT_ID'
+    ✖ Found more than one active Raid for OWNER/REPO associated with event 'EVENT_ID':  [\\"Potato\\",\\"Potato\\"]"
   `);
 });
 
@@ -142,7 +142,7 @@ it(`completes a raid when called`, async () => {
     .replace(new RegExp(repositoryArchivedEvent.id, 'g'), 'EVENT_ID')
     .replace(/(\w+|\w+\.\w+)\/((\w+(-\w+)+)|\w+)/g, 'OWNER/REPO');
   expect(sanitizedStdOut).toMatchInlineSnapshot(`
-    "[96m- Processing repository archived event 'EVENT_ID'[39m
-    [92m✔ Completed Raid OWNER/REPO[39m"
+    "- Processing repository archived event 'EVENT_ID'
+    ✔ Completed Raid OWNER/REPO"
   `);
 });
