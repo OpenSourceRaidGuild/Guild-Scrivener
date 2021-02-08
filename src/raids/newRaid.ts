@@ -38,7 +38,9 @@ async function createNewRaid({
         repo: raidRepoName,
       })
       .then((r) => r.data.parent);
-    const dungeonRepoNameWithOwner = String(parentRepository?.full_name);
+    const dungeonRepoNameWithOwner = parentRepository
+      ? parentRepository.full_name
+      : /* istanbul ignore next */ '';
 
     /*
      * Step 2 - Check if Raid already exists
@@ -67,9 +69,13 @@ async function createNewRaid({
         status: 'active',
         title: '[PLEASE RENAME ME]',
       })
-      .catch((error) => {
-        throw error;
-      });
+      .catch(
+        // Ignore, because this is impossible to test... And it works.
+        // If you change it, it's on you to test it (somehow)
+        /* istanbul ignore next */ (error) => {
+          throw error;
+        }
+      );
 
     console.log(
       chalk.greenBright(`✔ Created new Raid for ${dungeonRepoNameWithOwner}`)

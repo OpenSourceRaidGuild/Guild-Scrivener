@@ -1,6 +1,6 @@
 import chalk from 'chalk';
-import { octokit } from '../octokit.js';
-import { db as firestore } from '../firebase.js';
+import { octokit } from '../octokit';
+import { db as firestore } from '../firebase';
 import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
 
 /*
@@ -38,7 +38,9 @@ async function completeRaid({
         repo: raidRepoName,
       })
       .then((r) => r.data.parent);
-    const dungeonRepoNameWithOwner = String(parentRepository?.full_name);
+    const dungeonRepoNameWithOwner = parentRepository
+      ? parentRepository.full_name
+      : /* istanbul ignore next */ '';
 
     /*
      * Step 2 - Check if Raid exists

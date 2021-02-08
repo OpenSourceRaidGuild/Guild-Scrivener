@@ -63,7 +63,9 @@ async function statCompactor({
         repo: raidRepoName,
       })
       .then((r) => r.data.parent);
-    const dungeonRepoNameWithOwner = String(parentRepository?.full_name);
+    const dungeonRepoNameWithOwner = parentRepository
+      ? parentRepository.full_name
+      : /* istanbul ignore next */ '';
 
     /*
      * Step 2 - Fetch and filter commit data
@@ -205,61 +207,67 @@ async function updateRaidStats(
    * "unable to apply" queue with a part of the website that allows for a "Retry" of applying these failed stat updates.
    */
   // Use transactions to avoid incorrect data when multiple events occur near to each other
-  await firestore.runTransaction((transaction) => {
-    return transaction.get(raidsQuery).then((raidsSnapshot) => {
-      if (raidsSnapshot.empty) {
-        throw `No active Raid for ${dungeonRepoNameWithOwner} associated with $$event$$`;
-      }
-
-      const raids = raidsSnapshot.docs;
-
-      if (raids.length > 1) {
-        // Unlikely to actually hit this, but just in case
-        throw `Found more than one active Raid for ${dungeonRepoNameWithOwner} associated with $$event$$: ${JSON.stringify(
-          raids.map((r) => r.data().title)
-        )}`;
-      }
-
-      const raidRef = raids[0].ref;
-      const raidData = raids[0].data();
-      const updates: DocUpdates = {
-        commits: raidData.commits,
-        additions: raidData.additions,
-        deletions: raidData.deletions,
-      };
-
-      Object.values(compactedStatsToAdd).forEach((newStats) => {
-        // User Stats
-        const key = `contributors.${newStats.userId}`;
-        const oldStats = raidData.contributors[newStats.userId];
-        if (oldStats) {
-          const {
-            additions: oldAdditions,
-            deletions: oldDeletions,
-            commits: oldCommits,
-          } = oldStats;
-          const {
-            additions: newAdditions,
-            deletions: newDeletions,
-            commits: newCommits,
-          } = newStats;
-
-          updates[`${key}.additions`] = oldAdditions + newAdditions;
-          updates[`${key}.deletions`] = oldDeletions + newDeletions;
-          updates[`${key}.commits`] = oldCommits + newCommits;
-        } else {
-          updates[key] = newStats;
+  await firestore
+    .runTransaction((transaction) => {
+      return transaction.get(raidsQuery).then((raidsSnapshot) => {
+        if (raidsSnapshot.empty) {
+          throw `No active Raid for ${dungeonRepoNameWithOwner} associated with $$event$$`;
         }
 
-        // Update Raid Stats
-        updates.commits += newStats.commits;
-        updates.additions += newStats.additions;
-        updates.deletions += newStats.deletions;
-      });
+        const raids = raidsSnapshot.docs;
 
-      transaction.update(raidRef, updates);
-    });
-  });
+        if (raids.length > 1) {
+          // Unlikely to actually hit this, but just in case
+          throw `Found more than one active Raid for ${dungeonRepoNameWithOwner} associated with $$event$$: ${JSON.stringify(
+            raids.map((r) => r.data().title)
+          )}`;
+        }
+
+        const raidRef = raids[0].ref;
+        const raidData = raids[0].data();
+        const updates: DocUpdates = {
+          commits: raidData.commits,
+          additions: raidData.additions,
+          deletions: raidData.deletions,
+        };
+
+        Object.values(compactedStatsToAdd).forEach((newStats) => {
+          // User Stats
+          const key = `contributors.${newStats.userId}`;
+          const oldStats = raidData.contributors[newStats.userId];
+          if (oldStats) {
+            const {
+              additions: oldAdditions,
+              deletions: oldDeletions,
+              commits: oldCommits,
+            } = oldStats;
+            const {
+              additions: newAdditions,
+              deletions: newDeletions,
+              commits: newCommits,
+            } = newStats;
+
+            updates[`${key}.additions`] = oldAdditions + newAdditions;
+            updates[`${key}.deletions`] = oldDeletions + newDeletions;
+            updates[`${key}.commits`] = oldCommits + newCommits;
+          } else {
+            updates[key] = newStats;
+          }
+
+          // Update Raid Stats
+          updates.commits += newStats.commits;
+          updates.additions += newStats.additions;
+          updates.deletions += newStats.deletions;
+        });
+
+        transaction.update(raidRef, updates);
+      });
+    })
+    .catch(
+      /* istanbul ignore next */ (error) => {
+        throw error;
+      }
+    );
 }
 
 /*
