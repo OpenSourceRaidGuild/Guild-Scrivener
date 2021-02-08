@@ -24,7 +24,12 @@ export const buildRepositoryEvent = ({
   ownerName,
   repoName,
 }: BuildRepositoryEventProps): WebhookEvent<EventPayloads.WebhookPayloadRepository> => {
-  const repository = repoName ?? faker.git.branch();
+  const repository =
+    repoName ??
+    faker
+      .fake('{{hacker.noun}}-{{hacker.verb}}')
+      .replace(' ', '-')
+      .toLowerCase();
   const repositoryId = faker.random.number({ min: 1, max: 200 });
   const owner = ownerName ?? faker.internet.userName().toLowerCase();
   const ownerId = faker.random.number({ min: 1, max: 200 });
@@ -185,13 +190,23 @@ export const buildRepository = (
     parentRepoName,
   }: BuildRepositoryProps = { isFork: true }
 ) => {
-  const repository = repoName ?? faker.git.branch();
+  const repository =
+    repoName ??
+    faker
+      .fake('{{hacker.noun}}-{{hacker.verb}}')
+      .replace(' ', '-')
+      .toLowerCase();
   const repositoryId = faker.random.number({ min: 1, max: 200 });
   const owner = ownerName ?? faker.internet.userName().toLowerCase();
   const ownerId = faker.random.number({ min: 1, max: 200 });
   const repoNameWithOwner = `${owner}/${repository}`;
 
-  const parentRepository = repoName ?? faker.git.branch();
+  const parentRepository =
+    parentRepoName ??
+    faker
+      .fake('{{hacker.noun}}-{{hacker.verb}}')
+      .replace(' ', '-')
+      .toLowerCase();
   const parentRepositoryId = faker.random.number({ min: 1, max: 200 });
   const parentOwner =
     parentOwnerName ?? faker.internet.userName().toLowerCase();
@@ -445,7 +460,12 @@ export const buildPushEvent = ({
 }: BuildPushEventProps = {}): WebhookEvent<EventPayloads.WebhookPayloadPush> => {
   const branch = isDefaultBranch ?? true ? 'main' : faker.git.branch();
   const branchRef = `refs/heads/${branch}`;
-  const repository = repoName ?? faker.git.branch();
+  const repository =
+    repoName ??
+    faker
+      .fake('{{hacker.noun}}-{{hacker.verb}}')
+      .replace(' ', '-')
+      .toLowerCase();
   const repositoryId = faker.random.number({ min: 1, max: 200 });
   const owner = ownerName ?? faker.internet.userName().toLowerCase();
   const ownerId = faker.random.number({ min: 1, max: 200 });
