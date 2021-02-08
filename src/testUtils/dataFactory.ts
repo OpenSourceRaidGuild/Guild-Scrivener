@@ -24,7 +24,7 @@ export const buildRepositoryEvent = ({
   ownerName,
   repoName,
 }: BuildRepositoryEventProps): WebhookEvent<EventPayloads.WebhookPayloadRepository> => {
-  const repository = repoName ?? faker.fake('{{random.word}}-{{random.word}}');
+  const repository = repoName ?? faker.git.branch();
   const repositoryId = faker.random.number({ min: 1, max: 200 });
   const owner = ownerName ?? faker.internet.userName().toLowerCase();
   const ownerId = faker.random.number({ min: 1, max: 200 });
@@ -185,14 +185,13 @@ export const buildRepository = (
     parentRepoName,
   }: BuildRepositoryProps = { isFork: true }
 ) => {
-  const repository = repoName ?? faker.fake('{{random.word}}-{{random.word}}');
+  const repository = repoName ?? faker.git.branch();
   const repositoryId = faker.random.number({ min: 1, max: 200 });
   const owner = ownerName ?? faker.internet.userName().toLowerCase();
   const ownerId = faker.random.number({ min: 1, max: 200 });
   const repoNameWithOwner = `${owner}/${repository}`;
 
-  const parentRepository =
-    parentRepoName ?? faker.fake('{{random.word}}-{{random.word}}');
+  const parentRepository = repoName ?? faker.git.branch();
   const parentRepositoryId = faker.random.number({ min: 1, max: 200 });
   const parentOwner =
     parentOwnerName ?? faker.internet.userName().toLowerCase();
@@ -446,7 +445,7 @@ export const buildPushEvent = ({
 }: BuildPushEventProps = {}): WebhookEvent<EventPayloads.WebhookPayloadPush> => {
   const branch = isDefaultBranch ?? true ? 'main' : faker.git.branch();
   const branchRef = `refs/heads/${branch}`;
-  const repository = repoName ?? faker.fake('{{random.word}}-{{random.word}}');
+  const repository = repoName ?? faker.git.branch();
   const repositoryId = faker.random.number({ min: 1, max: 200 });
   const owner = ownerName ?? faker.internet.userName().toLowerCase();
   const ownerId = faker.random.number({ min: 1, max: 200 });
