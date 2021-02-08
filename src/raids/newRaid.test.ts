@@ -2,14 +2,14 @@ import {
   buildRepository,
   buildRepositoryEvent,
 } from '../testUtils/dataFactory';
-import { RaidStats } from '../types/raidStats';
+import { RaidStats } from './types/raidStats';
 import runOctokitWebhook from '../testUtils/runOctokitWebhook';
 import { firestore } from '../testUtils/firebaseUtils';
 import { collections } from '../firebase';
 import { server, rest } from '../testUtils/msw';
 import createNewRaid from './newRaid';
 
-it(`does not create a new raid if repository is not a fork`, async () => {
+it(`does not create a raid if repository is not a fork`, async () => {
   const repositoryCreatedEvent = buildRepositoryEvent({
     eventType: 'created',
     isFork: false,
@@ -46,7 +46,7 @@ it(`does not create a raid if an active raid already exists for the dungeon`, as
     status: 'active',
     title: 'Potato',
   };
-  const _ = await firestore.collection(collections.raidStats).add(raidStats);
+  await firestore.collection(collections.raidStats).add(raidStats);
 
   server.use(
     rest.get('https://api.github.com/repos/:owner/:repo', (req, res, ctx) => {
