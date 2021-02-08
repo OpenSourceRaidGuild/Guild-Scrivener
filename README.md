@@ -8,15 +8,12 @@ Currently
 
 ### Environment Setup
 
-create a `.env` file
+Create a `.env` file
 
-- `FIREBASE_URL` The project's [Firebase URL](https://stackoverflow.com/a/40168644/8367146) from the console
-- `FIREBASE_SERVICE_ACCOUNT_KEY` The service account key JSON
+- `FIREBASE_PROJECT_ID` This can just be set to `raid-stats-c1d5a`
 - `RAID_HOOK_SECRET` The Raid (Stats) Hooks' secret - see [GitHub Webhook Secret](https://docs.github.com/en/developers/webhooks-and-events/creating-webhooks)
 - `LABEL_HOOK_SECRET` The Label Hooks' secret - see [GitHub Webhook Secret](https://docs.github.com/en/developers/webhooks-and-events/creating-webhooks)
 - `AUTH` A [GitHub Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token)
-- `OWNER` Should be `OpenSourceRaidGuild`
-- `LABEL_REPO` Should be `website`
 - `PORT` **_optional_** Only useful for production - not setting this uses port 5000
 
 ## Commands
@@ -41,6 +38,6 @@ Builds the server using `tsc`
 
 Runs Jest in watch mode after starting the firestore emulator
 
-### `test:coverage`
+### `test:ci`
 
 Runs Jest while checking coverage
