@@ -1,4 +1,4 @@
-import { octokit } from '../octokit.js';
+import { octokit } from '../octokit';
 import chalk from 'chalk';
 import { WebhookEvent } from '@octokit/webhooks';
 import dotenv from 'dotenv';

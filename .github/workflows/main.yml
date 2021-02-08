@@ -25,8 +25,13 @@ jobs:
       # - name: Lint
       #   run: npm run lint
 
-      # - name: Test
-      #   run: npm run test --ci --coverage --maxWorkers=2
+      - name: Test
+        run: npm run test:ci
+        env:
+          FIREBASE_PROJECT_ID: dont-matter
+          RAID_HOOK_SECRET: raidHookSecret
+          LABEL_HOOK_SECRET: labelHookSecret
+          AUTH: auth123
 
       # - name: Build
       #   run: npm run build

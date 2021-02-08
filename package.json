@@ -1,30 +1,25 @@
 {
   "name": "guild-scrivener",
   "version": "0.0.1",
-  "main": "src/scrape-labels.js",
+  "main": "dist/index.js",
   "author": "JacobMGEvans",
   "license": "GNU GPLv3",
-  "type": "module",
   "description": "",
   "files": [
     "src"
   ],
   "scripts": {
-    "local": "tsc -w & nodemon --experimental-json-modules ./dist/index.js",
-    "local:emulator": "cross-env FIRESTORE_EMULATOR_HOST=\"localhost:8080\" npm run local",
-    "start": "node --experimental-json-modules ./dist/index.js",
-    "build": "tsc"
-  },
-  "prettier": {
-    "printWidth": 80,
-    "semi": true,
-    "singleQuote": true,
-    "trailingComma": "es5"
+    "firestore": "cross-env FIRESTORE_EMULATOR_HOST=\"localhost:8080\" firebase emulators:exec --only firestore",
+    "local": "npm run firestore -- \"nodemon ./src/index.ts\"",
+    "start": "node ./dist/index.js",
+    "build": "tsc",
+    "test": "npm run firestore -- \"jest --watch\"",
+    "test:ci": "npm run firestore -- \"jest --coverage --maxWorkers=2\""
   },
   "dependencies": {
     "@octokit/auth-token": "^2.4.4",
     "@octokit/rest": "^18.0.12",
-    "@octokit/webhooks": "^7.21.0",
+    "@octokit/webhooks": "7.21.0",
     "chalk": "^4.1.0",
     "dotenv": "^8.2.0",
     "fastify": "^3.10.1",
@@ -34,14 +29,29 @@
     "nodemon": "^2.0.7"
   },
   "devDependencies": {
+    "@firebase/testing": "^0.20.11",
     "@types/connect": "^3.4.34",
+    "@types/faker": "^5.1.6",
     "cross-env": "^7.0.3",
+    "faker": "^5.3.1",
+    "firebase-tools": "^9.3.0",
+    "jest": "^26.6.3",
+    "msw": "^0.26.1",
     "prettier": "^2.2.1",
+    "ts-jest": "^26.5.0",
+    "ts-node": "^9.1.1",
     "typescript": "^4.1.3"
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
   },
   "nodemonConfig": {
     "ignore": [
-      "test/*",
+      "**/*.test.*",
+      "src/testUtils/*",
       "node_modules/*",
       ".github"
     ],

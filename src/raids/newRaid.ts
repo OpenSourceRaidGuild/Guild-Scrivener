@@ -1,6 +1,6 @@
 import chalk from 'chalk';
-import { octokit } from '../octokit.js';
-import { db as firestore } from '../firebase.js';
+import { octokit } from '../octokit';
+import { db as firestore } from '../firebase';
 import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
 
 /*
@@ -13,6 +13,10 @@ async function createNewRaid({
   id,
   payload,
 }: WebhookEvent<EventPayloads.WebhookPayloadRepository>) {
+  console.log(
+    chalk.cyanBright(`- Processing repository created event '${id}'`)
+  );
+
   try {
     const {
       fork: isFork,
@@ -34,7 +38,9 @@ async function createNewRaid({
         repo: raidRepoName,
       })
       .then((r) => r.data.parent);
-    const dungeonRepoNameWithOwner = String(parentRepository?.full_name);
+    const dungeonRepoNameWithOwner = parentRepository
+      ? parentRepository.full_name
+      : /* istanbul ignore next */ '';
 
     /*
      * Step 2 - Check if Raid already exists
@@ -63,11 +69,19 @@ async function createNewRaid({
         status: 'active',
         title: '[PLEASE RENAME ME]',
       })
-      .catch((error) => {
-        throw error;
-      });
+      .catch(
+        // Ignore, because this is impossible to test... And it works.
+        // If you change it, it's on you to test it (somehow)
+        /* istanbul ignore next */ (error) => {
+          throw error;
+        }
+      );
+
+    console.log(
+      chalk.greenBright(`✔ Created new Raid for ${dungeonRepoNameWithOwner}`)
+    );
   } catch (error) {
-    return error;
+    console.log(chalk.redBright('✖ ' + error));
   }
 }
 export default createNewRaid;
