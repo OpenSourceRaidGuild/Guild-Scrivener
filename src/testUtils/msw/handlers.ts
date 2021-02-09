@@ -15,11 +15,9 @@ export const handlers = [
       )
     );
   }),
-  rest.get('https://api.github.com/*', (req, res, ctx) => {
-    return res(
-      ctx.json(
-        `This GitHub API route has not been mocked yet... Maybe now is a good time to do that`
-      )
-    );
+  rest.get('*', (req, res, ctx) => {
+    const warning = `${req.url} has not been mocked yet... Maybe now is a good time to do that`;
+    console.warn(warning);
+    return res(ctx.json(warning));
   }),
 ];
