@@ -1,13 +1,13 @@
 import {
+  buildRaidStats,
   buildRepository,
   buildRepositoryEvent,
 } from '../testUtils/dataFactory';
 import { firestore } from '../testUtils/firebaseUtils';
 import { collections } from '../firebase';
 import runOctokitWebhook from '../testUtils/runOctokitWebhook';
-import completeRaid from './completeRaid';
-import { RaidStats } from './types/raidStats';
 import { rest, server } from '../testUtils/msw';
+import completeRaid from './completeRaid';
 
 it(`does not complete a raid if repository is not a fork`, async () => {
   const repositoryArchivedEvent = buildRepositoryEvent({
@@ -58,16 +58,10 @@ it(`does not complete a raid if no active raid exists for the dungeon`, async ()
 it(`does not complete a raid if more than one active raid exists for the dungeon`, async () => {
   // Setup an existing raid
   const raidRepo = buildRepository();
-  const raidStats: RaidStats = {
-    additions: 0,
-    changedFiles: 0,
-    commits: 0,
-    contributors: {},
-    deletions: 0,
+  const raidStats = buildRaidStats({
     dungeon: String(raidRepo.parent?.full_name),
-    status: 'active',
-    title: 'Potato',
-  };
+    title: 'Migrate to Ecklston',
+  });
   await firestore.collection(collections.raidStats).add(raidStats);
   await firestore.collection(collections.raidStats).add(raidStats);
 
@@ -98,23 +92,16 @@ it(`does not complete a raid if more than one active raid exists for the dungeon
     .replace(/(\w+|\w+\.\w+)\/((\w+(-\w+)+)|\w+)/g, 'OWNER/REPO');
   expect(sanitizedStdOut).toMatchInlineSnapshot(`
     "- Processing repository archived event 'EVENT_ID'
-    ✖ Found more than one active Raid for OWNER/REPO associated with event 'EVENT_ID':  [\\"Potato\\",\\"Potato\\"]"
+    ✖ Found more than one active Raid for OWNER/REPO associated with event 'EVENT_ID':  [\\"Migrate to Ecklston\\",\\"Migrate to Ecklston\\"]"
   `);
 });
 
 it(`completes a raid when called`, async () => {
   // Setup an existing raid
   const raidRepo = buildRepository();
-  const raidStats: RaidStats = {
-    additions: 0,
-    changedFiles: 0,
-    commits: 0,
-    contributors: {},
-    deletions: 0,
+  const raidStats = buildRaidStats({
     dungeon: String(raidRepo.parent?.full_name),
-    status: 'active',
-    title: 'Potato',
-  };
+  });
   const _ = await firestore.collection(collections.raidStats).add(raidStats);
 
   server.use(

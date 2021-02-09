@@ -1,8 +1,8 @@
 import {
+  buildRaidStats,
   buildRepository,
   buildRepositoryEvent,
 } from '../testUtils/dataFactory';
-import { RaidStats } from './types/raidStats';
 import runOctokitWebhook from '../testUtils/runOctokitWebhook';
 import { firestore } from '../testUtils/firebaseUtils';
 import { collections } from '../firebase';
@@ -36,16 +36,9 @@ it(`does not create a raid if repository is not a fork`, async () => {
 it(`does not create a raid if an active raid already exists for the dungeon`, async () => {
   // Setup an existing raid
   const raidRepo = buildRepository();
-  const raidStats: RaidStats = {
-    additions: 0,
-    changedFiles: 0,
-    commits: 0,
-    contributors: {},
-    deletions: 0,
+  const raidStats = buildRaidStats({
     dungeon: String(raidRepo.parent?.full_name),
-    status: 'active',
-    title: 'Potato',
-  };
+  });
   await firestore.collection(collections.raidStats).add(raidStats);
 
   server.use(

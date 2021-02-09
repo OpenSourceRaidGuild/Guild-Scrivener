@@ -1,6 +1,8 @@
 import * as faker from 'faker';
 import { WebhookEvent, EventPayloads } from '@octokit/webhooks';
 import { RestEndpointMethodTypes } from '@octokit/rest';
+import { RaidStats } from '../raids/types/raidStats';
+import chalk from 'chalk';
 
 type BuildRepositoryEventProps = {
   eventType:
@@ -678,3 +680,28 @@ export const buildPushEvent = ({
 
   return pushData;
 };
+
+export const buildRaidStats = ({
+  additions,
+  changedFiles,
+  commits,
+  contributors,
+  deletions,
+  dungeon,
+  status,
+  title,
+}: Partial<RaidStats>): RaidStats => ({
+  additions: additions ?? 0,
+  changedFiles: changedFiles ?? 0,
+  commits: commits ?? 0,
+  contributors: contributors ?? {},
+  deletions: deletions ?? 0,
+  dungeon:
+    dungeon ??
+    faker
+      .fake('{{hacker.noun}}-{{hacker.verb}}')
+      .replace(' ', '-')
+      .toLowerCase(),
+  status: status ?? 'active',
+  title: title ?? faker.random.words(),
+});
