@@ -445,13 +445,33 @@ export const buildRepository = (
   return repositoryData;
 };
 
+type CommitUser = {
+  name: string;
+  email: string;
+  username: string;
+};
+
+export type Commit = {
+  id: string;
+  tree_id: string;
+  distinct: boolean;
+  message: string;
+  timestamp: string;
+  url: string;
+  author: CommitUser;
+  committer: CommitUser;
+  added: string[];
+  removed: string[];
+  modified: string[];
+};
+
 type BuildPushEventProps = {
   isFork?: boolean;
   isDefaultBranch?: boolean;
   isArchived?: boolean;
   ownerName?: string;
   repoName?: string;
-  commits?: any[];
+  commits?: Commit[];
 };
 
 export const buildPushEvent = ({
@@ -645,9 +665,9 @@ export const buildPushEvent = ({
   };
 
   if (!commits) {
-    const commitsData = [];
+    const commitsData: Commit[] = [];
     for (let i = 0; i < faker.random.number({ min: 1, max: 10 }); ++i) {
-      const user = {
+      const user: CommitUser = {
         name: faker.fake('{{name.firstName}} {{name.lastName}}'),
         email: faker.internet.exampleEmail(),
         username: faker.internet.userName(),
