@@ -690,7 +690,7 @@ export const buildRaidStats = ({
   dungeon,
   status,
   title,
-}: Partial<RaidStats>): RaidStats => ({
+}: Partial<RaidStats> = {}): RaidStats => ({
   additions: additions ?? 0,
   changedFiles: changedFiles ?? 0,
   commits: commits ?? 0,
