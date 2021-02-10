@@ -178,20 +178,22 @@ export const buildRepositoryEvent = ({
   };
 };
 
-type BuildRepositoryProps = Omit<BuildRepositoryEventProps, 'eventType'> & {
+type BuildRepositoryProps = {
+  isForkedRepo?: boolean;
+  ownerName?: string;
+  repoName?: string;
   parentOwnerName?: string;
   parentRepoName?: string;
 };
 
-export const buildRepository = (
-  {
-    isFork,
-    ownerName,
-    repoName,
-    parentOwnerName,
-    parentRepoName,
-  }: BuildRepositoryProps = { isFork: true }
-) => {
+export const buildRepository = ({
+  isForkedRepo,
+  ownerName,
+  repoName,
+  parentOwnerName,
+  parentRepoName,
+}: BuildRepositoryProps = {}) => {
+  const isFork = isForkedRepo ?? true;
   const repository =
     repoName ??
     faker
@@ -235,7 +237,7 @@ export const buildRepository = (
     disabled: false,
     downloads_url: `https://api.github.com/repos/${repoNameWithOwner}/downloads`,
     events_url: `https://api.github.com/repos/${repoNameWithOwner}/events`,
-    fork: isFork ?? true,
+    fork: isFork,
     forks: 0,
     forks_count: 0,
     forks_url: `https://api.github.com/repos/${repoNameWithOwner}/forks`,
@@ -758,7 +760,7 @@ export const buildCommit = ({
   const treeId = faker.git.commitSha();
   const totalAdditions = additions ?? faker.random.number(1000);
   const totalDeletions = deletions ?? faker.random.number(1000);
-  const authorName = faker.fake('{{name.firstName}} {{name.lastname}}');
+  const authorName = faker.fake('{{name.firstName}} {{name.lastName}}');
   const authorNames = authorName.split(' ');
   const authorEmail = faker.internet.exampleEmail(
     authorNames[0],

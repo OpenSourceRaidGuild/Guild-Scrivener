@@ -8,7 +8,7 @@ export const handlers = [
     return res(
       ctx.json(
         buildRepository({
-          isFork: true,
+          isForkedRepo: true,
           ownerName: owner,
           repoName: repo,
         })
