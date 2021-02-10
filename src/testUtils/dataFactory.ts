@@ -451,6 +451,7 @@ type BuildPushEventProps = {
   isArchived?: boolean;
   ownerName?: string;
   repoName?: string;
+  commits?: any[];
 };
 
 export const buildPushEvent = ({
@@ -459,6 +460,7 @@ export const buildPushEvent = ({
   isArchived,
   ownerName,
   repoName,
+  commits,
 }: BuildPushEventProps = {}): WebhookEvent<EventPayloads.WebhookPayloadPush> => {
   const branch = isDefaultBranch ?? true ? 'main' : faker.git.branch();
   const branchRef = `refs/heads/${branch}`;
@@ -637,46 +639,47 @@ export const buildPushEvent = ({
         0,
         12
       )}...${afterSha.substr(0, 12)}`,
-      commits: [],
+      commits: commits ?? [],
       head_commit: null,
     },
   };
 
-  const commits = [];
+  if (!commits) {
+    const commitsData = [];
+    for (let i = 0; i < faker.random.number({ min: 1, max: 10 }); ++i) {
+      const user = {
+        name: faker.fake('{{name.firstName}} {{name.lastName}}'),
+        email: faker.internet.exampleEmail(),
+        username: faker.internet.userName(),
+      };
+      const commitId = faker.git.commitSha();
 
-  for (let i = 0; i < faker.random.number({ min: 1, max: 10 }); ++i) {
-    const user = {
-      name: faker.fake('{{name.firstName}} {{name.lastName}}'),
-      email: faker.internet.exampleEmail(),
-      username: faker.internet.userName(),
-    };
-    const commitId = faker.git.commitSha();
+      commitsData.push({
+        id: commitId,
+        tree_id: faker.git.commitSha(),
+        distinct: false,
+        message:
+          faker.random.arrayElement(['chore', 'fix', 'test', 'feat', 'docs']) +
+          ': ' +
+          faker.git.commitMessage(),
+        timestamp: '2021-02-06T23:07:08+01:00',
+        url: `https://github.com/${repoNameWithOwner}/commit/${commitId}`,
+        author: user,
+        committer: user,
+        added: new Array(faker.random.number(5)).map((_) =>
+          faker.system.filePath()
+        ),
+        removed: new Array(faker.random.number(5)).map((_) =>
+          faker.system.filePath()
+        ),
+        modified: new Array(faker.random.number(5)).map((_) =>
+          faker.system.filePath()
+        ),
+      });
+    }
 
-    commits.push({
-      id: commitId,
-      tree_id: faker.git.commitSha(),
-      distinct: false,
-      message:
-        faker.random.arrayElement(['chore', 'fix', 'test', 'feat', 'docs']) +
-        ': ' +
-        faker.git.commitMessage(),
-      timestamp: '2021-02-06T23:07:08+01:00',
-      url: `https://github.com/${repoNameWithOwner}/commit/${commitId}`,
-      author: user,
-      committer: user,
-      added: new Array(faker.random.number(5)).map((_) =>
-        faker.system.filePath()
-      ),
-      removed: new Array(faker.random.number(5)).map((_) =>
-        faker.system.filePath()
-      ),
-      modified: new Array(faker.random.number(5)).map((_) =>
-        faker.system.filePath()
-      ),
-    });
+    pushData.payload.commits = commitsData;
   }
-
-  pushData.payload.commits = commits;
 
   return pushData;
 };
