@@ -587,9 +587,9 @@ export const buildPushEvent = ({
         forks: 0,
         open_issues: 0,
         watchers: 0,
-        default_branch: branch,
+        default_branch: 'main',
         stargazers: 0,
-        master_branch: branch,
+        master_branch: 'main',
       },
       pusher: {
         name: sender,
