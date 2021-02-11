@@ -1,6 +1,8 @@
 import * as faker from 'faker';
 import { WebhookEvent, EventPayloads } from '@octokit/webhooks';
 import { RestEndpointMethodTypes } from '@octokit/rest';
+import { RaidStats } from '../raids/types/raidStats';
+import chalk from 'chalk';
 
 type BuildRepositoryEventProps = {
   eventType:
@@ -176,20 +178,22 @@ export const buildRepositoryEvent = ({
   };
 };
 
-type BuildRepositoryProps = Omit<BuildRepositoryEventProps, 'eventType'> & {
+type BuildRepositoryProps = {
+  isForkedRepo?: boolean;
+  ownerName?: string;
+  repoName?: string;
   parentOwnerName?: string;
   parentRepoName?: string;
 };
 
-export const buildRepository = (
-  {
-    isFork,
-    ownerName,
-    repoName,
-    parentOwnerName,
-    parentRepoName,
-  }: BuildRepositoryProps = { isFork: true }
-) => {
+export const buildRepository = ({
+  isForkedRepo,
+  ownerName,
+  repoName,
+  parentOwnerName,
+  parentRepoName,
+}: BuildRepositoryProps = {}) => {
+  const isFork = isForkedRepo ?? true;
   const repository =
     repoName ??
     faker
@@ -233,7 +237,7 @@ export const buildRepository = (
     disabled: false,
     downloads_url: `https://api.github.com/repos/${repoNameWithOwner}/downloads`,
     events_url: `https://api.github.com/repos/${repoNameWithOwner}/events`,
-    fork: isFork ?? true,
+    fork: isFork,
     forks: 0,
     forks_count: 0,
     forks_url: `https://api.github.com/repos/${repoNameWithOwner}/forks`,
@@ -443,12 +447,33 @@ export const buildRepository = (
   return repositoryData;
 };
 
+type CommitUser = {
+  name: string;
+  email: string;
+  username: string;
+};
+
+export type Commit = {
+  id: string;
+  tree_id: string;
+  distinct: boolean;
+  message: string;
+  timestamp: string;
+  url: string;
+  author: CommitUser;
+  committer: CommitUser;
+  added: string[];
+  removed: string[];
+  modified: string[];
+};
+
 type BuildPushEventProps = {
   isFork?: boolean;
   isDefaultBranch?: boolean;
   isArchived?: boolean;
   ownerName?: string;
   repoName?: string;
+  commits?: Commit[];
 };
 
 export const buildPushEvent = ({
@@ -457,6 +482,7 @@ export const buildPushEvent = ({
   isArchived,
   ownerName,
   repoName,
+  commits,
 }: BuildPushEventProps = {}): WebhookEvent<EventPayloads.WebhookPayloadPush> => {
   const branch = isDefaultBranch ?? true ? 'main' : faker.git.branch();
   const branchRef = `refs/heads/${branch}`;
@@ -585,9 +611,9 @@ export const buildPushEvent = ({
         forks: 0,
         open_issues: 0,
         watchers: 0,
-        default_branch: branch,
+        default_branch: 'main',
         stargazers: 0,
-        master_branch: branch,
+        master_branch: 'main',
       },
       pusher: {
         name: sender,
@@ -635,46 +661,252 @@ export const buildPushEvent = ({
         0,
         12
       )}...${afterSha.substr(0, 12)}`,
-      commits: [],
+      commits: commits ?? [],
       head_commit: null,
     },
   };
 
-  const commits = [];
+  if (!commits) {
+    const commitsData: Commit[] = [];
+    for (let i = 0; i < faker.random.number({ min: 1, max: 10 }); ++i) {
+      const user: CommitUser = {
+        name: faker.fake('{{name.firstName}} {{name.lastName}}'),
+        email: faker.internet.exampleEmail(),
+        username: faker.internet.userName(),
+      };
+      const commitId = faker.git.commitSha();
 
-  for (let i = 0; i < faker.random.number({ min: 1, max: 10 }); ++i) {
-    const user = {
-      name: faker.fake('{{name.firstName}} {{name.lastName}}'),
-      email: faker.internet.exampleEmail(),
-      username: faker.internet.userName(),
-    };
-    const commitId = faker.git.commitSha();
+      commitsData.push({
+        id: commitId,
+        tree_id: faker.git.commitSha(),
+        distinct: false,
+        message:
+          faker.random.arrayElement(['chore', 'fix', 'test', 'feat', 'docs']) +
+          ': ' +
+          faker.git.commitMessage(),
+        timestamp: '2021-02-06T23:07:08+01:00',
+        url: `https://github.com/${repoNameWithOwner}/commit/${commitId}`,
+        author: user,
+        committer: user,
+        added: new Array(faker.random.number(5)).map((_) =>
+          faker.system.filePath()
+        ),
+        removed: new Array(faker.random.number(5)).map((_) =>
+          faker.system.filePath()
+        ),
+        modified: new Array(faker.random.number(5)).map((_) =>
+          faker.system.filePath()
+        ),
+      });
+    }
 
-    commits.push({
-      id: commitId,
-      tree_id: faker.git.commitSha(),
-      distinct: false,
-      message:
-        faker.random.arrayElement(['chore', 'fix', 'test', 'feat', 'docs']) +
-        ': ' +
-        faker.git.commitMessage(),
-      timestamp: '2021-02-06T23:07:08+01:00',
-      url: `https://github.com/${repoNameWithOwner}/commit/${commitId}`,
-      author: user,
-      committer: user,
-      added: new Array(faker.random.number(5)).map((_) =>
-        faker.system.filePath()
-      ),
-      removed: new Array(faker.random.number(5)).map((_) =>
-        faker.system.filePath()
-      ),
-      modified: new Array(faker.random.number(5)).map((_) =>
-        faker.system.filePath()
-      ),
-    });
+    pushData.payload.commits = commitsData;
   }
 
-  pushData.payload.commits = commits;
-
   return pushData;
+};
+
+export const buildRaidStats = ({
+  additions,
+  changedFiles,
+  commits,
+  contributors,
+  deletions,
+  dungeon,
+  status,
+  title,
+}: Partial<RaidStats> = {}): RaidStats => ({
+  additions: additions ?? 0,
+  changedFiles: changedFiles ?? 0,
+  commits: commits ?? 0,
+  contributors: contributors ?? {},
+  deletions: deletions ?? 0,
+  dungeon:
+    dungeon ??
+    faker
+      .fake('{{internet.userName}}/{{hacker.noun}}-{{hacker.verb}}')
+      .replace(' ', '-')
+      .toLowerCase(),
+  status: status ?? 'active',
+  title: title ?? faker.random.words(),
+});
+
+type BuildCommitProps = {
+  ownerName?: string;
+  repoName?: string;
+  multipleParents?: boolean;
+  additions?: number;
+  deletions?: number;
+  changedFiles?: number;
+};
+
+export const buildCommit = ({
+  ownerName,
+  repoName,
+  multipleParents,
+  additions,
+  deletions,
+  changedFiles,
+}: BuildCommitProps) => {
+  const owner = ownerName ?? faker.internet.userName().toLowerCase();
+  const repository =
+    repoName ??
+    faker
+      .fake('{{hacker.noun}}-{{hacker.verb}}')
+      .replace(' ', '-')
+      .toLowerCase();
+  const repoNameWithOwner = `${owner}/${repository}`;
+  const commitId = faker.git.commitSha();
+  const treeId = faker.git.commitSha();
+  const totalAdditions = additions ?? faker.random.number(1000);
+  const totalDeletions = deletions ?? faker.random.number(1000);
+  const authorName = faker.fake('{{name.firstName}} {{name.lastName}}');
+  const authorNames = authorName.split(' ');
+  const authorEmail = faker.internet.exampleEmail(
+    authorNames[0],
+    authorNames[1]
+  );
+  const authorUsername = faker.internet.userName(
+    authorNames[0],
+    authorNames[1]
+  );
+
+  const getCommitParents = () => {
+    const parentCommitId1 = faker.git.commitSha();
+    const parents = [
+      {
+        url: `https://api.github.com/repos/${repoNameWithOwner}/commits/${parentCommitId1}`,
+        sha: parentCommitId1,
+      },
+    ];
+
+    if (multipleParents ?? false) {
+      const parentCommitId2 = faker.git.commitSha();
+      parents.push({
+        url: `https://api.github.com/repos/${repoNameWithOwner}/commits/${parentCommitId2}`,
+        sha: parentCommitId2,
+      });
+    }
+
+    return parents;
+  };
+
+  const distribute = (total: number, items: number): number[] => {
+    const results = new Array(items).fill(Math.floor(total / items));
+
+    const roundingRemainder = total % items;
+    if (roundingRemainder !== 0) {
+      results[items - 1] += roundingRemainder;
+    }
+
+    return results;
+  };
+
+  const getCommitFiles = () => {
+    const fileChanges = distribute(
+      totalAdditions + totalDeletions,
+      changedFiles ?? faker.random.number(10)
+    );
+
+    return fileChanges.map((total) => {
+      const fileId = faker.git.commitSha();
+      const fileName = faker.system.filePath();
+
+      const isAdditions = faker.random.boolean();
+      const additions = isAdditions ? total : 0;
+      const deletions = isAdditions ? 0 : total;
+
+      return {
+        filename: fileName,
+        additions,
+        deletions,
+        changes: total,
+        status: 'modified',
+        raw_url: `https://github.com/${repoNameWithOwner}/raw/${fileId}/${fileName}`,
+        blob_url: `https://github.com/${repoNameWithOwner}/blob/${fileId}/${fileName}`,
+        patch: '@@ -29,7 +29,7 @@\n.....',
+      };
+    });
+  };
+
+  return {
+    url: `https://api.github.com/repos/${repoNameWithOwner}/commits/${commitId}`,
+    sha: commitId,
+    node_id:
+      'MDY6Q29tbWl0NmRjYjA5YjViNTc4NzVmMzM0ZjYxYWViZWQ2OTVlMmU0MTkzZGI1ZQ==',
+    html_url: `https://github.com/${repoNameWithOwner}/commit/${commitId}`,
+    comments_url: `https://api.github.com/repos/${repoNameWithOwner}/commits/${commitId}/comments`,
+    commit: {
+      url: `https://api.github.com/repos/${repoNameWithOwner}/git/commits/${commitId}`,
+      author: {
+        name: authorName,
+        email: authorEmail,
+        date: '2011-04-14T16:00:49Z',
+      },
+      committer: {
+        name: authorName,
+        email: authorEmail,
+        date: '2011-04-14T16:00:49Z',
+      },
+      message: faker.git.commitMessage(),
+      tree: {
+        url: `https://api.github.com/repos/${repoNameWithOwner}/tree/${treeId}`,
+        sha: treeId,
+      },
+      comment_count: 0,
+      verification: {
+        verified: false,
+        reason: 'unsigned',
+        signature: null,
+        payload: null,
+      },
+    },
+    author: {
+      login: authorUsername,
+      id: 1,
+      node_id: 'MDQ6VXNlcjE=',
+      avatar_url: `https://github.com/images/error/octocat_happy.gif`,
+      gravatar_id: '',
+      url: `https://api.github.com/users/${authorUsername}`,
+      html_url: `https://github.com/${authorUsername}`,
+      followers_url: `https://api.github.com/users/${authorUsername}/followers`,
+      following_url: `https://api.github.com/users/${authorUsername}/following{/other_user}`,
+      gists_url: `https://api.github.com/users/${authorUsername}/gists{/gist_id}`,
+      starred_url: `https://api.github.com/users/${authorUsername}/starred{/owner}{/repo}`,
+      subscriptions_url: `https://api.github.com/users/${authorUsername}/subscriptions`,
+      organizations_url: `https://api.github.com/users/${authorUsername}/orgs`,
+      repos_url: `https://api.github.com/users/${authorUsername}/repos`,
+      events_url: `https://api.github.com/users/${authorUsername}/events{/privacy}`,
+      received_events_url: `https://api.github.com/users/${authorUsername}/received_events`,
+      type: 'User',
+      site_admin: false,
+    },
+    committer: {
+      login: authorUsername,
+      id: 1,
+      node_id: 'MDQ6VXNlcjE=',
+      avatar_url: `https://github.com/images/error/octocat_happy.gif`,
+      gravatar_id: '',
+      url: `https://api.github.com/users/${authorUsername}`,
+      html_url: `https://github.com/${authorUsername}`,
+      followers_url: `https://api.github.com/users/${authorUsername}/followers`,
+      following_url: `https://api.github.com/users/${authorUsername}/following{/other_user}`,
+      gists_url: `https://api.github.com/users/${authorUsername}/gists{/gist_id}`,
+      starred_url: `https://api.github.com/users/${authorUsername}/starred{/owner}{/repo}`,
+      subscriptions_url: `https://api.github.com/users/${authorUsername}/subscriptions`,
+      organizations_url: `https://api.github.com/users/${authorUsername}/orgs`,
+      repos_url: `https://api.github.com/users/${authorUsername}/repos`,
+      events_url: `https://api.github.com/users/${authorUsername}/events{/privacy}`,
+      received_events_url: `https://api.github.com/users/${authorUsername}/received_events`,
+      type: 'User',
+      site_admin: false,
+    },
+    parents: getCommitParents(),
+    stats: {
+      additions: totalAdditions,
+      deletions: totalDeletions,
+      total: totalAdditions + totalDeletions,
+    },
+    files: getCommitFiles(),
+  };
 };
