@@ -59,7 +59,7 @@ it(`does not complete a raid if more than one active raid exists for the dungeon
   // Setup an existing raid
   const raidRepo = buildRepository();
   const raidStats = buildRaidStats({
-    dungeon: String(raidRepo.parent?.full_name),
+    dungeon: raidRepo.parent!.full_name,
     title: 'Migrate to Ecklston',
   });
   await firestore.collection(collections.raidStats).add(raidStats);
@@ -100,7 +100,7 @@ it(`completes a raid when called`, async () => {
   // Setup an existing raid
   const raidRepo = buildRepository();
   const raidStats = buildRaidStats({
-    dungeon: String(raidRepo.parent?.full_name),
+    dungeon: raidRepo.parent!.full_name,
   });
   const _ = await firestore.collection(collections.raidStats).add(raidStats);
 

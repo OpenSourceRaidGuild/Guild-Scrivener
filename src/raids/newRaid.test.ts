@@ -8,6 +8,7 @@ import { firestore } from '../testUtils/firebaseUtils';
 import { collections } from '../firebase';
 import { server, rest } from '../testUtils/msw';
 import createNewRaid from './newRaid';
+import { RaidStats } from './types/raidStats';
 
 it(`does not create a raid if repository is not a fork`, async () => {
   const repositoryCreatedEvent = buildRepositoryEvent({
@@ -37,7 +38,7 @@ it(`does not create a raid if an active raid already exists for the dungeon`, as
   // Setup an existing raid
   const raidRepo = buildRepository();
   const raidStats = buildRaidStats({
-    dungeon: String(raidRepo.parent?.full_name),
+    dungeon: raidRepo.parent!.full_name,
   });
   await firestore.collection(collections.raidStats).add(raidStats);
 
@@ -71,6 +72,9 @@ it(`does not create a raid if an active raid already exists for the dungeon`, as
 });
 
 it(`creates a raid when called`, async () => {
+  const mockCreatedAt = Date.now();
+  jest.spyOn(Date, 'now').mockReturnValue(mockCreatedAt);
+
   const raidRepo = buildRepository();
   server.use(
     rest.get('https://api.github.com/repos/:owner/:repo', (req, res, ctx) => {
@@ -89,18 +93,23 @@ it(`creates a raid when called`, async () => {
     .collection(collections.raidStats)
     .get();
   expect(raidDocsSnapshot.docs).toHaveLength(1);
-  expect(raidDocsSnapshot.docs.map((d) => d.data())).toStrictEqual([
+
+  const expectedRaidStats: RaidStats[] = [
     {
       additions: 0,
       changedFiles: 0,
       commits: 0,
       contributors: {},
       deletions: 0,
-      dungeon: raidRepo.parent?.full_name,
+      dungeon: raidRepo.parent!.full_name,
       status: 'active',
       title: '[PLEASE RENAME ME]',
+      createdAt: mockCreatedAt,
     },
-  ]);
+  ];
+  expect(raidDocsSnapshot.docs.map((d) => d.data())).toStrictEqual(
+    expectedRaidStats
+  );
 
   const sanitizedStdOut = result.stdOut
     .replace(new RegExp(repositoryCreatedEvent.id, 'g'), 'EVENT_ID')

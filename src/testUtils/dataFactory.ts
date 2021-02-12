@@ -715,6 +715,7 @@ export const buildRaidStats = ({
   dungeon,
   status,
   title,
+  createdAt,
 }: Partial<RaidStats> = {}): RaidStats => ({
   additions: additions ?? 0,
   changedFiles: changedFiles ?? 0,
@@ -729,6 +730,7 @@ export const buildRaidStats = ({
       .toLowerCase(),
   status: status ?? 'active',
   title: title ?? faker.random.words(),
+  createdAt: createdAt ?? faker.date.recent(3).getTime(),
 });
 
 type BuildCommitProps = {

@@ -3,7 +3,6 @@ import {
   buildPushEvent,
   buildRaidStats,
   buildRepository,
-  buildRepositoryEvent,
 } from '../testUtils/dataFactory';
 import { firestore } from '../testUtils/firebaseUtils';
 import { collections } from '../firebase';
