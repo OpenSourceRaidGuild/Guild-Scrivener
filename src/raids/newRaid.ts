@@ -65,6 +65,7 @@ async function createNewRaid({
       .add({
         additions: 0,
         changedFiles: 0,
+        files: {},
         commits: 0,
         contributors: {},
         deletions: 0,

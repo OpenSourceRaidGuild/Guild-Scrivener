@@ -17,6 +17,13 @@ export interface RaidStats {
   deletions: number;
   commits: number;
   changedFiles: number;
+  files: {
+    [key: string]: {
+      url: string;
+      filename: string;
+      contributors: number[];
+    };
+  };
   contributors: {
     [key: number]: UserStats;
   };

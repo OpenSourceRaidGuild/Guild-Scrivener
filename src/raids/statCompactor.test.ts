@@ -8,7 +8,8 @@ import { firestore } from '../testUtils/firebaseUtils';
 import { collections } from '../firebase';
 import runOctokitWebhook from '../testUtils/runOctokitWebhook';
 import { rest, server } from '../testUtils/msw';
-import statCompactor from './statCompactor';
+import statCompactor, { compactStatsFromCommitData } from './statCompactor';
+import { RaidStats } from './types/raidStats';
 
 const raidStats = buildRaidStats({});
 
@@ -81,7 +82,7 @@ it('does not update stats for a raid if repository is archived', async () => {
 
 it('does not update stats for a raid if there were no stat related commits', async () => {
   const pushEvent = buildPushEvent({
-    commits: [],
+    commits: 0,
   });
   const result = await runOctokitWebhook(() => statCompactor(pushEvent));
 
@@ -110,6 +111,7 @@ it('updates raid stats when called', async () => {
   const commit = buildCommit({
     ownerName: owner,
     repoName: repo,
+    changedFiles: 1,
   });
 
   server.use(
@@ -137,29 +139,7 @@ it('updates raid stats when called', async () => {
   const pushEvent = buildPushEvent({
     ownerName: owner,
     repoName: repo,
-    commits: [
-      {
-        id: '123',
-        tree_id: '456',
-        url: '',
-        distinct: true,
-        timestamp: '',
-        message: 'feat: did stuff',
-        author: {
-          name: 'Bob',
-          email: 'bob@example.com',
-          username: 'bob',
-        },
-        committer: {
-          name: 'Bob',
-          email: 'bob@example.com',
-          username: 'bob',
-        },
-        added: ['src/raids/statCompactor.test.ts'],
-        modified: [],
-        removed: [],
-      },
-    ],
+    commits: 1,
   });
   const result = await runOctokitWebhook(() => statCompactor(pushEvent));
 
@@ -167,11 +147,19 @@ it('updates raid stats when called', async () => {
     .collection(collections.raidStats)
     .get();
   expect(raidDocsSnapshot.docs).toHaveLength(1);
-  expect(raidDocsSnapshot.docs.map((d) => d.data())).toStrictEqual([
+  const expectedRaidStats: RaidStats[] = [
     {
       ...raidStats,
       additions: commit.stats.additions,
       deletions: commit.stats.deletions,
+      changedFiles: commit.files.length,
+      files: {
+        [commit.files[0].filename]: {
+          url: commit.files[0].blob_url,
+          filename: commit.files[0].filename,
+          contributors: [commit.author.id],
+        },
+      },
       commits: 1,
       contributors: {
         [commit.author.id]: {
@@ -184,7 +172,10 @@ it('updates raid stats when called', async () => {
         },
       },
     },
-  ]);
+  ];
+  expect(raidDocsSnapshot.docs.map((d) => d.data())).toStrictEqual(
+    expectedRaidStats
+  );
 
   const sanitizedStdOut = result.stdOut
     .replace(new RegExp(pushEvent.id, 'g'), 'EVENT_ID')

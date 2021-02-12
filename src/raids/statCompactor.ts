@@ -142,6 +142,11 @@ async function fetchAndFilterCommitData(
     const user = commitData.author?.login;
     const userId = commitData.author?.id;
     const avatarUrl = commitData.author?.avatar_url;
+    const changedFiles =
+      commitData.files?.map<ChangedFile>((file) => ({
+        filename: file.filename!,
+        url: file.blob_url!,
+      })) ?? [];
 
     results.push({
       user,
@@ -151,37 +156,11 @@ async function fetchAndFilterCommitData(
       deletions,
       parentCount: parents.length,
       isRaidCommit,
+      changedFiles,
     });
   }
 
   return results;
-}
-
-function compactStatsFromCommitData(commitData: FetchedCommitData[]) {
-  if (!commitData) return [];
-
-  return commitData.reduce<CompactedStats>((stats, commit) => {
-    if (!isCompactableCommit(commit)) {
-      return stats;
-    }
-
-    if (commit.userId in stats) {
-      stats[commit.userId].additions += commit.additions;
-      stats[commit.userId].deletions += commit.deletions;
-      stats[commit.userId].commits += 1;
-    } else {
-      stats[commit.userId] = {
-        userId: commit.userId,
-        user: commit.user,
-        avatarUrl: commit.avatarUrl,
-        additions: commit.additions,
-        deletions: commit.deletions,
-        commits: 1,
-      };
-    }
-
-    return stats;
-  }, {});
 }
 
 function isCompactableCommit(
@@ -191,6 +170,33 @@ function isCompactableCommit(
   // Exclude non raid commits
   // Exclude Merge commits
   return !!commit.user || !!commit.isRaidCommit || !(commit.parentCount > 1);
+}
+
+export function compactStatsFromCommitData(commitData: FetchedCommitData[]) {
+  return commitData.reduce<CompactedStats>((stats, commit) => {
+    if (!isCompactableCommit(commit)) {
+      return stats;
+    }
+
+    if (commit.userId in stats) {
+      stats[commit.userId].additions += commit.additions;
+      stats[commit.userId].deletions += commit.deletions;
+      stats[commit.userId].commits += 1;
+      stats[commit.userId].changedFiles.push(...commit.changedFiles);
+    } else {
+      stats[commit.userId] = {
+        userId: commit.userId,
+        user: commit.user,
+        avatarUrl: commit.avatarUrl,
+        additions: commit.additions,
+        deletions: commit.deletions,
+        commits: 1,
+        changedFiles: commit.changedFiles,
+      };
+    }
+
+    return stats;
+  }, {});
 }
 
 async function updateRaidStats(
@@ -224,41 +230,11 @@ async function updateRaidStats(
         }
 
         const raidRef = raids[0].ref;
-        const raidData = raids[0].data();
-        const updates: DocUpdates = {
-          commits: raidData.commits,
-          additions: raidData.additions,
-          deletions: raidData.deletions,
-        };
 
-        Object.values(compactedStatsToAdd).forEach((newStats) => {
-          // User Stats
-          const key = `contributors.${newStats.userId}`;
-          const oldStats = raidData.contributors[newStats.userId];
-          if (oldStats) {
-            const {
-              additions: oldAdditions,
-              deletions: oldDeletions,
-              commits: oldCommits,
-            } = oldStats;
-            const {
-              additions: newAdditions,
-              deletions: newDeletions,
-              commits: newCommits,
-            } = newStats;
-
-            updates[`${key}.additions`] = oldAdditions + newAdditions;
-            updates[`${key}.deletions`] = oldDeletions + newDeletions;
-            updates[`${key}.commits`] = oldCommits + newCommits;
-          } else {
-            updates[key] = newStats;
-          }
-
-          // Update Raid Stats
-          updates.commits += newStats.commits;
-          updates.additions += newStats.additions;
-          updates.deletions += newStats.deletions;
-        });
+        const updates = getUpdatesFromCompactedStats(
+          raids[0],
+          compactedStatsToAdd
+        );
 
         transaction.update(raidRef, updates);
       });
@@ -270,9 +246,85 @@ async function updateRaidStats(
     );
 }
 
+function getUpdatesFromCompactedStats(
+  raidSnapshot: FirebaseFirestore.DocumentSnapshot,
+  compactedStatsToAdd: CompactedStats
+): DocUpdates {
+  const raidData = raidSnapshot.data()!;
+  const updates: DocUpdates = {
+    commits: raidData.commits,
+    additions: raidData.additions,
+    deletions: raidData.deletions,
+    changedFiles: raidData.changedFiles,
+    files: raidData.files,
+  };
+
+  Object.values(compactedStatsToAdd).forEach((compactedStats) => {
+    const { changedFiles, ...newStats } = compactedStats;
+    const userId = newStats.userId;
+
+    // User Stats
+    const key = `contributors.${userId}`;
+    const oldStats = raidData.contributors[newStats.userId];
+    if (oldStats) {
+      const {
+        additions: oldAdditions,
+        deletions: oldDeletions,
+        commits: oldCommits,
+      } = oldStats;
+      const {
+        additions: newAdditions,
+        deletions: newDeletions,
+        commits: newCommits,
+      } = newStats;
+
+      updates[`${key}.additions`] = oldAdditions + newAdditions;
+      updates[`${key}.deletions`] = oldDeletions + newDeletions;
+      updates[`${key}.commits`] = oldCommits + newCommits;
+    } else {
+      updates[key] = newStats;
+    }
+
+    // Update changed files
+    let numberOfUniqueNewFiles = 0;
+    changedFiles.forEach((changedFile) => {
+      const { filename, url } = changedFile;
+      if (!(filename in updates.files)) {
+        // Add the file to the list of files if it hasn't already been added
+        updates.files[filename] = {
+          filename,
+          url,
+          contributors: [userId],
+        };
+        numberOfUniqueNewFiles++;
+      } else if (
+        filename in updates.files &&
+        !(userId in updates.files[filename].contributors)
+      ) {
+        // Add userId to a file's contributors list if they haven't already been added
+        updates.files[filename].contributors.push(userId);
+      }
+      // If the file already exists, and the userId has already been added, then there isn't anything that needs to be done
+    });
+
+    // Update Raid Stats
+    updates.commits += newStats.commits;
+    updates.additions += newStats.additions;
+    updates.deletions += newStats.deletions;
+    updates.changedFiles += numberOfUniqueNewFiles;
+  });
+
+  return updates;
+}
+
 /*
  * TYPES
  */
+type ChangedFile = {
+  url: string;
+  filename: string;
+};
+
 type FetchedCommitData = {
   user?: string;
   userId?: number;
@@ -281,6 +333,7 @@ type FetchedCommitData = {
   deletions: number;
   parentCount: number;
   isRaidCommit: boolean;
+  changedFiles: ChangedFile[];
 };
 
 type CompactableCommitData = FetchedCommitData & {
@@ -296,6 +349,7 @@ type UserStats = {
   additions: number;
   deletions: number;
   commits: number;
+  changedFiles: ChangedFile[];
 };
 
 type CompactedStats = {

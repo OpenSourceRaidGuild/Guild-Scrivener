@@ -98,6 +98,7 @@ it(`creates a raid when called`, async () => {
     {
       additions: 0,
       changedFiles: 0,
+      files: {},
       commits: 0,
       contributors: {},
       deletions: 0,
