@@ -730,7 +730,7 @@ export const buildRaidStats = ({
       .toLowerCase(),
   status: status ?? 'active',
   title: title ?? faker.random.words(),
-  createdAt: createdAt ?? faker.date.recent(3).getTime(),
+  createdAt: createdAt ?? faker.date.recent(3).setHours(0, 0, 0, 0),
 });
 
 type BuildCommitProps = {

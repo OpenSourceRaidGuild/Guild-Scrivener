@@ -8,6 +8,7 @@ import { collections } from '../firebase';
 import runOctokitWebhook from '../testUtils/runOctokitWebhook';
 import { rest, server } from '../testUtils/msw';
 import completeRaid from './completeRaid';
+import faker from 'faker';
 
 it(`does not complete a raid if repository is not a fork`, async () => {
   const repositoryArchivedEvent = buildRepositoryEvent({
@@ -100,6 +101,8 @@ it(`completes a raid when called`, async () => {
   // Setup an existing raid
   const raidRepo = buildRepository();
   const raidStats = buildRaidStats({
+    // Use set hours to stabilize results
+    createdAt: new Date().setHours(0, 0, 0, 0) - 259200000, // 3 days ago
     dungeon: raidRepo.parent!.full_name,
   });
   const _ = await firestore.collection(collections.raidStats).add(raidStats);
@@ -122,7 +125,11 @@ it(`completes a raid when called`, async () => {
     .get();
   expect(raidDocsSnapshot.docs).toHaveLength(1);
   expect(raidDocsSnapshot.docs.map((d) => d.data())).toStrictEqual([
-    { ...raidStats, status: 'completed' },
+    {
+      ...raidStats,
+      status: 'completed',
+      duration: 4,
+    },
   ]);
 
   const sanitizedStdOut = result.stdOut
