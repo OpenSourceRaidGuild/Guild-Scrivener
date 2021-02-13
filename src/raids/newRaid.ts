@@ -2,6 +2,8 @@ import chalk from 'chalk';
 import { octokit } from '../octokit';
 import { db as firestore } from '../firebase';
 import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
+import { RaidStats } from './types/raidStats';
+import { date } from 'faker';
 
 /*
  * Steps:
@@ -25,7 +27,7 @@ async function createNewRaid({
     } = payload.repository;
 
     /*
-     * Step 1 - Check flags
+     * Step - Check flags
      */
     if (!isFork) {
       throw `Event '${id}' did not meet criteria for Raid creation: Repository was not a fork`;
@@ -43,7 +45,7 @@ async function createNewRaid({
       : /* istanbul ignore next */ '';
 
     /*
-     * Step 2 - Check if Raid already exists
+     * Step - Check if Raid already exists
      */
     const snapshot = await firestore
       .collection('raid-stats')
@@ -55,19 +57,22 @@ async function createNewRaid({
     }
 
     /*
-     * Step 3 - Create new Raid
+     * Step - Create new Raid
      */
-    await firestore
-      .collection('raid-stats')
+    await (firestore.collection(
+      'raid-stats'
+    ) as FirebaseFirestore.CollectionReference<RaidStats>)
       .add({
         additions: 0,
         changedFiles: 0,
+        files: {},
         commits: 0,
         contributors: {},
         deletions: 0,
         dungeon: dungeonRepoNameWithOwner,
         status: 'active',
         title: '[PLEASE RENAME ME]',
+        createdAt: Date.now(),
       })
       .catch(
         // Ignore, because this is impossible to test... And it works.

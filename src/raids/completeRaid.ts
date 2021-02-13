@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import { octokit } from '../octokit';
 import { db as firestore } from '../firebase';
 import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
+import { RaidStats } from './types/raidStats';
 
 /*
  * Steps:
@@ -63,8 +64,10 @@ async function completeRaid({
      * Step 3 - Complete Raid
      */
     const raidRef = snapshot.docs[0].ref;
+    const raidCreatedAt: number = (await raidRef.get()).get('createdAt');
     await raidRef.update({
       status: 'completed',
+      duration: Math.ceil(Math.abs(raidCreatedAt - Date.now()) / 86400000),
     });
 
     console.log(

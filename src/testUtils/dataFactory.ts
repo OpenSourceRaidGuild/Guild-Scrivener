@@ -473,7 +473,7 @@ type BuildPushEventProps = {
   isArchived?: boolean;
   ownerName?: string;
   repoName?: string;
-  commits?: Commit[];
+  commits?: number;
 };
 
 export const buildPushEvent = ({
@@ -661,47 +661,49 @@ export const buildPushEvent = ({
         0,
         12
       )}...${afterSha.substr(0, 12)}`,
-      commits: commits ?? [],
+      commits: [],
       head_commit: null,
     },
   };
 
-  if (!commits) {
-    const commitsData: Commit[] = [];
-    for (let i = 0; i < faker.random.number({ min: 1, max: 10 }); ++i) {
-      const user: CommitUser = {
-        name: faker.fake('{{name.firstName}} {{name.lastName}}'),
-        email: faker.internet.exampleEmail(),
-        username: faker.internet.userName(),
-      };
-      const commitId = faker.git.commitSha();
+  const commitsData: Commit[] = [];
+  for (
+    let i = 0;
+    i < (commits ?? faker.random.number({ min: 1, max: 10 }));
+    ++i
+  ) {
+    const user: CommitUser = {
+      name: faker.fake('{{name.firstName}} {{name.lastName}}'),
+      email: faker.internet.exampleEmail(),
+      username: faker.internet.userName(),
+    };
+    const commitId = faker.git.commitSha();
 
-      commitsData.push({
-        id: commitId,
-        tree_id: faker.git.commitSha(),
-        distinct: false,
-        message:
-          faker.random.arrayElement(['chore', 'fix', 'test', 'feat', 'docs']) +
-          ': ' +
-          faker.git.commitMessage(),
-        timestamp: '2021-02-06T23:07:08+01:00',
-        url: `https://github.com/${repoNameWithOwner}/commit/${commitId}`,
-        author: user,
-        committer: user,
-        added: new Array(faker.random.number(5)).map((_) =>
-          faker.system.filePath()
-        ),
-        removed: new Array(faker.random.number(5)).map((_) =>
-          faker.system.filePath()
-        ),
-        modified: new Array(faker.random.number(5)).map((_) =>
-          faker.system.filePath()
-        ),
-      });
-    }
-
-    pushData.payload.commits = commitsData;
+    commitsData.push({
+      id: commitId,
+      tree_id: faker.git.commitSha(),
+      distinct: false,
+      message:
+        faker.random.arrayElement(['chore', 'fix', 'test', 'feat', 'docs']) +
+        ': ' +
+        faker.git.commitMessage(),
+      timestamp: '2021-02-06T23:07:08+01:00',
+      url: `https://github.com/${repoNameWithOwner}/commit/${commitId}`,
+      author: user,
+      committer: user,
+      added: new Array(faker.random.number(5)).map((_) =>
+        faker.system.filePath()
+      ),
+      removed: new Array(faker.random.number(5)).map((_) =>
+        faker.system.filePath()
+      ),
+      modified: new Array(faker.random.number(5)).map((_) =>
+        faker.system.filePath()
+      ),
+    });
   }
+
+  pushData.payload.commits = commitsData;
 
   return pushData;
 };
@@ -715,6 +717,7 @@ export const buildRaidStats = ({
   dungeon,
   status,
   title,
+  createdAt,
 }: Partial<RaidStats> = {}): RaidStats => ({
   additions: additions ?? 0,
   changedFiles: changedFiles ?? 0,
@@ -729,6 +732,8 @@ export const buildRaidStats = ({
       .toLowerCase(),
   status: status ?? 'active',
   title: title ?? faker.random.words(),
+  createdAt: createdAt ?? faker.date.recent(3).setHours(0, 0, 0, 0),
+  files: {},
 });
 
 type BuildCommitProps = {
@@ -738,6 +743,7 @@ type BuildCommitProps = {
   additions?: number;
   deletions?: number;
   changedFiles?: number;
+  hasAuthor?: boolean;
 };
 
 export const buildCommit = ({
@@ -747,6 +753,7 @@ export const buildCommit = ({
   additions,
   deletions,
   changedFiles,
+  hasAuthor,
 }: BuildCommitProps) => {
   const owner = ownerName ?? faker.internet.userName().toLowerCase();
   const repository =
@@ -760,6 +767,7 @@ export const buildCommit = ({
   const treeId = faker.git.commitSha();
   const totalAdditions = additions ?? faker.random.number(1000);
   const totalDeletions = deletions ?? faker.random.number(1000);
+  const withAuthor = hasAuthor ?? true;
   const authorName = faker.fake('{{name.firstName}} {{name.lastName}}');
   const authorNames = authorName.split(' ');
   const authorEmail = faker.internet.exampleEmail(
@@ -810,7 +818,7 @@ export const buildCommit = ({
 
     return fileChanges.map((total) => {
       const fileId = faker.git.commitSha();
-      const fileName = faker.system.filePath();
+      const fileName = faker.system.filePath().replace(/^\//, '');
 
       const isAdditions = faker.random.boolean();
       const additions = isAdditions ? total : 0;
@@ -862,10 +870,12 @@ export const buildCommit = ({
       },
     },
     author: {
-      login: authorUsername,
-      id: 1,
+      login: withAuthor ? authorUsername : null,
+      id: withAuthor ? 1 : null,
       node_id: 'MDQ6VXNlcjE=',
-      avatar_url: `https://github.com/images/error/octocat_happy.gif`,
+      avatar_url: withAuthor
+        ? `https://github.com/images/error/octocat_happy.gif`
+        : null,
       gravatar_id: '',
       url: `https://api.github.com/users/${authorUsername}`,
       html_url: `https://github.com/${authorUsername}`,
