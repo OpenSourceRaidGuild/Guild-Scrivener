@@ -3,6 +3,7 @@ import got from 'got';
 import { octokit } from '../octokit';
 import { db as firestore } from '../firebase';
 import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
+import { RaidStats } from './types/raidStats';
 
 /*
  * Steps:
@@ -110,7 +111,7 @@ export default statCompactor;
 /*
  * HELPERS
  */
-async function fetchAndFilterCommitData(
+export async function fetchAndFilterCommitData(
   raidRepoOwner: string,
   raidRepoName: string,
   dungeonRepoNameWithOwner: string,
@@ -138,7 +139,7 @@ async function fetchAndFilterCommitData(
 
     const additions = commitData.stats?.additions ?? 0;
     const deletions = commitData.stats?.deletions ?? 0;
-    const parents = commitData.parents;
+    const parentCount = commitData.parents.length;
     const user = commitData.author?.login;
     const userId = commitData.author?.id;
     const avatarUrl = commitData.author?.avatar_url;
@@ -154,7 +155,7 @@ async function fetchAndFilterCommitData(
       avatarUrl,
       additions,
       deletions,
-      parentCount: parents.length,
+      parentCount,
       isRaidCommit,
       changedFiles,
     });
@@ -166,10 +167,13 @@ async function fetchAndFilterCommitData(
 function isCompactableCommit(
   commit: FetchedCommitData
 ): commit is CompactableCommitData {
-  // Exclude null/undefined users
-  // Exclude non raid commits
-  // Exclude Merge commits
-  return !!commit.user || !!commit.isRaidCommit || !(commit.parentCount > 1);
+  /*
+   * A commit is compactable if:
+   * - The user is not undefined
+   * - The commit is a raid commit
+   * - The commit has only one parent
+   */
+  return !!commit.user && commit.isRaidCommit && !(commit.parentCount > 1);
 }
 
 export function compactStatsFromCommitData(commitData: FetchedCommitData[]) {
@@ -182,7 +186,9 @@ export function compactStatsFromCommitData(commitData: FetchedCommitData[]) {
       stats[commit.userId].additions += commit.additions;
       stats[commit.userId].deletions += commit.deletions;
       stats[commit.userId].commits += 1;
-      stats[commit.userId].changedFiles.push(...commit.changedFiles);
+      stats[commit.userId].changedFiles = stats[
+        commit.userId
+      ].changedFiles.concat(commit.changedFiles);
     } else {
       stats[commit.userId] = {
         userId: commit.userId,
@@ -232,7 +238,7 @@ async function updateRaidStats(
         const raidRef = raids[0].ref;
 
         const updates = getUpdatesFromCompactedStats(
-          raids[0],
+          raids[0].data() as RaidStats,
           compactedStatsToAdd
         );
 
@@ -246,17 +252,17 @@ async function updateRaidStats(
     );
 }
 
-function getUpdatesFromCompactedStats(
-  raidSnapshot: FirebaseFirestore.DocumentSnapshot,
+export function getUpdatesFromCompactedStats(
+  raidData: RaidStats,
   compactedStatsToAdd: CompactedStats
 ): DocUpdates {
-  const raidData = raidSnapshot.data()!;
   const updates: DocUpdates = {
     commits: raidData.commits,
     additions: raidData.additions,
     deletions: raidData.deletions,
     changedFiles: raidData.changedFiles,
-    files: raidData.files,
+    files: JSON.parse(JSON.stringify(raidData.files)), // There has to be a better way to deep clone
+    contributors: JSON.parse(JSON.stringify(raidData.contributors)), // There has to be a better way to deep clone
   };
 
   Object.values(compactedStatsToAdd).forEach((compactedStats) => {
@@ -264,25 +270,18 @@ function getUpdatesFromCompactedStats(
     const userId = newStats.userId;
 
     // User Stats
-    const key = `contributors.${userId}`;
-    const oldStats = raidData.contributors[newStats.userId];
-    if (oldStats) {
-      const {
-        additions: oldAdditions,
-        deletions: oldDeletions,
-        commits: oldCommits,
-      } = oldStats;
+    if (userId in updates.contributors) {
       const {
         additions: newAdditions,
         deletions: newDeletions,
         commits: newCommits,
       } = newStats;
 
-      updates[`${key}.additions`] = oldAdditions + newAdditions;
-      updates[`${key}.deletions`] = oldDeletions + newDeletions;
-      updates[`${key}.commits`] = oldCommits + newCommits;
+      updates.contributors[userId].additions += newAdditions;
+      updates.contributors[userId].deletions += newDeletions;
+      updates.contributors[userId].commits += newCommits;
     } else {
-      updates[key] = newStats;
+      updates.contributors[userId] = newStats;
     }
 
     // Update changed files
@@ -297,7 +296,7 @@ function getUpdatesFromCompactedStats(
           contributors: [userId],
         };
         numberOfUniqueNewFiles++;
-      } else if (
+      } /* istanbul ignore else */ else if (
         filename in updates.files &&
         !(userId in updates.files[filename].contributors)
       ) {

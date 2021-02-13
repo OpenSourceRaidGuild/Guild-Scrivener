@@ -743,6 +743,7 @@ type BuildCommitProps = {
   additions?: number;
   deletions?: number;
   changedFiles?: number;
+  hasAuthor?: boolean;
 };
 
 export const buildCommit = ({
@@ -752,6 +753,7 @@ export const buildCommit = ({
   additions,
   deletions,
   changedFiles,
+  hasAuthor,
 }: BuildCommitProps) => {
   const owner = ownerName ?? faker.internet.userName().toLowerCase();
   const repository =
@@ -765,6 +767,7 @@ export const buildCommit = ({
   const treeId = faker.git.commitSha();
   const totalAdditions = additions ?? faker.random.number(1000);
   const totalDeletions = deletions ?? faker.random.number(1000);
+  const withAuthor = hasAuthor ?? true;
   const authorName = faker.fake('{{name.firstName}} {{name.lastName}}');
   const authorNames = authorName.split(' ');
   const authorEmail = faker.internet.exampleEmail(
@@ -867,10 +870,12 @@ export const buildCommit = ({
       },
     },
     author: {
-      login: authorUsername,
-      id: 1,
+      login: withAuthor ? authorUsername : null,
+      id: withAuthor ? 1 : null,
       node_id: 'MDQ6VXNlcjE=',
-      avatar_url: `https://github.com/images/error/octocat_happy.gif`,
+      avatar_url: withAuthor
+        ? `https://github.com/images/error/octocat_happy.gif`
+        : null,
       gravatar_id: '',
       url: `https://api.github.com/users/${authorUsername}`,
       html_url: `https://github.com/${authorUsername}`,
