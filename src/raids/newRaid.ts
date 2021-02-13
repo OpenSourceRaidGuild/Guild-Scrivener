@@ -1,14 +1,14 @@
 import chalk from 'chalk';
-import { octokit } from '../octokit';
-import { db as firestore } from '../firebase';
+import { octokit } from '../utils/octokit';
+import { db as firestore } from '../utils/firebase';
 import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
 import { RaidStats } from './types/raidStats';
-import { date } from 'faker';
 
 /*
  * Steps:
  * - Check flag(s) to either ignore or proceed
  * - Check if Raid already exists
+ * - Send Discord notification
  * - Create new Raid in firestore
  */
 async function createNewRaid({
@@ -55,6 +55,11 @@ async function createNewRaid({
     if (!snapshot.empty) {
       throw `An active Raid already exists for ${dungeonRepoNameWithOwner}`;
     }
+
+    /*
+     * Step - Send Discord notification
+     */
+    // STUB
 
     /*
      * Step - Create new Raid
