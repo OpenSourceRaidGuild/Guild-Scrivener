@@ -10,8 +10,11 @@ chalk.level = 0;
 beforeAll(() => server.listen());
 
 beforeEach(async () => {
-  server.resetHandlers();
   await resetFirestore();
+});
+
+afterEach(() => {
+  server.resetHandlers();
 });
 
 afterAll(async () => {
