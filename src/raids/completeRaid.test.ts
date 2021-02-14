@@ -104,7 +104,7 @@ it(`completes a raid when called`, async () => {
     createdAt: new Date().setHours(0, 0, 0, 0) - 259200000, // 3 days ago
     dungeon: raidRepo.parent!.full_name,
   });
-  const _ = await firestore.collection(collections.raidStats).add(raidStats);
+  await firestore.collection(collections.raidStats).add(raidStats);
 
   server.use(
     rest.get('https://api.github.com/repos/:owner/:repo', (req, res, ctx) => {
