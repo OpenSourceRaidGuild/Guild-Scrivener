@@ -8,7 +8,6 @@ import { collections } from '../utils/firebase';
 import runOctokitWebhook from '../testUtils/runOctokitWebhook';
 import { rest, server } from '../testUtils/msw';
 import completeRaid from './completeRaid';
-import faker from 'faker';
 
 it(`does not complete a raid if repository is not a fork`, async () => {
   const repositoryArchivedEvent = buildRepositoryEvent({
@@ -110,7 +109,24 @@ it(`completes a raid when called`, async () => {
   server.use(
     rest.get('https://api.github.com/repos/:owner/:repo', (req, res, ctx) => {
       return res(ctx.json(raidRepo));
-    })
+    }),
+    rest.delete(
+      'https://discord.com/api/webhooks/:webhookId/:token/messages/:messageId',
+      (req, res, ctx) => {
+        return res();
+      }
+    ),
+    rest.post(
+      'https://discord.com/api/webhooks/:id/:token',
+      (req, res, ctx) => {
+        return res(
+          ctx.json({
+            content: (req.body as any).content,
+            id: '67890',
+          })
+        );
+      }
+    )
   );
 
   const repositoryArchivedEvent = buildRepositoryEvent({
@@ -129,6 +145,7 @@ it(`completes a raid when called`, async () => {
       ...raidStats,
       status: 'completed',
       duration: 4,
+      discordMessageId: '67890',
     },
   ]);
 
