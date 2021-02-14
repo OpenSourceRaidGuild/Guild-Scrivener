@@ -3,7 +3,7 @@
   "exclude": ["src/**/*.test.ts", "src/setupTests.ts"],
   "compilerOptions": {
     "types": ["jest"],
-    "module": "System",
+    "module": "CommonJS",
     "target": "ES2019",
     "outDir": "dist",
     "moduleResolution": "node",

@@ -1,5 +1,5 @@
 import { Webhooks } from '@octokit/webhooks';
-import { labelWebhookhandler } from './labelWebhookhandler';
+import { labelWebhookHandler } from './labelWebhookHandler';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -8,4 +8,4 @@ export const labelsWebhook = new Webhooks({
   path: '/labels',
 });
 
-labelsWebhook.on('label', labelWebhookhandler as any);
+labelsWebhook.on('label', labelWebhookHandler as any);

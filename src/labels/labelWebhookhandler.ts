@@ -6,19 +6,18 @@ import { TPayload, TLabelReqObject } from './types';
 import { createLabelInRepos, updateLabelsInRepos } from './repoEventHelpers';
 
 dotenv.config();
-const LOG = console.log;
 
-export async function labelWebhookhandler(event: WebhookEvent<TPayload>) {
+export async function labelWebhookHandler(event: WebhookEvent<TPayload>) {
   const rateLimitCheck = await octokit.request('GET /rate_limit');
-  LOG(chalk`
+  console.log(chalk`
   Rate: {yellow ${JSON.stringify(rateLimitCheck.data.rate, null, 2)}}
   `);
 
-  const listOfReposResponse = await octokit.repos.listForOrg({
+  const listOfRepos = await octokit.repos.listForOrg({
     type: 'all',
     org: event.payload.organization.login,
   });
-  const filteredRepos = listOfReposResponse.data.filter(
+  const filteredRepos = listOfRepos.data.filter(
     (repo) => repo.name !== 'website' && repo.archived !== true
   );
 
@@ -56,6 +55,6 @@ export async function labelWebhookhandler(event: WebhookEvent<TPayload>) {
       break;
 
     default:
-      LOG(chalk.redBright('Label Fetching/Writing Failed!!! \n'));
+      console.log(chalk.redBright('Label Fetching/Writing Failed!!! \n'));
   }
 }
