@@ -1,12 +1,11 @@
 import * as firebaseUtils from '@firebase/testing';
 import faker from 'faker';
 
-if (process.env.GITHUB_ACTION) {
-  console.log(process.env.GITHUB_ACTION);
-  faker.seed(Number(process.env.GITHUB_ACTION));
-}
+const projectIdPrefix = process.env.PROJECT_ID_PREFIX;
+const prefix = projectIdPrefix ? projectIdPrefix : 'test';
+faker.seed(Date.now());
 
-const PROJECT_ID = 'test-' + faker.git.shortSha();
+const PROJECT_ID = faker.fake(`${prefix}-{{git.shortSha}}`);
 
 // Makes the firebase instance used by the app point to our test instance
 process.env.FIREBASE_PROJECT_ID = PROJECT_ID;
