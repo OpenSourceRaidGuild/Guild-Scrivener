@@ -734,6 +734,7 @@ export const buildRaidStats = ({
   title: title ?? faker.random.words(),
   createdAt: createdAt ?? faker.date.recent(3).setHours(0, 0, 0, 0),
   files: {},
+  discordMessageId: faker.random.number({ min: 1, max: 10000000 }).toString(),
 });
 
 type BuildCommitProps = {
