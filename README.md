@@ -14,6 +14,8 @@ Create a `.env` file
 - `RAID_HOOK_SECRET` The Raid (Stats) Hooks' secret - see [GitHub Webhook Secret](https://docs.github.com/en/developers/webhooks-and-events/creating-webhooks)
 - `LABEL_HOOK_SECRET` The Label Hooks' secret - see [GitHub Webhook Secret](https://docs.github.com/en/developers/webhooks-and-events/creating-webhooks)
 - `AUTH` A [GitHub Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token)
+- `CURRENT_RAID_DISCORD_WEBHOOK_URL` The webhook URL for sending "current raid" messages
+- `COMPLETED_RAID_DISCORD_WEBHOOK_URL` The webhook URL for sending "completed raid" messages
 - `PORT` **_optional_** Only useful for production - not setting this uses port 5000
 
 ## Commands
