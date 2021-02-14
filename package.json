@@ -14,7 +14,7 @@
     "start": "node ./dist/index.js",
     "build": "tsc",
     "test": "npm run firestore -- \"jest --watch\"",
-    "test:ci": "npm run firestore -- \"jest --coverage --maxWorkers=2\""
+    "test:ci": "npm run firestore -- \"jest --coverage --runInBand\""
   },
   "dependencies": {
     "@octokit/auth-token": "^2.4.4",
