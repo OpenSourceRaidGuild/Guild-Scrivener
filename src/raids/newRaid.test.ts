@@ -12,7 +12,7 @@ import { RaidStats } from './types/raidStats';
 
 it(`does not create a raid if repository is not a fork`, async () => {
   const repositoryCreatedEvent = buildRepositoryEvent({
-    eventType: 'created',
+    action: 'created',
     isFork: false,
   });
   const result = await runOctokitWebhook(() =>
@@ -49,7 +49,7 @@ it(`does not create a raid if an active raid already exists for the dungeon`, as
   );
 
   const repositoryCreatedEvent = buildRepositoryEvent({
-    eventType: 'created',
+    action: 'created',
   });
   const result = await runOctokitWebhook(() =>
     createNewRaid(repositoryCreatedEvent)
@@ -83,7 +83,7 @@ it(`creates a raid when called`, async () => {
   );
 
   const repositoryCreatedEvent = buildRepositoryEvent({
-    eventType: 'created',
+    action: 'created',
   });
   const result = await runOctokitWebhook(() =>
     createNewRaid(repositoryCreatedEvent)

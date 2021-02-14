@@ -1,9 +1,8 @@
 import chalk from 'chalk';
 import { octokit } from '../octokit';
 import { db as firestore } from '../firebase';
-import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
+import { EmitterWebhookEvent } from '@octokit/webhooks';
 import { RaidStats } from './types/raidStats';
-import { date } from 'faker';
 
 /*
  * Steps:
@@ -14,7 +13,7 @@ import { date } from 'faker';
 async function createNewRaid({
   id,
   payload,
-}: WebhookEvent<EventPayloads.WebhookPayloadRepository>) {
+}: EmitterWebhookEvent<'repository.created'>) {
   console.log(
     chalk.cyanBright(`- Processing repository created event '${id}'`)
   );
