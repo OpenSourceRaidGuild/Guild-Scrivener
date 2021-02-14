@@ -1,6 +1,11 @@
 import * as firebaseUtils from '@firebase/testing';
 import faker from 'faker';
 
+if (process.env.GITHUB_RUN_ID) {
+  console.log(process.env.GITHUB_RUN_ID);
+  faker.seed(Number(process.env.GITHUB_RUN_ID!));
+}
+
 const PROJECT_ID = 'test-' + faker.git.shortSha();
 
 // Makes the firebase instance used by the app point to our test instance
