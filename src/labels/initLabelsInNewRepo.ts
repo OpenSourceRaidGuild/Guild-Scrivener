@@ -7,7 +7,7 @@ dotenv.config();
 
 // TODO delete partial dupes that are older or shorter
 
-export async function initLabelsInNewRepo(event: WebhookEvent<any>) {
+export async function initLabelsInNewRepoHandler(event: WebhookEvent<any>) {
   const listOfLabels = await octokit.issues.listLabelsForRepo({
     owner: 'OpenSourceRaidGuild',
     repo: 'website',
