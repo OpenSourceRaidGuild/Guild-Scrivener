@@ -18,7 +18,7 @@ Create a `.env` file
 
 ## Commands
 
-## `firestore`
+### `firestore`
 
 Starts the firestore emulator, and runs the provided script. The emulator is closed once the script has completed.
 
