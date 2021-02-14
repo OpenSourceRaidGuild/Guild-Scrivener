@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "firestore": "cross-env FIRESTORE_EMULATOR_HOST=\"localhost:8080\" firebase emulators:exec --only firestore",
-    "local": "npm run firestore -- \"nodemon ./src/index.ts\"",
+    "local": "npm run firestore -- --ui \"nodemon ./src/index.ts\"",
     "start": "node ./dist/index.js",
     "build": "tsc",
     "test": "npm run firestore -- \"jest --watch\"",

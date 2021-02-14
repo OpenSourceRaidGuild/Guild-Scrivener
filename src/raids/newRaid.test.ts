@@ -79,7 +79,18 @@ it(`creates a raid when called`, async () => {
   server.use(
     rest.get('https://api.github.com/repos/:owner/:repo', (req, res, ctx) => {
       return res(ctx.json(raidRepo));
-    })
+    }),
+    rest.post(
+      'https://discord.com/api/webhooks/:id/:token',
+      (req, res, ctx) => {
+        return res(
+          ctx.json({
+            content: (req.body as any).content,
+            id: '12345',
+          })
+        );
+      }
+    )
   );
 
   const repositoryCreatedEvent = buildRepositoryEvent({
@@ -106,6 +117,7 @@ it(`creates a raid when called`, async () => {
       status: 'active',
       title: '[PLEASE RENAME ME]',
       createdAt: mockCreatedAt,
+      discordMessageId: '12345',
     },
   ];
   expect(raidDocsSnapshot.docs.map((d) => d.data())).toStrictEqual(

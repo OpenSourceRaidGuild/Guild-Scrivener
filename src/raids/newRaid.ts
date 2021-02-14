@@ -1,8 +1,12 @@
 import chalk from 'chalk';
+import dotenv from 'dotenv';
 import { octokit } from '../utils/octokit';
 import { db as firestore } from '../utils/firebase';
 import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
 import { RaidStats } from './types/raidStats';
+import { sendWebhookMessage } from '../utils/discord/webhooks';
+
+dotenv.config();
 
 /*
  * Steps:
@@ -59,7 +63,13 @@ async function createNewRaid({
     /*
      * Step - Send Discord notification
      */
-    // STUB
+    const { id: discordMessageId } = await sendWebhookMessage(
+      process.env.CURRENT_RAID_DISCORD_WEBHOOK_URL!,
+      {
+        // TODO: replace with a templating system
+        content: `Raid Repo: https://github.com/${raidRepoOwner}/${raidRepoName}`,
+      }
+    );
 
     /*
      * Step - Create new Raid
@@ -78,6 +88,7 @@ async function createNewRaid({
         status: 'active',
         title: '[PLEASE RENAME ME]',
         createdAt: Date.now(),
+        discordMessageId,
       })
       .catch(
         // Ignore, because this is impossible to test... And it works.
