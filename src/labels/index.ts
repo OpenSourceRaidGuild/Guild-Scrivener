@@ -1,5 +1,5 @@
 import { Webhooks } from '@octokit/webhooks';
-import { labelWebhookhandler } from './labelling';
+import { labelWebhookhandler } from './labelWebhookhandler';
 import dotenv from 'dotenv';
 dotenv.config();
 
