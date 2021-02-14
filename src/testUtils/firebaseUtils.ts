@@ -1,9 +1,9 @@
 import * as firebaseUtils from '@firebase/testing';
 import faker from 'faker';
 
-if (process.env.GITHUB_RUN_ID) {
-  console.log(process.env.GITHUB_RUN_ID);
-  faker.seed(Number(process.env.GITHUB_RUN_ID!));
+if (process.env.GITHUB_ACTION) {
+  console.log(process.env.GITHUB_ACTION);
+  faker.seed(Number(process.env.GITHUB_ACTION));
 }
 
 const PROJECT_ID = 'test-' + faker.git.shortSha();
