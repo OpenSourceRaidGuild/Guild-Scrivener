@@ -1,5 +1,5 @@
 import runOctokitWebhook from '../testUtils/runOctokitWebhook';
-import { labelWebhookHandler } from './labelWebhookhandler';
+import { labelWebhookHandler } from './labelWebhookHandler';
 
 it('smoke tests', async () => {
   try {

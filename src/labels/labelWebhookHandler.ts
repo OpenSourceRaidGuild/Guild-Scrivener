@@ -1,13 +1,13 @@
 import { octokit } from '../octokit';
 import chalk from 'chalk';
-import { WebhookEvent } from '@octokit/webhooks';
+import { EmitterWebhookEvent } from '@octokit/webhooks';
 import dotenv from 'dotenv';
-import { TPayload, TLabelReqObject } from './types';
+import { TLabelReqObject } from './types';
 import { createLabelInRepos, updateLabelsInRepos } from './repoEventHelpers';
 
 dotenv.config();
 
-export async function labelWebhookHandler(event: WebhookEvent<TPayload>) {
+export async function labelWebhookHandler(event: EmitterWebhookEvent<'label'>) {
   const rateLimitCheck = await octokit.request('GET /rate_limit');
   console.log(chalk`
   Rate: {yellow ${JSON.stringify(rateLimitCheck.data.rate, null, 2)}}
@@ -15,7 +15,7 @@ export async function labelWebhookHandler(event: WebhookEvent<TPayload>) {
 
   const listOfRepos = await octokit.repos.listForOrg({
     type: 'all',
-    org: event.payload.organization.login,
+    org: event.payload.organization!.login,
   });
   const filteredRepos = listOfRepos.data.filter(
     (repo) => repo.name !== 'website' && repo.archived !== true
@@ -33,7 +33,7 @@ export async function labelWebhookHandler(event: WebhookEvent<TPayload>) {
         return await createLabelInRepos({
           label,
           repo: repo.name,
-          owner: event.payload.organization.login,
+          owner: event.payload.organization!.login,
         });
       });
     }
@@ -47,7 +47,7 @@ export async function labelWebhookHandler(event: WebhookEvent<TPayload>) {
         return await updateLabelsInRepos({
           label,
           repo: repo.name,
-          owner: event.payload.organization.login,
+          owner: event.payload.organization!.login,
         });
       });
     }

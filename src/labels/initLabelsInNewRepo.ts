@@ -2,12 +2,14 @@ import { octokit } from '../octokit';
 import chalk from 'chalk';
 import { createLabelInRepos } from './repoEventHelpers';
 import dotenv from 'dotenv';
-import { WebhookEvent } from '@octokit/webhooks';
+import { EmitterWebhookEvent } from '@octokit/webhooks';
 dotenv.config();
 
 // TODO delete partial dupes that are older or shorter
 
-export async function initLabelsInNewRepoHandler(event: WebhookEvent<any>) {
+export async function initLabelsInNewRepoHandler(
+  event: EmitterWebhookEvent<'repository.created'>
+) {
   const listOfLabels = await octokit.issues.listLabelsForRepo({
     owner: 'OpenSourceRaidGuild',
     repo: 'website',
