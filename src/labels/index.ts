@@ -14,4 +14,6 @@ export const repoCreatedWebhook = new Webhooks({
 });
 
 labelsWebhook.on('label', labelWebhookHandler as any);
+
 repoCreatedWebhook.on('repository.created', initLabelsInNewRepoHandler as any);
+repoCreatedWebhook.on('fork', initLabelsInNewRepoHandler as any);
