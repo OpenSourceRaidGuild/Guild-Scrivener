@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import got from 'got';
 import { octokit } from '../octokit';
 import { db as firestore } from '../firebase';
-import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
+import { EmitterWebhookEvent } from '@octokit/webhooks';
 import { RaidStats } from './types/raidStats';
 
 /*
@@ -12,10 +12,7 @@ import { RaidStats } from './types/raidStats';
  * - Compact stats from filtered commit data
  * - Write stats to firestore
  */
-async function statCompactor({
-  id,
-  payload,
-}: WebhookEvent<EventPayloads.WebhookPayloadPush>) {
+async function statCompactor({ id, payload }: EmitterWebhookEvent<'push'>) {
   console.log(chalk.cyanBright(`- Processing push event '${id}'`));
 
   try {

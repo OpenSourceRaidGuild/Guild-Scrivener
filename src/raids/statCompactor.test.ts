@@ -28,7 +28,6 @@ it('does not update stats for a raid if repository is not a fork', async () => {
   const raidDocsSnapshot = await firestore
     .collection(collections.raidStats)
     .get();
-  expect(raidDocsSnapshot.docs).toHaveLength(1);
   expect(raidDocsSnapshot.docs.map((d) => d.data())).toStrictEqual([raidStats]);
 
   const sanitizedStdOut = result.stdOut
@@ -51,7 +50,6 @@ it('does not update stats for a raid if commits were not on the default branch',
   const raidDocsSnapshot = await firestore
     .collection(collections.raidStats)
     .get();
-  expect(raidDocsSnapshot.docs).toHaveLength(1);
   expect(raidDocsSnapshot.docs.map((d) => d.data())).toStrictEqual([raidStats]);
 
   const sanitizedStdOut = result.stdOut
@@ -74,7 +72,6 @@ it('does not update stats for a raid if repository is archived', async () => {
   const raidDocsSnapshot = await firestore
     .collection(collections.raidStats)
     .get();
-  expect(raidDocsSnapshot.docs).toHaveLength(1);
   expect(raidDocsSnapshot.docs.map((d) => d.data())).toStrictEqual([raidStats]);
 
   const sanitizedStdOut = result.stdOut
@@ -97,7 +94,6 @@ it('does not update stats for a raid if there were no stat related commits', asy
   const raidDocsSnapshot = await firestore
     .collection(collections.raidStats)
     .get();
-  expect(raidDocsSnapshot.docs).toHaveLength(1);
   expect(raidDocsSnapshot.docs.map((d) => d.data())).toStrictEqual([raidStats]);
 
   const sanitizedStdOut = result.stdOut
@@ -146,7 +142,6 @@ it(`does not update stats for a raid if more than one active raid exists for the
   const raidDocsSnapshot = await firestore
     .collection(collections.raidStats)
     .get();
-  expect(raidDocsSnapshot.docs).toHaveLength(2);
   expect(raidDocsSnapshot.docs.map((d) => d.data())).toStrictEqual([
     raidStats,
     raidStats,
@@ -195,7 +190,7 @@ it(`does not update stats for a raid if no active raid exists for the dungeon`, 
   const raidDocsSnapshot = await firestore
     .collection(collections.raidStats)
     .get();
-  expect(raidDocsSnapshot.docs).toHaveLength(0);
+  expect(raidDocsSnapshot.docs).toStrictEqual([]);
 
   const sanitizedStdOut = result.stdOut
     .replace(new RegExp(repositoryArchivedEvent.id, 'g'), 'EVENT_ID')
@@ -243,7 +238,6 @@ it('updates raid stats when called', async () => {
   const raidDocsSnapshot = await firestore
     .collection(collections.raidStats)
     .get();
-  expect(raidDocsSnapshot.docs).toHaveLength(1);
   const expectedRaidStats: RaidStats[] = [
     {
       ...raidStats,

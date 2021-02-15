@@ -13,7 +13,7 @@ export async function createLabelInRepos({
       repo,
       name: label.name,
       color: label.color,
-      description: label.description,
+      description: label.description ?? undefined,
     })
     .then((res) => {
       if (res.status === 201) {
@@ -47,7 +47,7 @@ export async function updateLabelsInRepos({
       name: label.name,
       new_name: label.new_name,
       color: label.color,
-      description: label.description,
+      description: label.description ?? undefined,
     })
     .then((res) => {
       if (res.status === 200)

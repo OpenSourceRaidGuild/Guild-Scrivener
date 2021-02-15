@@ -13,7 +13,6 @@ export const repoCreatedWebhook = new Webhooks({
   path: '/repoCreated',
 });
 
-labelsWebhook.on('label', labelWebhookHandler as any);
-
+labelsWebhook.on('label', labelWebhookHandler);
 repoCreatedWebhook.on('repository.created', initLabelsInNewRepoHandler as any);
 repoCreatedWebhook.on('fork', initLabelsInNewRepoHandler as any);

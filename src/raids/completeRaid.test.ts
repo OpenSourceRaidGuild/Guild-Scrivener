@@ -8,11 +8,10 @@ import { collections } from '../firebase';
 import runOctokitWebhook from '../testUtils/runOctokitWebhook';
 import { rest, server } from '../testUtils/msw';
 import completeRaid from './completeRaid';
-import faker from 'faker';
 
 it(`does not complete a raid if repository is not a fork`, async () => {
   const repositoryArchivedEvent = buildRepositoryEvent({
-    eventType: 'archived',
+    action: 'archived',
     isFork: false,
   });
   const result = await runOctokitWebhook(() =>
@@ -22,7 +21,7 @@ it(`does not complete a raid if repository is not a fork`, async () => {
   const raidDocsSnapshot = await firestore
     .collection(collections.raidStats)
     .get();
-  expect(raidDocsSnapshot.docs).toHaveLength(0);
+  expect(raidDocsSnapshot.docs).toStrictEqual([]);
 
   const sanitizedStdOut = result.stdOut.replace(
     new RegExp(repositoryArchivedEvent.id, 'g'),
@@ -36,7 +35,7 @@ it(`does not complete a raid if repository is not a fork`, async () => {
 
 it(`does not complete a raid if no active raid exists for the dungeon`, async () => {
   const repositoryArchivedEvent = buildRepositoryEvent({
-    eventType: 'archived',
+    action: 'archived',
   });
   const result = await runOctokitWebhook(() =>
     completeRaid(repositoryArchivedEvent)
@@ -45,7 +44,7 @@ it(`does not complete a raid if no active raid exists for the dungeon`, async ()
   const raidDocsSnapshot = await firestore
     .collection(collections.raidStats)
     .get();
-  expect(raidDocsSnapshot.docs).toHaveLength(0);
+  expect(raidDocsSnapshot.docs).toStrictEqual([]);
 
   const sanitizedStdOut = result.stdOut
     .replace(new RegExp(repositoryArchivedEvent.id, 'g'), 'EVENT_ID')
@@ -73,7 +72,7 @@ it(`does not complete a raid if more than one active raid exists for the dungeon
   );
 
   const repositoryArchivedEvent = buildRepositoryEvent({
-    eventType: 'archived',
+    action: 'archived',
   });
   const result = await runOctokitWebhook(() =>
     completeRaid(repositoryArchivedEvent)
@@ -114,7 +113,7 @@ it(`completes a raid when called`, async () => {
   );
 
   const repositoryArchivedEvent = buildRepositoryEvent({
-    eventType: 'archived',
+    action: 'archived',
   });
   const result = await runOctokitWebhook(() =>
     completeRaid(repositoryArchivedEvent)
@@ -123,7 +122,6 @@ it(`completes a raid when called`, async () => {
   const raidDocsSnapshot = await firestore
     .collection(collections.raidStats)
     .get();
-  expect(raidDocsSnapshot.docs).toHaveLength(1);
   expect(raidDocsSnapshot.docs.map((d) => d.data())).toStrictEqual([
     {
       ...raidStats,
