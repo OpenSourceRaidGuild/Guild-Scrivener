@@ -10,6 +10,7 @@ dotenv.config();
 export async function initLabelsInNewRepoHandler(
   event: EmitterWebhookEvent<'repository.created'>
 ) {
+  console.log(event);
   const listOfLabels = await octokit.issues.listLabelsForRepo({
     owner: 'OpenSourceRaidGuild',
     repo: 'website',

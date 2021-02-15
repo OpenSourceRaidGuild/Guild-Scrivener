@@ -2,7 +2,7 @@ import { octokit } from '../octokit';
 import chalk from 'chalk';
 import { EmitterWebhookEvent } from '@octokit/webhooks';
 import dotenv from 'dotenv';
-import { TLabelReqObject } from './types';
+import { TLabelReqObject } from './types/labels';
 import { createLabelInRepos, updateLabelsInRepos } from './repoEventHelpers';
 
 dotenv.config();

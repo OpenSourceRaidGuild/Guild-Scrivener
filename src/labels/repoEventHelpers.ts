@@ -1,6 +1,6 @@
 import { octokit } from '../octokit';
 import chalk from 'chalk';
-import { IOctoLabelParams } from './types';
+import { IOctoLabelParams } from './types/labels';
 
 export async function createLabelInRepos({
   label,
