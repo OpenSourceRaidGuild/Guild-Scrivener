@@ -8,11 +8,11 @@ export const labelsWebhook = new Webhooks({
   secret: process.env.LABEL_HOOK_SECRET,
   path: '/labels',
 });
+labelsWebhook.on('label', labelWebhookHandler);
+
 export const repoCreatedWebhook = new Webhooks({
-  secret: process.env.LABEL_HOOK_SECRET,
-  path: '/repoCreated',
+  secret: process.env.REPO_INIT_HOOK_SECRET,
+  path: '/repo-created-labels',
 });
 
-labelsWebhook.on('label', labelWebhookHandler);
-repoCreatedWebhook.on('repository.created', initLabelsInNewRepoHandler as any);
-repoCreatedWebhook.on('fork', initLabelsInNewRepoHandler as any);
+repoCreatedWebhook.on('repository.created', initLabelsInNewRepoHandler);
