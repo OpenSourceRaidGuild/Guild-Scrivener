@@ -5,50 +5,39 @@ import dotenv from 'dotenv';
 import { EmitterWebhookEvent } from '@octokit/webhooks';
 dotenv.config();
 
-// TODO delete partial dupes that are older or shorter
+// TODO delete partial Label dupes that are older or shorter
 
 export async function initLabelsInNewRepoHandler(
   event: EmitterWebhookEvent<'repository.created'>
 ) {
-  console.log({ event });
+  const owner = String(event.payload.repository.owner);
   const listOfLabels = await octokit.issues.listLabelsForRepo({
-    owner: 'OpenSourceRaidGuild',
+    owner,
     repo: 'website',
   });
 
-  const listOfRepos = await octokit.repos.listForOrg({
-    type: 'all',
-    org: 'OpenSourceRaidGuild',
-  });
-
-  const filteredRepos = listOfRepos.data.filter(
-    (repo) => repo.name !== 'website'
-  );
-
-  filteredRepos.forEach(async (repo) => {
-    listOfLabels.data.forEach(async (label) => {
-      const buildLabel = {
-        name: label.name,
-        color: label.color,
-        description: label?.description as string,
-      };
-      return await createLabelInRepos({
-        label: buildLabel,
-        repo: repo.name,
-        owner: 'OpenSourceRaidGuild',
+  listOfLabels.data.forEach(
+    async (label) =>
+      await createLabelInRepos({
+        label: {
+          name: label.name,
+          color: label.color,
+          description: label?.description as string,
+        },
+        repo: event.payload.repository.name,
+        owner,
       })
         .then(() =>
           console.log(
             chalk.greenBright(
-              `Label ${label.name} created in ${repo.name} Successfully`
+              `Label ${label.name} created in ${event.payload.repository.name} Successfully`
             )
           )
         )
         .catch((err) =>
           console.log(
-            `Error creating ${label.name} in ${repo.name} \n Reason: ${err}`
+            `Error creating ${label.name} in ${event.payload.repository.name} \n Reason: ${err}`
           )
-        );
-    });
-  });
+        )
+  );
 }
