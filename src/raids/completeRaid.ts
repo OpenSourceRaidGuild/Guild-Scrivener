@@ -1,8 +1,7 @@
 import chalk from 'chalk';
 import { octokit } from '../octokit';
 import { db as firestore } from '../firebase';
-import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
-import { RaidStats } from './types/raidStats';
+import { EmitterWebhookEvent } from '@octokit/webhooks';
 
 /*
  * Steps:
@@ -13,7 +12,7 @@ import { RaidStats } from './types/raidStats';
 async function completeRaid({
   id,
   payload,
-}: WebhookEvent<EventPayloads.WebhookPayloadRepository>) {
+}: EmitterWebhookEvent<'repository.archived'>) {
   console.log(
     chalk.cyanBright(`- Processing repository archived event '${id}'`)
   );
