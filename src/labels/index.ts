@@ -11,8 +11,8 @@ export const labelsWebhook = new Webhooks({
 labelsWebhook.on('label', labelWebhookHandler);
 
 export const repoCreatedWebhook = new Webhooks({
-  secret: process.env.REPO_INIT_HOOK_SECRET,
-  path: '/repo-created-labels',
+  secret: process.env.LABEL_HOOK_SECRET,
+  path: '/new-repo-label-update',
 });
 
 repoCreatedWebhook.on('repository.created', initLabelsInNewRepoHandler);

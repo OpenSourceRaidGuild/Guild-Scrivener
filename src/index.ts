@@ -11,8 +11,6 @@ dotenv.config();
 
 const server = fastify();
 
-server.get('/ping', async () => 'Pong!');
-
 const start = async () => {
   await server.register(middie);
   server.use(raidsWebhook.middleware);
