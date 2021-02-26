@@ -302,7 +302,7 @@ export function getUpdatesFromCompactedStats(
       }
       // If the file already exists, and the userId has already been added, then there isn't anything that needs to be done
     });
-    console.log(numberOfUniqueNewFiles);
+
     // Update Raid Stats
     updates.commits += newStats.commits;
     updates.additions += newStats.additions;
