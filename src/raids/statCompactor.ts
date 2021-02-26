@@ -295,14 +295,14 @@ export function getUpdatesFromCompactedStats(
         numberOfUniqueNewFiles++;
       } /* istanbul ignore else */ else if (
         filename in updates.files &&
-        !(userId in updates.files[filename].contributors)
+        !updates.files[filename].contributors.includes(userId)
       ) {
         // Add userId to a file's contributors list if they haven't already been added
         updates.files[filename].contributors.push(userId);
       }
       // If the file already exists, and the userId has already been added, then there isn't anything that needs to be done
     });
-
+    console.log(numberOfUniqueNewFiles);
     // Update Raid Stats
     updates.commits += newStats.commits;
     updates.additions += newStats.additions;
