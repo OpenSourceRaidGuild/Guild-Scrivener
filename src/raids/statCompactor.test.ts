@@ -540,5 +540,85 @@ describe('helpers', () => {
         },
       });
     });
+
+    it(`does not add a user to the same file more than once, or increase the count for the same file`, () => {
+      const raidData: RaidStats = {
+        additions: 1,
+        deletions: 1,
+        changedFiles: 1,
+        commits: 1,
+        createdAt: Date.now(),
+        dungeon: 'octocat/Hello-World',
+        status: 'active',
+        title: 'Hello the worlds!',
+        files: {
+          'README.md': {
+            url: 'https://github.com/octocat/Hello-World/blob/master/README.md',
+            filename: 'README.md',
+            contributors: [123],
+          },
+        },
+        contributors: {
+          123: {
+            user: 'octocat',
+            userId: 123,
+            avatarUrl: 'https://github.com/octocat.png',
+            additions: 1,
+            deletions: 1,
+            commits: 1,
+          },
+        },
+      };
+      const compactedStatsToAdd = {
+        123: {
+          user: 'octocat',
+          userId: 123,
+          avatarUrl: 'https://github.com/octocat.png',
+          additions: 1,
+          deletions: 1,
+          commits: 1,
+          changedFiles: [
+            {
+              url:
+                'https://github.com/octocat/Hello-World/blob/master/README.md',
+              filename: 'README.md',
+            },
+          ],
+        },
+      };
+
+      const result = getUpdatesFromCompactedStats(
+        raidData,
+        compactedStatsToAdd
+      );
+
+      const statsToAdd = compactedStatsToAdd[123];
+      expect(result).toStrictEqual({
+        commits: raidData.commits + statsToAdd.commits,
+        additions: raidData.additions + statsToAdd.additions,
+        deletions: raidData.deletions + statsToAdd.deletions,
+        changedFiles: raidData.changedFiles,
+        files: {
+          ...raidData.files,
+          [statsToAdd.changedFiles[0].filename]: {
+            filename: statsToAdd.changedFiles[0].filename,
+            url: statsToAdd.changedFiles[0].url,
+            contributors: [statsToAdd.userId],
+          },
+        },
+        contributors: {
+          [statsToAdd.userId]: {
+            user: statsToAdd.user,
+            userId: statsToAdd.userId,
+            avatarUrl: raidData.contributors[123].avatarUrl,
+            additions:
+              raidData.contributors[123].additions + statsToAdd.additions,
+            deletions:
+              raidData.contributors[123].deletions + statsToAdd.deletions,
+            commits: raidData.contributors[123].commits + statsToAdd.commits,
+          },
+        },
+      });
+    });
   });
 });
