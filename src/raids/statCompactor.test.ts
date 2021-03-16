@@ -149,8 +149,8 @@ it(`does not update stats for a raid if more than one active raid exists for the
 
   const sanitizedStdOut = result.stdOut
     .replace(new RegExp(repositoryArchivedEvent.id, 'g'), 'EVENT_ID')
-    .replace(/(\w+|\w+\.\w+)\/((\w+(-\w+)+)|\w+)/g, 'OWNER/REPO')
-    .replace(new RegExp(raidStats.title, 'g'), 'RAID_TITLE');
+    .replace(new RegExp(raidStats.title, 'g'), 'RAID_TITLE')
+    .replace(/(\w+|\w+\.\w+)\/((\w+(-\w+)+)|\w+)/g, 'OWNER/REPO');
   expect(sanitizedStdOut).toMatchInlineSnapshot(`
     "- Processing push event 'EVENT_ID'
     ✖ Found more than one active Raid for OWNER/REPO associated with event 'EVENT_ID': [\\"RAID_TITLE\\",\\"RAID_TITLE\\"]"
