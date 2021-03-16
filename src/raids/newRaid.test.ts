@@ -12,7 +12,7 @@ import { RaidStats } from './types/raidStats';
 
 it(`does not create a raid if repository is not a fork`, async () => {
   const repositoryCreatedEvent = buildRepositoryEvent({
-    eventType: 'created',
+    action: 'created',
     isFork: false,
   });
   const result = await runOctokitWebhook(() =>
@@ -22,7 +22,7 @@ it(`does not create a raid if repository is not a fork`, async () => {
   const raidDocsSnapshot = await firestore
     .collection(collections.raidStats)
     .get();
-  expect(raidDocsSnapshot.docs).toHaveLength(0);
+  expect(raidDocsSnapshot.docs).toStrictEqual([]);
 
   const sanitizedStdOut = result.stdOut.replace(
     new RegExp(repositoryCreatedEvent.id, 'g'),
@@ -49,7 +49,7 @@ it(`does not create a raid if an active raid already exists for the dungeon`, as
   );
 
   const repositoryCreatedEvent = buildRepositoryEvent({
-    eventType: 'created',
+    action: 'created',
   });
   const result = await runOctokitWebhook(() =>
     createNewRaid(repositoryCreatedEvent)
@@ -58,8 +58,6 @@ it(`does not create a raid if an active raid already exists for the dungeon`, as
   const raidDocsSnapshot = await firestore
     .collection(collections.raidStats)
     .get();
-  // Only have the one document we setup earlier
-  expect(raidDocsSnapshot.docs).toHaveLength(1);
   expect(raidDocsSnapshot.docs.map((d) => d.data())).toStrictEqual([raidStats]);
 
   const sanitizedStdOut = result.stdOut
@@ -94,7 +92,7 @@ it(`creates a raid when called`, async () => {
   );
 
   const repositoryCreatedEvent = buildRepositoryEvent({
-    eventType: 'created',
+    action: 'created',
   });
   const result = await runOctokitWebhook(() =>
     createNewRaid(repositoryCreatedEvent)
@@ -103,8 +101,6 @@ it(`creates a raid when called`, async () => {
   const raidDocsSnapshot = await firestore
     .collection(collections.raidStats)
     .get();
-  expect(raidDocsSnapshot.docs).toHaveLength(1);
-
   const expectedRaidStats: RaidStats[] = [
     {
       additions: 0,

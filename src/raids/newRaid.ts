@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import dotenv from 'dotenv';
 import { octokit } from '../utils/octokit';
 import { db as firestore } from '../utils/firebase';
-import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
+import { EmitterWebhookEvent } from '@octokit/webhooks';
 import { RaidStats } from './types/raidStats';
 import { sendWebhookMessage } from '../utils/discord/webhooks';
 
@@ -18,7 +18,7 @@ dotenv.config();
 async function createNewRaid({
   id,
   payload,
-}: WebhookEvent<EventPayloads.WebhookPayloadRepository>) {
+}: EmitterWebhookEvent<'repository.created'>) {
   console.log(
     chalk.cyanBright(`- Processing repository created event '${id}'`)
   );

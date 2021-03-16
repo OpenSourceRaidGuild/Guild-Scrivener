@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import dotenv from 'dotenv';
 import { octokit } from '../utils/octokit';
 import { db as firestore } from '../utils/firebase';
-import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
+import { EmitterWebhookEvent } from '@octokit/webhooks';
 import { RaidStats } from './types/raidStats';
 import {
   deleteWebhookMessage,
@@ -21,7 +21,7 @@ dotenv.config();
 async function completeRaid({
   id,
   payload,
-}: WebhookEvent<EventPayloads.WebhookPayloadRepository>) {
+}: EmitterWebhookEvent<'repository.archived'>) {
   console.log(
     chalk.cyanBright(`- Processing repository archived event '${id}'`)
   );

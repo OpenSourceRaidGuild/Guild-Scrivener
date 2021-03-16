@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import got from 'got';
 import { octokit } from '../utils/octokit';
 import { db as firestore } from '../utils/firebase';
-import { EventPayloads, WebhookEvent } from '@octokit/webhooks';
+import { EmitterWebhookEvent } from '@octokit/webhooks';
 import { RaidStats } from './types/raidStats';
 
 /*
@@ -12,10 +12,7 @@ import { RaidStats } from './types/raidStats';
  * - Compact stats from filtered commit data
  * - Write stats to firestore
  */
-async function statCompactor({
-  id,
-  payload,
-}: WebhookEvent<EventPayloads.WebhookPayloadPush>) {
+async function statCompactor({ id, payload }: EmitterWebhookEvent<'push'>) {
   console.log(chalk.cyanBright(`- Processing push event '${id}'`));
 
   try {
@@ -128,13 +125,9 @@ export async function fetchAndFilterCommitData(
       })
       .then((r) => r.data);
 
-    /*
-     * TODO: Find a better way to do this with the API, as it is subject to breaking at some point in the future
-     */
-    const isRaidCommit = !new RegExp(dungeonRepoNameWithOwner).test(
-      await got(
-        `https://github.com/${dungeonRepoNameWithOwner}/branch_commits/${commitId}`
-      ).text()
+    const isRaidCommit = await checkIsRaidCommit(
+      dungeonRepoNameWithOwner,
+      commitId
     );
 
     const additions = commitData.stats?.additions ?? 0;
@@ -162,6 +155,20 @@ export async function fetchAndFilterCommitData(
   }
 
   return results;
+}
+
+export async function checkIsRaidCommit(
+  dungeonRepoNameWithOwner: string,
+  commitId: string
+) {
+  /*
+   * TODO: Find a better way to do this with the API, as it is subject to breaking at some point in the future
+   */
+  return !new RegExp(`href="/${dungeonRepoNameWithOwner}"`).test(
+    await got(
+      `https://github.com/${dungeonRepoNameWithOwner}/branch_commits/${commitId}`
+    ).text()
+  );
 }
 
 function isCompactableCommit(
@@ -298,7 +305,7 @@ export function getUpdatesFromCompactedStats(
         numberOfUniqueNewFiles++;
       } /* istanbul ignore else */ else if (
         filename in updates.files &&
-        !(userId in updates.files[filename].contributors)
+        !updates.files[filename].contributors.includes(userId)
       ) {
         // Add userId to a file's contributors list if they haven't already been added
         updates.files[filename].contributors.push(userId);
