@@ -125,13 +125,9 @@ export async function fetchAndFilterCommitData(
       })
       .then((r) => r.data);
 
-    /*
-     * TODO: Find a better way to do this with the API, as it is subject to breaking at some point in the future
-     */
-    const isRaidCommit = !new RegExp(dungeonRepoNameWithOwner).test(
-      await got(
-        `https://github.com/${dungeonRepoNameWithOwner}/branch_commits/${commitId}`
-      ).text()
+    const isRaidCommit = await checkIsRaidCommit(
+      dungeonRepoNameWithOwner,
+      commitId
     );
 
     const additions = commitData.stats?.additions ?? 0;
@@ -159,6 +155,20 @@ export async function fetchAndFilterCommitData(
   }
 
   return results;
+}
+
+export async function checkIsRaidCommit(
+  dungeonRepoNameWithOwner: string,
+  commitId: string
+) {
+  /*
+   * TODO: Find a better way to do this with the API, as it is subject to breaking at some point in the future
+   */
+  return !new RegExp(`href="/${dungeonRepoNameWithOwner}"`).test(
+    await got(
+      `https://github.com/${dungeonRepoNameWithOwner}/branch_commits/${commitId}`
+    ).text()
+  );
 }
 
 function isCompactableCommit(
