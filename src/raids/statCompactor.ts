@@ -125,9 +125,6 @@ export async function fetchAndFilterCommitData(
       })
       .then((r) => r.data);
 
-    /*
-     * TODO: Find a better way to do this with the API, as it is subject to breaking at some point in the future
-     */
     const isRaidCommit = await checkIsRaidCommit(
       dungeonRepoNameWithOwner,
       commitId
@@ -160,10 +157,13 @@ export async function fetchAndFilterCommitData(
   return results;
 }
 
-async function checkIsRaidCommit(
+export async function checkIsRaidCommit(
   dungeonRepoNameWithOwner: string,
   commitId: string
 ) {
+  /*
+   * TODO: Find a better way to do this with the API, as it is subject to breaking at some point in the future
+   */
   return !new RegExp(`href="/${dungeonRepoNameWithOwner}"`).test(
     await got(
       `https://github.com/${dungeonRepoNameWithOwner}/branch_commits/${commitId}`

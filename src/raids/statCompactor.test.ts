@@ -1,8 +1,10 @@
 import {
   buildCommit,
+  buildCommitSha,
   buildPushEvent,
   buildRaidStats,
   buildRepository,
+  buildRepoNameWithOwner,
 } from '../testUtils/dataFactory';
 import { firestore } from '../testUtils/firebaseUtils';
 import { collections } from '../firebase';
@@ -10,6 +12,7 @@ import runOctokitWebhook from '../testUtils/runOctokitWebhook';
 import { rest, server } from '../testUtils/msw';
 import statCompactor, {
   fetchAndFilterCommitData,
+  checkIsRaidCommit,
   compactStatsFromCommitData,
   getUpdatesFromCompactedStats,
 } from './statCompactor';
@@ -305,6 +308,79 @@ describe('helpers', () => {
           changedFiles: [],
         },
       ]);
+    });
+  });
+
+  describe('checkIsRaidCommit', () => {
+    it('is true for upstream non-default branch commits', async () => {
+      server.use(
+        rest.get(
+          'https://github.com/:owner/:repo/branch_commits/:ref',
+          (req, res, ctx) => {
+            const { owner, repo } = req.params;
+            return res(
+              ctx.text(
+                `<ul class="branches-list"><li class="branch"><a href="/${owner}/${repo}/compare/some-branch">some-branch</a></li></ul>`
+              )
+            );
+          }
+        )
+      );
+
+      const result = await checkIsRaidCommit(
+        buildRepoNameWithOwner(),
+        buildCommitSha()
+      );
+
+      expect(result).toBe(true);
+    });
+
+    /*
+     * All non-raid PRs to the upstream repo have to come through the default branch, which is accounted for in this test
+     */
+    it('is false for upstream default branch commits', async () => {
+      server.use(
+        rest.get(
+          'https://github.com/:owner/:repo/branch_commits/:ref',
+          (req, res, ctx) => {
+            const { owner, repo } = req.params;
+            return res(
+              ctx.text(
+                `<ul class="branches-list"><li class="branch"><a href="/${owner}/${repo}">default</a></li></ul>`
+              )
+            );
+          }
+        )
+      );
+
+      const result = await checkIsRaidCommit(
+        buildRepoNameWithOwner(),
+        buildCommitSha()
+      );
+
+      expect(result).toBe(false);
+    });
+
+    it('is true for all other commits', async () => {
+      server.use(
+        rest.get(
+          'https://github.com/:owner/:repo/branch_commits/:ref',
+          (req, res, ctx) => {
+            return res(
+              ctx.text(
+                `<ul class="js-branches-list"><li class="branch">This commit does not belong to any branch on this repository.</li></ul>`
+              )
+            );
+          }
+        )
+      );
+
+      const result = await checkIsRaidCommit(
+        buildRepoNameWithOwner(),
+        buildCommitSha()
+      );
+
+      expect(result).toBe(true);
     });
   });
 
