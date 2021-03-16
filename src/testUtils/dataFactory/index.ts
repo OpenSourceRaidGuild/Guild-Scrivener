@@ -35,6 +35,13 @@ const getRepositoryValues = ({ ownerName, repoName }: GetRepositoryValues) => {
   };
 };
 
+export const buildRepoNameWithOwner = (options: GetRepositoryValues = {}) => {
+  const { repoNameWithOwner } = getRepositoryValues(options);
+  return repoNameWithOwner;
+};
+
+export const buildCommitSha = () => faker.git.commitSha();
+
 type RepostioryEventActions = 'archived' | 'created';
 
 type RepositoryEventMap = {
