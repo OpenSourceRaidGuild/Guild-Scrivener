@@ -14,7 +14,7 @@ const getRepositoryValues = ({ ownerName, repoName }: GetRepositoryValues) => {
     repoName ??
     faker
       .fake('{{hacker.noun}}-{{hacker.verb}}')
-      .replace(' ', '-')
+      .replace(/\s/g, '-')
       .toLowerCase();
   const repositoryId = faker.random.number({ min: 1, max: 200 });
   const owner = ownerName ?? faker.internet.userName().toLowerCase();
