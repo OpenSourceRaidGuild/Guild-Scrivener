@@ -646,6 +646,7 @@ describe('helpers', () => {
             commits: 1,
           },
         },
+        discordMessageId: '123456',
       };
       const compactedStatsToAdd = {
         123: {
