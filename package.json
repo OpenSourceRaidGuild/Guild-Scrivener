@@ -32,6 +32,7 @@
     "@firebase/testing": "^0.20.11",
     "@types/connect": "^3.4.34",
     "@types/faker": "^5.1.6",
+    "@types/jest": "^26.0.20",
     "cross-env": "^7.0.3",
     "faker": "^5.4.0",
     "firebase-tools": "^9.3.0",
