@@ -72,29 +72,41 @@ async function completeRaid({
     /*
      * Step - Discord Messages
      */
-    const { discordMessageId } = (await raidRef.get()).data() as RaidStats;
+    const raidStats = (await raidRef.get()).data() as RaidStats;
+    const discordMessageId = raidStats.discordMessageId;
+    const raidDuration = Math.ceil(
+      Math.abs(raidStats.createdAt - Date.now()) / 86400000
+    );
 
     // Remove current raid message
-    await deleteWebhookMessage(
-      process.env.CURRENT_RAID_DISCORD_WEBHOOK_URL!,
-      discordMessageId
-    );
+    if (discordMessageId) {
+      await deleteWebhookMessage(
+        process.env.CURRENT_RAID_DISCORD_WEBHOOK_URL!,
+        discordMessageId
+      );
+    }
 
     // Send completed raid message
     const { id: newDiscordMessageId } = await sendWebhookMessage(
       process.env.COMPLETED_RAID_DISCORD_WEBHOOK_URL!,
       {
-        content: `**${dungeonRepoNameWithOwner}**\n\nRaid Complete! :crossed_swords:`,
+        // TODO: replace with a templating system
+        content: `Raid Complete!
+
+**${raidStats.title} - *${raidStats.dungeon}***
+:crossed_swords:  ${Object.values(raidStats.contributors).length} Contributors
+:card_box:  ${raidStats.changedFiles} Files Changed
+:computer:  ${raidStats.commits} Commits
+:calendar:  ${raidDuration} Day(s)`,
       }
     );
 
     /*
      * Step - Complete Raid
      */
-    const raidCreatedAt: number = (await raidRef.get()).get('createdAt');
     await raidRef.update({
       status: 'completed',
-      duration: Math.ceil(Math.abs(raidCreatedAt - Date.now()) / 86400000),
+      duration: raidDuration,
       discordMessageId: newDiscordMessageId,
     });
 
