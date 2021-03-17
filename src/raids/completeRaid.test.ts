@@ -136,23 +136,23 @@ it(`completes a raid when called`, async () => {
     completeRaid(repositoryArchivedEvent)
   );
 
-  // const raidDocsSnapshot = await firestore
-  //   .collection(collections.raidStats)
-  //   .get();
-  // expect(raidDocsSnapshot.docs.map((d) => d.data())).toStrictEqual([
-  //   {
-  //     ...raidStats,
-  //     status: 'completed',
-  //     duration: 4,
-  //     discordMessageId: '67890',
-  //   },
-  // ]);
-
   const sanitizedStdOut = result.stdOut
     .replace(new RegExp(repositoryArchivedEvent.id, 'g'), 'EVENT_ID')
     .replace(/(\w+|\w+\.\w+)\/((\w+(-\w+)+)|\w+)/g, 'OWNER/REPO');
   expect(sanitizedStdOut).toMatchInlineSnapshot(`
-    "- Processing repository archived event 'EVENT_ID'
-    ✔ Completed Raid OWNER/REPO"
+  "- Processing repository archived event 'EVENT_ID'
+  ✔ Completed Raid OWNER/REPO"
   `);
+
+  const raidDocsSnapshot = await firestore
+    .collection(collections.raidStats)
+    .get();
+  expect(raidDocsSnapshot.docs.map((d) => d.data())).toStrictEqual([
+    {
+      ...raidStats,
+      status: 'completed',
+      duration: 4,
+      discordMessageId: '67890',
+    },
+  ]);
 });

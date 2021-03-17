@@ -32,6 +32,8 @@ jobs:
           RAID_HOOK_SECRET: raidHookSecret
           LABEL_HOOK_SECRET: labelHookSecret
           AUTH: auth123
+          CURRENT_RAID_DISCORD_WEBHOOK_URL: https://discord.com/api/webhooks/12345/blargh-de-har
+          COMPLETED_RAID_DISCORD_WEBHOOK_URL: https://discord.com/api/webhooks/12345/har-de-blargh
 
       # - name: Build
       #   run: npm run build
