@@ -1,2 +1,2 @@
-export { default } from './webhooks';
+export * from './webhooks';
 export * from './types';
