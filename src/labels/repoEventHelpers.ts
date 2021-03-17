@@ -1,4 +1,4 @@
-import { octokit } from '../octokit';
+import { octokit } from '../utils/octokit';
 import chalk from 'chalk';
 import { IOctoLabelParams } from './types/labels';
 

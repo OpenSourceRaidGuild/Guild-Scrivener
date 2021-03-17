@@ -27,4 +27,5 @@ export interface RaidStats {
   contributors: {
     [key: number]: UserStats;
   };
+  discordMessageId?: string;
 }

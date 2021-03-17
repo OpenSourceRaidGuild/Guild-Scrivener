@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import got from 'got';
-import { octokit } from '../octokit';
-import { db as firestore } from '../firebase';
+import { octokit } from '../utils/octokit';
+import { db as firestore } from '../utils/firebase';
 import { EmitterWebhookEvent } from '@octokit/webhooks';
 import { RaidStats } from './types/raidStats';
 

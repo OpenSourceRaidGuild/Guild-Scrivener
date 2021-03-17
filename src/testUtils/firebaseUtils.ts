@@ -1,7 +1,7 @@
 import * as firebaseUtils from '@firebase/testing';
 import faker from 'faker';
 
-const PROJECT_ID = 'test-' + faker.git.shortSha();
+const PROJECT_ID = faker.fake(`test-{{git.shortSha}}`);
 
 // Makes the firebase instance used by the app point to our test instance
 process.env.FIREBASE_PROJECT_ID = PROJECT_ID;

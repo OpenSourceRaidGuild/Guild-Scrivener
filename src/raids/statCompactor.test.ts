@@ -7,7 +7,7 @@ import {
   buildRepoNameWithOwner,
 } from '../testUtils/dataFactory';
 import { firestore } from '../testUtils/firebaseUtils';
-import { collections } from '../firebase';
+import { collections } from '../utils/firebase';
 import runOctokitWebhook from '../testUtils/runOctokitWebhook';
 import { rest, server } from '../testUtils/msw';
 import statCompactor, {
@@ -502,6 +502,7 @@ describe('helpers', () => {
             commits: 1,
           },
         },
+        discordMessageId: '123456',
       };
       const compactedStatsToAdd = {
         123: {
@@ -582,6 +583,7 @@ describe('helpers', () => {
             commits: 1,
           },
         },
+        discordMessageId: '123456',
       };
       const compactedStatsToAdd = {
         321: {
@@ -644,6 +646,7 @@ describe('helpers', () => {
             commits: 1,
           },
         },
+        discordMessageId: '123456',
       };
       const compactedStatsToAdd = {
         123: {

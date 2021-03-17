@@ -1,4 +1,4 @@
-import { octokit } from '../octokit';
+import { octokit } from '../utils/octokit';
 import chalk from 'chalk';
 import { createLabelInRepos } from './repoEventHelpers';
 import { EmitterWebhookEvent } from '@octokit/webhooks';

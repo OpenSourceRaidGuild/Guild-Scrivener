@@ -1,12 +1,21 @@
 import chalk from 'chalk';
-import { octokit } from '../octokit';
-import { db as firestore } from '../firebase';
+import dotenv from 'dotenv';
+import { octokit } from '../utils/octokit';
+import { db as firestore } from '../utils/firebase';
 import { EmitterWebhookEvent } from '@octokit/webhooks';
+import { RaidStats } from './types/raidStats';
+import {
+  deleteWebhookMessage,
+  sendWebhookMessage,
+} from '../utils/discord/webhooks';
+
+dotenv.config();
 
 /*
  * Steps:
  * - Check flag(s) to either ignore or proceed
  * - Check if Raid exists
+ * - Remove "current raid" discord message, send "raid complete" message
  * - Update Raid to 'completed' status
  */
 async function completeRaid({
@@ -25,7 +34,7 @@ async function completeRaid({
     } = payload.repository;
 
     /*
-     * Step 1 - Check flags
+     * Step - Check flags
      */
     if (!isFork) {
       throw `Event '${id}' did not meet criteria for Raid creation: Repository was not a fork`;
@@ -43,7 +52,7 @@ async function completeRaid({
       : /* istanbul ignore next */ '';
 
     /*
-     * Step 2 - Check if Raid exists
+     * Step - Check if Raid exists
      */
     const snapshot = await firestore
       .collection('raid-stats')
@@ -58,15 +67,47 @@ async function completeRaid({
         snapshot.docs.map((r) => r.data().title)
       )}`;
     }
+    const raidRef = snapshot.docs[0].ref;
 
     /*
-     * Step 3 - Complete Raid
+     * Step - Discord Messages
      */
-    const raidRef = snapshot.docs[0].ref;
-    const raidCreatedAt: number = (await raidRef.get()).get('createdAt');
+    const raidStats = (await raidRef.get()).data() as RaidStats;
+    const discordMessageId = raidStats.discordMessageId;
+    const raidDuration = Math.ceil(
+      Math.abs(raidStats.createdAt - Date.now()) / 86400000
+    );
+
+    // Remove current raid message
+    if (discordMessageId) {
+      await deleteWebhookMessage(
+        process.env.CURRENT_RAID_DISCORD_WEBHOOK_URL!,
+        discordMessageId
+      );
+    }
+
+    // Send completed raid message
+    const { id: newDiscordMessageId } = await sendWebhookMessage(
+      process.env.COMPLETED_RAID_DISCORD_WEBHOOK_URL!,
+      {
+        // TODO: replace with a templating system
+        content: `Raid Complete!
+
+**${raidStats.title} - *${raidStats.dungeon}***
+:crossed_swords:  ${Object.values(raidStats.contributors).length} Contributors
+:card_box:  ${raidStats.changedFiles} Files Changed
+:computer:  ${raidStats.commits} Commits
+:calendar:  ${raidDuration} Day(s)`,
+      }
+    );
+
+    /*
+     * Step - Complete Raid
+     */
     await raidRef.update({
       status: 'completed',
-      duration: Math.ceil(Math.abs(raidCreatedAt - Date.now()) / 86400000),
+      duration: raidDuration,
+      discordMessageId: newDiscordMessageId,
     });
 
     console.log(

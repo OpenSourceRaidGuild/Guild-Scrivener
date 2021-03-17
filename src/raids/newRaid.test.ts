@@ -5,7 +5,7 @@ import {
 } from '../testUtils/dataFactory';
 import runOctokitWebhook from '../testUtils/runOctokitWebhook';
 import { firestore } from '../testUtils/firebaseUtils';
-import { collections } from '../firebase';
+import { collections } from '../utils/firebase';
 import { server, rest } from '../testUtils/msw';
 import createNewRaid from './newRaid';
 import { RaidStats } from './types/raidStats';

@@ -1,13 +1,17 @@
 import chalk from 'chalk';
-import { octokit } from '../octokit';
-import { db as firestore } from '../firebase';
+import dotenv from 'dotenv';
+import { octokit } from '../utils/octokit';
+import { db as firestore } from '../utils/firebase';
 import { EmitterWebhookEvent } from '@octokit/webhooks';
 import { RaidStats } from './types/raidStats';
+
+dotenv.config();
 
 /*
  * Steps:
  * - Check flag(s) to either ignore or proceed
  * - Check if Raid already exists
+ * - Send Discord notification
  * - Create new Raid in firestore
  */
 async function createNewRaid({

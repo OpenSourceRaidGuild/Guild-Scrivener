@@ -4,7 +4,7 @@ import {
   buildRepositoryEvent,
 } from '../testUtils/dataFactory';
 import { firestore } from '../testUtils/firebaseUtils';
-import { collections } from '../firebase';
+import { collections } from '../utils/firebase';
 import runOctokitWebhook from '../testUtils/runOctokitWebhook';
 import { rest, server } from '../testUtils/msw';
 import completeRaid from './completeRaid';
@@ -104,12 +104,29 @@ it(`completes a raid when called`, async () => {
     createdAt: new Date().setHours(0, 0, 0, 0) - 259200000, // 3 days ago
     dungeon: raidRepo.parent!.full_name,
   });
-  const _ = await firestore.collection(collections.raidStats).add(raidStats);
+  await firestore.collection(collections.raidStats).add(raidStats);
 
   server.use(
     rest.get('https://api.github.com/repos/:owner/:repo', (req, res, ctx) => {
       return res(ctx.json(raidRepo));
-    })
+    }),
+    rest.delete(
+      'https://discord.com/api/webhooks/:webhookId/:token/messages/:messageId',
+      (req, res, ctx) => {
+        return res();
+      }
+    ),
+    rest.post(
+      'https://discord.com/api/webhooks/:id/:token',
+      (req, res, ctx) => {
+        return res(
+          ctx.json({
+            content: (req.body as any).content,
+            id: '67890',
+          })
+        );
+      }
+    )
   );
 
   const repositoryArchivedEvent = buildRepositoryEvent({
@@ -119,6 +136,14 @@ it(`completes a raid when called`, async () => {
     completeRaid(repositoryArchivedEvent)
   );
 
+  const sanitizedStdOut = result.stdOut
+    .replace(new RegExp(repositoryArchivedEvent.id, 'g'), 'EVENT_ID')
+    .replace(/(\w+|\w+\.\w+)\/((\w+(-\w+)+)|\w+)/g, 'OWNER/REPO');
+  expect(sanitizedStdOut).toMatchInlineSnapshot(`
+  "- Processing repository archived event 'EVENT_ID'
+  ✔ Completed Raid OWNER/REPO"
+  `);
+
   const raidDocsSnapshot = await firestore
     .collection(collections.raidStats)
     .get();
@@ -127,14 +152,7 @@ it(`completes a raid when called`, async () => {
       ...raidStats,
       status: 'completed',
       duration: 4,
+      discordMessageId: '67890',
     },
   ]);
-
-  const sanitizedStdOut = result.stdOut
-    .replace(new RegExp(repositoryArchivedEvent.id, 'g'), 'EVENT_ID')
-    .replace(/(\w+|\w+\.\w+)\/((\w+(-\w+)+)|\w+)/g, 'OWNER/REPO');
-  expect(sanitizedStdOut).toMatchInlineSnapshot(`
-    "- Processing repository archived event 'EVENT_ID'
-    ✔ Completed Raid OWNER/REPO"
-  `);
 });

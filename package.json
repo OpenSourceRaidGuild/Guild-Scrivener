@@ -10,11 +10,11 @@
   ],
   "scripts": {
     "firestore": "cross-env FIRESTORE_EMULATOR_HOST=\"localhost:8080\" firebase emulators:exec --only firestore",
-    "local": "npm run firestore -- \"nodemon ./src/index.ts\"",
+    "local": "npm run firestore -- --ui \"nodemon ./src/index.ts\"",
     "start": "node ./dist/index.js",
     "build": "tsc",
     "test": "npm run firestore -- \"jest --watch\"",
-    "test:ci": "npm run firestore -- \"jest --coverage --maxWorkers=2\""
+    "test:ci": "npm run firestore -- \"jest --coverage\""
   },
   "dependencies": {
     "@octokit/auth-token": "^2.4.5",
@@ -32,6 +32,7 @@
     "@firebase/testing": "^0.20.11",
     "@types/connect": "^3.4.34",
     "@types/faker": "^5.1.6",
+    "@types/jest": "^26.0.20",
     "cross-env": "^7.0.3",
     "faker": "^5.4.0",
     "firebase-tools": "^9.3.0",
