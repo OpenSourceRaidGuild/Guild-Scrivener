@@ -92,11 +92,16 @@ async function completeRaid({
      * Step - Complete Raid
      */
     const raidCreatedAt: number = (await raidRef.get()).get('createdAt');
-    await raidRef.update({
-      status: 'completed',
-      duration: Math.ceil(Math.abs(raidCreatedAt - Date.now()) / 86400000),
-      discordMessageId: newDiscordMessageId,
-    });
+    try {
+      await raidRef.update({
+        status: 'completed',
+        duration: Math.ceil(Math.abs(raidCreatedAt - Date.now()) / 86400000),
+        discordMessageId: newDiscordMessageId,
+      });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
 
     console.log(
       chalk.greenBright(`✔ Completed Raid ${dungeonRepoNameWithOwner}`)
