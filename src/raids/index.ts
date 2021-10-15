@@ -5,8 +5,7 @@ import statCompactor from './statCompactor';
 import completeRaid from './completeRaid';
 
 export const raidsWebhook = new Webhooks({
-  secret: process.env.RAID_HOOK_SECRET,
-  path: '/raid-hooks',
+  secret: process.env.RAID_HOOK_SECRET as string
 });
 
 raidsWebhook.on('repository.created', createNewRaid);

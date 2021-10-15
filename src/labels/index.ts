@@ -5,14 +5,12 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const labelsWebhook = new Webhooks({
-  secret: process.env.LABEL_HOOK_SECRET,
-  path: '/labels',
+  secret: process.env.LABEL_HOOK_SECRET as string,
 });
 labelsWebhook.on('label', labelWebhookHandler);
 
 export const repoCreatedWebhook = new Webhooks({
-  secret: process.env.LABEL_HOOK_SECRET,
-  path: '/new-repo-label-update',
+  secret: process.env.LABEL_HOOK_SECRET as string,
 });
 
 repoCreatedWebhook.on('repository.created', initLabelsInNewRepoHandler);
