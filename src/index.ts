@@ -14,7 +14,7 @@ const server = fastify();
 
 const start = async () => {
   await server.register(middie);
-  server.use(createNodeMiddleware(raidsWebhook, { path: '/raid-hooks' }));
+  // server.use(createNodeMiddleware(raidsWebhook, { path: '/raid-hooks' }));
   server.use(createNodeMiddleware(labelsWebhook, { path: '/labels' }));
   server.use(
     createNodeMiddleware(repoCreatedWebhook, { path: '/new-repo-label-update' })

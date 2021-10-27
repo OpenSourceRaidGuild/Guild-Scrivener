@@ -3,8 +3,6 @@ import {
   buildRepository,
   buildRepositoryEvent,
 } from '../testUtils/dataFactory';
-import { firestore } from '../testUtils/firebaseUtils';
-import { collections } from '../utils/firebase';
 import runOctokitWebhook from '../testUtils/runOctokitWebhook';
 import { rest, server } from '../testUtils/msw';
 import completeRaid from './completeRaid';
