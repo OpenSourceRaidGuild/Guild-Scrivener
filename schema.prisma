@@ -1,0 +1,41 @@
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+enum Status {
+    ACTIVE
+    INCOMPLETE
+    COMPLETE
+}
+
+model Contributors {
+    user            String     @unique
+    userId          Int        @id @unique
+    commits         Int
+    avatarUrl       String
+    deletions       Int
+    additions       Int
+    raidStatsId     String?
+    RaidStats       RaidStats? @relation(fields: [raidStatsRaidId], references: [raidId])
+    raidStatsRaidId String?
+}
+
+model RaidStats {
+    raidId       String         @id @unique
+    status       Status
+    dungeon      String
+    title        String
+    duration     Int // diff createdAt & completedAt
+    contributors Contributors[]
+    changedFiles Int
+    createdAt    DateTime
+    completedAt  DateTime
+    deletions    Int
+    additions    Int
+    commits      Int
+}
