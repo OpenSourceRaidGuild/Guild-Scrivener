@@ -3182,6 +3182,7 @@ const firestoreRaidStatsDump = {
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
+const raidIds = Object.keys(firestoreRaidStatsDump['raid-stats']);
 const last = firestoreRaidStatsDump['raid-stats'].wygNnMpvq9KAOrRtkt0M;
 // convert to SQL friendly format
 // create Raid Stats table
