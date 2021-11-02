@@ -6,7 +6,7 @@ const firestoreRaidStatsDump = {
       title: 'Migrate to TypeScript',
       additions: 640,
       contributors: {
-        '544386': {
+        544386: {
           deletions: 82,
           userId: 544386,
           commits: 1,
@@ -14,7 +14,7 @@ const firestoreRaidStatsDump = {
           user: 'juhanakristian',
           additions: 146,
         },
-        '1087670': {
+        1087670: {
           additions: 1,
           avatarUrl: 'https://avatars.githubusercontent.com/u/1087670?v=4',
           commits: 1,
@@ -22,7 +22,7 @@ const firestoreRaidStatsDump = {
           deletions: 1,
           userId: 1087670,
         },
-        '23029903': {
+        23029903: {
           commits: 14,
           userId: 23029903,
           deletions: 368,
@@ -39,7 +39,7 @@ const firestoreRaidStatsDump = {
     },
     Cj5ATeGVPJQ1TITShxNm: {
       contributors: {
-        '544386': {
+        544386: {
           additions: 42,
           userId: 544386,
           deletions: 136,
@@ -48,7 +48,7 @@ const firestoreRaidStatsDump = {
             'https://avatars3.githubusercontent.com/u/544386?u=f99a26170f80d3ed37d822b354430f1315a16b84&v=4',
           commits: 2,
         },
-        '5365582': {
+        5365582: {
           additions: 15,
           deletions: 4,
           commits: 1,
@@ -57,7 +57,7 @@ const firestoreRaidStatsDump = {
           avatarUrl:
             'https://avatars0.githubusercontent.com/u/5365582?u=a9e5811a2a8388d300821121fb76d34136230a7c&v=4',
         },
-        '17033502': {
+        17033502: {
           userId: 17033502,
           commits: 7,
           avatarUrl:
@@ -66,7 +66,7 @@ const firestoreRaidStatsDump = {
           user: 'merodiro',
           deletions: 35,
         },
-        '27247160': {
+        27247160: {
           deletions: 70,
           user: 'JacobMGEvans',
           userId: 27247160,
@@ -75,7 +75,7 @@ const firestoreRaidStatsDump = {
           avatarUrl:
             'https://avatars3.githubusercontent.com/u/27247160?u=768c4a975a73af6f5111c2af628c10939f7d0f47&v=4',
         },
-        '40751395': {
+        40751395: {
           userId: 40751395,
           deletions: 65,
           commits: 12,
@@ -84,7 +84,7 @@ const firestoreRaidStatsDump = {
           avatarUrl:
             'https://avatars2.githubusercontent.com/u/40751395?u=dbb71f044fe955ecb0e59047036dba2ca32c824d&v=4',
         },
-        '49603590': {
+        49603590: {
           deletions: 21,
           commits: 3,
           userId: 49603590,
@@ -110,7 +110,7 @@ const firestoreRaidStatsDump = {
       status: 'completed',
       changedFiles: 86,
       contributors: {
-        '544386': {
+        544386: {
           deletions: 9,
           user: 'juhanakristian',
           additions: 355,
@@ -118,7 +118,7 @@ const firestoreRaidStatsDump = {
           userId: 544386,
           commits: 7,
         },
-        '905225': {
+        905225: {
           avatarUrl: 'https://avatars.githubusercontent.com/u/905225?v=4',
           userId: 905225,
           user: 'rubenmoya',
@@ -126,7 +126,7 @@ const firestoreRaidStatsDump = {
           commits: 4,
           additions: 139,
         },
-        '1087670': {
+        1087670: {
           commits: 2,
           avatarUrl: 'https://avatars.githubusercontent.com/u/1087670?v=4',
           user: 'Aprillion',
@@ -134,7 +134,7 @@ const firestoreRaidStatsDump = {
           userId: 1087670,
           additions: 53,
         },
-        '6424060': {
+        6424060: {
           user: 'grady-lad',
           userId: 6424060,
           avatarUrl: 'https://avatars.githubusercontent.com/u/6424060?v=4',
@@ -142,7 +142,7 @@ const firestoreRaidStatsDump = {
           additions: 190,
           commits: 4,
         },
-        '10127707': {
+        10127707: {
           userId: 10127707,
           user: 'mitchelvanbever',
           deletions: 30,
@@ -150,7 +150,7 @@ const firestoreRaidStatsDump = {
           additions: 187,
           avatarUrl: 'https://avatars.githubusercontent.com/u/10127707?v=4',
         },
-        '15978090': {
+        15978090: {
           additions: 293,
           deletions: 77,
           userId: 15978090,
@@ -158,7 +158,7 @@ const firestoreRaidStatsDump = {
           commits: 7,
           avatarUrl: 'https://avatars.githubusercontent.com/u/15978090?v=4',
         },
-        '17976072': {
+        17976072: {
           userId: 17976072,
           avatarUrl: 'https://avatars.githubusercontent.com/u/17976072?v=4',
           deletions: 192,
@@ -166,7 +166,7 @@ const firestoreRaidStatsDump = {
           commits: 17,
           additions: 1027,
         },
-        '22864071': {
+        22864071: {
           user: 'tsuki42',
           userId: 22864071,
           avatarUrl: 'https://avatars.githubusercontent.com/u/22864071?v=4',
@@ -174,7 +174,7 @@ const firestoreRaidStatsDump = {
           additions: 99,
           deletions: 92,
         },
-        '23029903': {
+        23029903: {
           deletions: 333,
           additions: 2076,
           commits: 27,
@@ -182,7 +182,7 @@ const firestoreRaidStatsDump = {
           user: 'mpeyper',
           userId: 23029903,
         },
-        '27247160': {
+        27247160: {
           commits: 13,
           avatarUrl: 'https://avatars.githubusercontent.com/u/27247160?v=4',
           user: 'JacobMGEvans',
@@ -190,7 +190,7 @@ const firestoreRaidStatsDump = {
           deletions: 125,
           userId: 27247160,
         },
-        '40751395': {
+        40751395: {
           commits: 9,
           avatarUrl: 'https://avatars.githubusercontent.com/u/40751395?v=4',
           userId: 40751395,
@@ -198,7 +198,7 @@ const firestoreRaidStatsDump = {
           user: 'nobrayner',
           deletions: 1631,
         },
-        '49603590': {
+        49603590: {
           userId: 49603590,
           commits: 1,
           user: 'tigerabrodi',
@@ -206,7 +206,7 @@ const firestoreRaidStatsDump = {
           additions: 20,
           deletions: 1,
         },
-        '58681803': {
+        58681803: {
           commits: 1,
           userId: 58681803,
           avatarUrl: 'https://avatars.githubusercontent.com/u/58681803?v=4',
@@ -214,7 +214,7 @@ const firestoreRaidStatsDump = {
           user: 'Devil005',
           deletions: 0,
         },
-        '60733989': {
+        60733989: {
           commits: 1,
           avatarUrl: 'https://avatars.githubusercontent.com/u/60733989?v=4',
           userId: 60733989,
@@ -1176,7 +1176,7 @@ const firestoreRaidStatsDump = {
       changedFiles: 93,
       commits: 122,
       contributors: {
-        '544386': {
+        544386: {
           avatarUrl: 'https://avatars.githubusercontent.com/u/544386?v=4',
           deletions: 51,
           user: 'juhanakristian',
@@ -1184,7 +1184,7 @@ const firestoreRaidStatsDump = {
           userId: 544386,
           commits: 2,
         },
-        '5365582': {
+        5365582: {
           deletions: 535,
           additions: 520,
           user: 'marcosvega91',
@@ -1192,7 +1192,7 @@ const firestoreRaidStatsDump = {
           commits: 3,
           avatarUrl: 'https://avatars.githubusercontent.com/u/5365582?v=4',
         },
-        '6759612': {
+        6759612: {
           commits: 19,
           user: 'HorusGoul',
           userId: 6759612,
@@ -1200,7 +1200,7 @@ const firestoreRaidStatsDump = {
           additions: 398,
           avatarUrl: 'https://avatars.githubusercontent.com/u/6759612?v=4',
         },
-        '10127707': {
+        10127707: {
           userId: 10127707,
           additions: 75,
           user: 'mitchelvanbever',
@@ -1208,7 +1208,7 @@ const firestoreRaidStatsDump = {
           deletions: 111,
           commits: 2,
         },
-        '15978090': {
+        15978090: {
           avatarUrl: 'https://avatars.githubusercontent.com/u/15978090?v=4',
           userId: 15978090,
           commits: 5,
@@ -1216,7 +1216,7 @@ const firestoreRaidStatsDump = {
           additions: 171,
           deletions: 141,
         },
-        '17976072': {
+        17976072: {
           userId: 17976072,
           additions: 511,
           deletions: 324,
@@ -1224,7 +1224,7 @@ const firestoreRaidStatsDump = {
           user: 'MohitPopli',
           avatarUrl: 'https://avatars.githubusercontent.com/u/17976072?v=4',
         },
-        '22864071': {
+        22864071: {
           userId: 22864071,
           commits: 2,
           additions: 69,
@@ -1232,7 +1232,7 @@ const firestoreRaidStatsDump = {
           avatarUrl: 'https://avatars.githubusercontent.com/u/22864071?v=4',
           user: 'tsuki42',
         },
-        '23029903': {
+        23029903: {
           deletions: 2361,
           user: 'mpeyper',
           commits: 38,
@@ -1241,7 +1241,7 @@ const firestoreRaidStatsDump = {
             'https://avatars2.githubusercontent.com/u/23029903?u=86ef88261fe287ecea4c5d678c11abb4e8d40222&v=4',
           userId: 23029903,
         },
-        '27247160': {
+        27247160: {
           additions: 29112,
           deletions: 28893,
           userId: 27247160,
@@ -1249,7 +1249,7 @@ const firestoreRaidStatsDump = {
           commits: 23,
           user: 'JacobMGEvans',
         },
-        '40751395': {
+        40751395: {
           userId: 40751395,
           additions: 0,
           commits: 1,
@@ -1257,7 +1257,7 @@ const firestoreRaidStatsDump = {
           avatarUrl: 'https://avatars.githubusercontent.com/u/40751395?v=4',
           deletions: 3,
         },
-        '46447321': {
+        46447321: {
           userId: 46447321,
           user: 'allcontributors[bot]',
           deletions: 33,
@@ -1265,7 +1265,7 @@ const firestoreRaidStatsDump = {
           additions: 44,
           avatarUrl: 'https://avatars.githubusercontent.com/in/23186?v=4',
         },
-        '56167866': {
+        56167866: {
           deletions: 1142,
           user: 'YPAzevedo',
           commits: 15,
@@ -1273,7 +1273,7 @@ const firestoreRaidStatsDump = {
           userId: 56167866,
           additions: 985,
         },
-        '79797361': {
+        79797361: {
           user: 'amit-agrawals',
           commits: 2,
           avatarUrl: 'https://avatars.githubusercontent.com/u/79797361?v=4',
@@ -1289,7 +1289,7 @@ const firestoreRaidStatsDump = {
     T9lOZVSldhtV0aons6Wk: {
       status: 'completed',
       contributors: {
-        '544386': {
+        544386: {
           commits: 3,
           user: 'juhanakristian',
           userId: 544386,
@@ -1297,7 +1297,7 @@ const firestoreRaidStatsDump = {
           avatarUrl: 'https://avatars.githubusercontent.com/u/544386?v=4',
           deletions: 18,
         },
-        '23029903': {
+        23029903: {
           avatarUrl: 'https://avatars.githubusercontent.com/u/23029903?v=4',
           user: 'mpeyper',
           deletions: 4,
@@ -1305,7 +1305,7 @@ const firestoreRaidStatsDump = {
           additions: 4,
           userId: 23029903,
         },
-        '27247160': {
+        27247160: {
           avatarUrl: 'https://avatars.githubusercontent.com/u/27247160?v=4',
           userId: 27247160,
           user: 'JacobMGEvans',
@@ -1313,7 +1313,7 @@ const firestoreRaidStatsDump = {
           deletions: 948,
           commits: 9,
         },
-        '40751395': {
+        40751395: {
           avatarUrl: 'https://avatars.githubusercontent.com/u/40751395?v=4',
           user: 'nobrayner',
           deletions: 117,
@@ -2257,7 +2257,7 @@ const firestoreRaidStatsDump = {
       dungeon: '6pac/SlickGrid',
       duration: 36,
       contributors: {
-        '7198302': {
+        7198302: {
           userId: 7198302,
           commits: 3,
           deletions: 85,
@@ -2265,7 +2265,7 @@ const firestoreRaidStatsDump = {
           additions: 221,
           avatarUrl: 'https://avatars.githubusercontent.com/u/7198302?v=4',
         },
-        '10127707': {
+        10127707: {
           commits: 6,
           additions: 925,
           deletions: 3804,
@@ -2273,7 +2273,7 @@ const firestoreRaidStatsDump = {
           avatarUrl: 'https://avatars.githubusercontent.com/u/10127707?v=4',
           user: 'mitchelvanbever',
         },
-        '17976072': {
+        17976072: {
           userId: 17976072,
           deletions: 154,
           commits: 1,
@@ -2281,7 +2281,7 @@ const firestoreRaidStatsDump = {
           avatarUrl: 'https://avatars.githubusercontent.com/u/17976072?v=4',
           additions: 336,
         },
-        '23029903': {
+        23029903: {
           commits: 1,
           user: 'mpeyper',
           userId: 23029903,
@@ -2289,7 +2289,7 @@ const firestoreRaidStatsDump = {
           additions: 199,
           avatarUrl: 'https://avatars.githubusercontent.com/u/23029903?v=4',
         },
-        '27247160': {
+        27247160: {
           deletions: 584,
           avatarUrl: 'https://avatars.githubusercontent.com/u/27247160?v=4',
           userId: 27247160,
@@ -2297,7 +2297,7 @@ const firestoreRaidStatsDump = {
           additions: 4927,
           commits: 20,
         },
-        '56167866': {
+        56167866: {
           deletions: 6434,
           commits: 7,
           avatarUrl: 'https://avatars.githubusercontent.com/u/56167866?v=4',
@@ -2314,7 +2314,7 @@ const firestoreRaidStatsDump = {
       changedFiles: 169,
       commits: 568,
       contributors: {
-        '354596': {
+        354596: {
           additions: 267,
           deletions: 307,
           commits: 9,
@@ -2323,7 +2323,7 @@ const firestoreRaidStatsDump = {
           userId: 354596,
           user: 'proful',
         },
-        '544386': {
+        544386: {
           avatarUrl:
             'https://avatars3.githubusercontent.com/u/544386?u=f99a26170f80d3ed37d822b354430f1315a16b84&v=4',
           additions: 1176,
@@ -2332,7 +2332,7 @@ const firestoreRaidStatsDump = {
           user: 'juhanakristian',
           userId: 544386,
         },
-        '1087670': {
+        1087670: {
           user: 'Aprillion',
           additions: 289,
           commits: 9,
@@ -2341,7 +2341,7 @@ const firestoreRaidStatsDump = {
           deletions: 486,
           userId: 1087670,
         },
-        '3214876': {
+        3214876: {
           deletions: 38,
           avatarUrl:
             'https://avatars0.githubusercontent.com/u/3214876?u=7f9a3adc3fb14bb28116e831b17b387e626b0538&v=4',
@@ -2350,7 +2350,7 @@ const firestoreRaidStatsDump = {
           additions: 23,
           userId: 3214876,
         },
-        '15978090': {
+        15978090: {
           avatarUrl:
             'https://avatars3.githubusercontent.com/u/15978090?u=d726f27a71c8a6620e06ad1a768720b5bbc8fd25&v=4',
           userId: 15978090,
@@ -2359,7 +2359,7 @@ const firestoreRaidStatsDump = {
           additions: 64,
           deletions: 75,
         },
-        '17033502': {
+        17033502: {
           additions: 253,
           userId: 17033502,
           user: 'merodiro',
@@ -2368,7 +2368,7 @@ const firestoreRaidStatsDump = {
           commits: 13,
           deletions: 312,
         },
-        '22864071': {
+        22864071: {
           userId: 22864071,
           user: 'tsuki42',
           avatarUrl:
@@ -2377,7 +2377,7 @@ const firestoreRaidStatsDump = {
           commits: 2,
           additions: 17,
         },
-        '23029903': {
+        23029903: {
           deletions: 378,
           commits: 10,
           userId: 23029903,
@@ -2386,7 +2386,7 @@ const firestoreRaidStatsDump = {
           user: 'mpeyper',
           additions: 253,
         },
-        '25822851': {
+        25822851: {
           userId: 25822851,
           deletions: 180,
           user: 'kiranjd',
@@ -2395,7 +2395,7 @@ const firestoreRaidStatsDump = {
             'https://avatars0.githubusercontent.com/u/25822851?u=d328d59b4d75cb084266e6f7141dbcd2cc9c5b94&v=4',
           additions: 231,
         },
-        '27247160': {
+        27247160: {
           additions: 1901,
           user: 'JacobMGEvans',
           userId: 27247160,
@@ -2404,7 +2404,7 @@ const firestoreRaidStatsDump = {
           commits: 55,
           deletions: 2913,
         },
-        '35306025': {
+        35306025: {
           user: 'codyarose',
           userId: 35306025,
           additions: 2163,
@@ -2413,7 +2413,7 @@ const firestoreRaidStatsDump = {
           commits: 72,
           deletions: 2858,
         },
-        '40751395': {
+        40751395: {
           additions: 2305,
           user: 'nobrayner',
           userId: 40751395,
@@ -2422,7 +2422,7 @@ const firestoreRaidStatsDump = {
             'https://avatars2.githubusercontent.com/u/40751395?u=dbb71f044fe955ecb0e59047036dba2ca32c824d&v=4',
           commits: 87,
         },
-        '49603590': {
+        49603590: {
           commits: 15,
           additions: 464,
           deletions: 539,
@@ -2431,7 +2431,7 @@ const firestoreRaidStatsDump = {
             'https://avatars3.githubusercontent.com/u/49603590?u=011adf63409359a3a222a718f5b8230e1dcecc79&v=4',
           userId: 49603590,
         },
-        '60733989': {
+        60733989: {
           deletions: 1672,
           userId: 60733989,
           avatarUrl:
@@ -2440,7 +2440,7 @@ const firestoreRaidStatsDump = {
           user: 'emma-r-slight',
           commits: 43,
         },
-        '73331245': {
+        73331245: {
           user: 'accentsoftware-braydonh',
           avatarUrl: 'https://avatars1.githubusercontent.com/u/73331245?v=4',
           userId: 73331245,
@@ -2460,7 +2460,7 @@ const firestoreRaidStatsDump = {
       changedFiles: 23,
       dungeon: 'smeijer/unimported',
       contributors: {
-        '544386': {
+        544386: {
           user: 'juhanakristian',
           additions: 291,
           deletions: 105,
@@ -2469,7 +2469,7 @@ const firestoreRaidStatsDump = {
           avatarUrl:
             'https://avatars.githubusercontent.com/u/544386?u=f99a26170f80d3ed37d822b354430f1315a16b84&v=4',
         },
-        '1087670': {
+        1087670: {
           commits: 6,
           deletions: 58,
           userId: 1087670,
@@ -2478,7 +2478,7 @@ const firestoreRaidStatsDump = {
           avatarUrl:
             'https://avatars.githubusercontent.com/u/1087670?u=5a6738983bae1f3a10243aa603a5e9caa641d93d&v=4',
         },
-        '5365582': {
+        5365582: {
           commits: 7,
           user: 'marcosvega91',
           userId: 5365582,
@@ -2487,7 +2487,7 @@ const firestoreRaidStatsDump = {
           avatarUrl:
             'https://avatars.githubusercontent.com/u/5365582?u=a9e5811a2a8388d300821121fb76d34136230a7c&v=4',
         },
-        '16880975': {
+        16880975: {
           deletions: 1,
           avatarUrl: 'https://avatars.githubusercontent.com/u/16880975?v=4',
           user: 'abeprincec',
@@ -2495,7 +2495,7 @@ const firestoreRaidStatsDump = {
           additions: 15,
           commits: 1,
         },
-        '22598347': {
+        22598347: {
           additions: 55,
           user: 'datner',
           deletions: 9,
@@ -2504,7 +2504,7 @@ const firestoreRaidStatsDump = {
           avatarUrl:
             'https://avatars.githubusercontent.com/u/22598347?u=ea4bf17b45012ac4fe123092160f529dea217ed0&v=4',
         },
-        '23029903': {
+        23029903: {
           commits: 23,
           additions: 600,
           avatarUrl:
@@ -2513,7 +2513,7 @@ const firestoreRaidStatsDump = {
           deletions: 213,
           user: 'mpeyper',
         },
-        '27247160': {
+        27247160: {
           user: 'JacobMGEvans',
           additions: 17654,
           userId: 27247160,
@@ -2522,7 +2522,7 @@ const firestoreRaidStatsDump = {
           commits: 6,
           deletions: 16004,
         },
-        '35306025': {
+        35306025: {
           avatarUrl:
             'https://avatars.githubusercontent.com/u/35306025?u=abc450125ac88a3eb77a5ae7c374258f2e43d3d4&v=4',
           userId: 35306025,
@@ -2531,7 +2531,7 @@ const firestoreRaidStatsDump = {
           commits: 5,
           deletions: 100,
         },
-        '40751395': {
+        40751395: {
           commits: 3,
           additions: 16,
           deletions: 17,
@@ -2540,7 +2540,7 @@ const firestoreRaidStatsDump = {
           avatarUrl:
             'https://avatars.githubusercontent.com/u/40751395?u=dbb71f044fe955ecb0e59047036dba2ca32c824d&v=4',
         },
-        '44158955': {
+        44158955: {
           avatarUrl:
             'https://avatars.githubusercontent.com/u/44158955?u=932607fc9711af11b1e57fcf64fd6977320dc4dd&v=4',
           deletions: 8878,
@@ -2549,7 +2549,7 @@ const firestoreRaidStatsDump = {
           commits: 5,
           user: 'AhmedEldessouki',
         },
-        '56167866': {
+        56167866: {
           deletions: 19,
           avatarUrl:
             'https://avatars.githubusercontent.com/u/56167866?u=71ef325daa8a76d715e87615a13abd22211d31dc&v=4',
@@ -3068,7 +3068,7 @@ const firestoreRaidStatsDump = {
       deletions: 472,
       discordMessageId: '900946391659057183',
       contributors: {
-        '6751787': {
+        6751787: {
           deletions: 11,
           avatarUrl: 'https://avatars.githubusercontent.com/u/6751787?v=4',
           commits: 2,
@@ -3076,7 +3076,7 @@ const firestoreRaidStatsDump = {
           additions: 11,
           userId: 6751787,
         },
-        '10127707': {
+        10127707: {
           user: 'mitchelvanbever',
           userId: 10127707,
           avatarUrl: 'https://avatars.githubusercontent.com/u/10127707?v=4',
@@ -3084,7 +3084,7 @@ const firestoreRaidStatsDump = {
           additions: 45,
           deletions: 18,
         },
-        '17976072': {
+        17976072: {
           additions: 120,
           commits: 4,
           avatarUrl: 'https://avatars.githubusercontent.com/u/17976072?v=4',
@@ -3092,7 +3092,7 @@ const firestoreRaidStatsDump = {
           user: 'MohitPopli',
           deletions: 94,
         },
-        '19767710': {
+        19767710: {
           userId: 19767710,
           commits: 3,
           avatarUrl: 'https://avatars.githubusercontent.com/u/19767710?v=4',
@@ -3100,7 +3100,7 @@ const firestoreRaidStatsDump = {
           additions: 16,
           deletions: 4,
         },
-        '23029903': {
+        23029903: {
           commits: 14,
           avatarUrl: 'https://avatars.githubusercontent.com/u/23029903?v=4',
           deletions: 50,
@@ -3108,7 +3108,7 @@ const firestoreRaidStatsDump = {
           additions: 167,
           userId: 23029903,
         },
-        '27247160': {
+        27247160: {
           commits: 34,
           additions: 521,
           deletions: 295,
@@ -3126,7 +3126,7 @@ const firestoreRaidStatsDump = {
       title: 'Convert to React Testing Library',
       duration: 5,
       contributors: {
-        '544386': {
+        544386: {
           user: 'juhanakristian',
           userId: 544386,
           commits: 6,
@@ -3135,7 +3135,7 @@ const firestoreRaidStatsDump = {
           deletions: 162,
           additions: 184,
         },
-        '13718688': {
+        13718688: {
           user: 'balavishnuvj',
           additions: 17,
           deletions: 90,
@@ -3143,7 +3143,7 @@ const firestoreRaidStatsDump = {
           commits: 1,
           userId: 13718688,
         },
-        '17033502': {
+        17033502: {
           user: 'merodiro',
           commits: 9,
           additions: 263,
@@ -3152,7 +3152,7 @@ const firestoreRaidStatsDump = {
           deletions: 156,
           userId: 17033502,
         },
-        '27247160': {
+        27247160: {
           userId: 27247160,
           additions: 33,
           avatarUrl:
@@ -3161,7 +3161,7 @@ const firestoreRaidStatsDump = {
           commits: 8,
           user: 'JacobMGEvans',
         },
-        '49603590': {
+        49603590: {
           additions: 416,
           avatarUrl:
             'https://avatars3.githubusercontent.com/u/49603590?u=011adf63409359a3a222a718f5b8230e1dcecc79&v=4',
@@ -3179,19 +3179,37 @@ const firestoreRaidStatsDump = {
     },
   },
 };
-import { PrismaClient } from '@prisma/client';
+const pkg = require('@prisma/client');
+const { PrismaClient } = pkg;
 const prisma = new PrismaClient();
 
 const raidIds = Object.keys(firestoreRaidStatsDump['raid-stats']);
-const last = firestoreRaidStatsDump['raid-stats'].wygNnMpvq9KAOrRtkt0M;
-// convert to SQL friendly format
-// create Raid Stats table
-// insert each raid object, property being a column in a row
-//? contributors list be its own table?
+// const last = firestoreRaidStatsDump['raid-stats'].wygNnMpvq9KAOrRtkt0M;
+// // convert to SQL friendly format
+// // create Raid Stats table
+// // insert each raid object, property being a column in a row
+// //? contributors list be its own table?
 
-prisma.raidStats.create({
-  data: {
-    ...last,
-    contributors: [...Object.values(last.contributors)],
-  },
+// const userIds = Object.keys(last.contributors);
+// type raidID = typeof raidIds[number];
+raidIds.forEach((raidId) => {
+  const currentRaidUserIds = Object.keys(
+    firestoreRaidStatsDump['raid-stats'][raidId].contributors
+  );
+  prisma.raidStats.create({
+    data: {
+      ...Object.values(firestoreRaidStatsDump['raid-stats'])[raidId],
+      contributors: {
+        create: [
+          ...Object.values(firestoreRaidStatsDump['raid-stats']).map((raid) => {
+            currentRaidUserIds.forEach((userId) => {
+              return {
+                ...raid.contributors[userId],
+              };
+            });
+          }),
+        ],
+      },
+    },
+  });
 });

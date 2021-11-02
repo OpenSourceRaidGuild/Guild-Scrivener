@@ -3,17 +3,17 @@
   "version": "0.0.1",
   "main": "dist/index.js",
   "author": "JacobMGEvans",
-  "license": "GNU GPLv3",
+  "license": "",
   "description": "",
   "files": [
     "src"
   ],
   "scripts": {
-    "local": "npm run firestore -- --ui \"nodemon ./src/index.ts\"",
+    "local": "npm -- --ui \"nodemon ./src/index.ts\"",
     "start": "node ./dist/index.js",
     "build": "tsc",
-    "test": "npm run firestore -- \"jest --watch\"",
-    "test:ci": "npm run firestore -- \"jest --coverage\""
+    "test": "npm -- \"jest --watch\"",
+    "test:ci": "npm -- \"jest --coverage\""
   },
   "dependencies": {
     "@octokit/auth-token": "^2.5.0",
