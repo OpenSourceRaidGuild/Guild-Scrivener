@@ -3194,13 +3194,9 @@ raidIds.forEach(async (raidId) => {
       ...Object.values(firestoreRaidStatsDump['raid-stats'])[raidId],
       contributors: {
         create: [
-          ...Object.values(firestoreRaidStatsDump['raid-stats']).map((raid) => {
-            currentRaidUserIds.forEach((userId) => {
-              return {
-                ...raid.contributors[userId],
-              };
-            });
-          }),
+          ...Object.values(firestoreRaidStatsDump['raid-stats']).map((raid) =>
+            currentRaidUserIds.forEach((userId) => raid.contributors[userId])
+          ),
         ],
       },
     },
