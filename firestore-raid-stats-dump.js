@@ -3184,19 +3184,12 @@ const { PrismaClient } = pkg;
 const prisma = new PrismaClient();
 
 const raidIds = Object.keys(firestoreRaidStatsDump['raid-stats']);
-// const last = firestoreRaidStatsDump['raid-stats'].wygNnMpvq9KAOrRtkt0M;
-// // convert to SQL friendly format
-// // create Raid Stats table
-// // insert each raid object, property being a column in a row
-// //? contributors list be its own table?
 
-// const userIds = Object.keys(last.contributors);
-// type raidID = typeof raidIds[number];
-raidIds.forEach((raidId) => {
+raidIds.forEach(async (raidId) => {
   const currentRaidUserIds = Object.keys(
     firestoreRaidStatsDump['raid-stats'][raidId].contributors
   );
-  prisma.raidStats.create({
+  await prisma.raidStats.create({
     data: {
       ...Object.values(firestoreRaidStatsDump['raid-stats'])[raidId],
       contributors: {
