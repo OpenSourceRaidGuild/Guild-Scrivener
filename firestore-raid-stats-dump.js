@@ -3191,13 +3191,16 @@ raidIds.forEach(async (raidId) => {
   );
   await prisma.raidStats.create({
     data: {
+      raidId,
       ...Object.values(firestoreRaidStatsDump['raid-stats'])[raidId],
       contributors: {
-        create: [
-          ...Object.values(firestoreRaidStatsDump['raid-stats']).map((raid) =>
-            currentRaidUserIds.forEach((userId) => raid.contributors[userId])
-          ),
-        ],
+        create: Object.values(firestoreRaidStatsDump['raid-stats']).map(
+          (raid) =>
+            currentRaidUserIds.map((userId) => ({
+              userId,
+              ...Object.values(raid.contributors[userId]),
+            }))
+        ),
       },
     },
   });
