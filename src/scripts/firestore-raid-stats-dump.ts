@@ -3179,14 +3179,36 @@ const firestoreRaidStatsDump = {
     },
   },
 };
-const pkg = require('@prisma/client');
-const { PrismaClient } = pkg;
+
+import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-const raidIds = Object.keys(firestoreRaidStatsDump['raid-stats']);
+const allRaidStats = firestoreRaidStatsDump['raid-stats'];
 
+type FSContributor = {
+  additions: number;
+  avatarUrl: string;
+  deletions: number;
+  userId: number;
+  user: string;
+  commits: number;
+};
+
+type RaidStats = Omit<
+  Omit<
+    Omit<typeof allRaidStats['4QphZW3j4YZKyF3RM8IA'], 'contributors'>,
+    'changedFiles'
+  >,
+  'duration'
+> & {
+  contributors: { [key: string]: FSContributor };
+};
+
+const typesafeStats: { [key: string]: RaidStats } = allRaidStats;
+
+const raidIds = Object.keys(firestoreRaidStatsDump['raid-stats']);
 const prismaReadyData = raidIds.map((raidId) => {
-  const raidStats = firestoreRaidStatsDump['raid-stats'][raidId];
+  const raidStats = typesafeStats[raidId];
 
   const currentRaidUserIds = Object.keys(raidStats.contributors);
 
@@ -3194,10 +3216,23 @@ const prismaReadyData = raidIds.map((raidId) => {
     (userId) => raidStats.contributors[userId]
   );
 
-  return { raidStats, currentRaidUserIds, currentRaidUsers };
+  return { raidId, raidStats, currentRaidUserIds, currentRaidUsers };
 });
 
 console.log('we good?', prismaReadyData);
+
+const doTheThing = async () => {
+  await prisma.raidStats.createMany({
+    data: [
+      prismaReadyData.map((currentRaidStats) => ({
+        raidId: currentRaidStats.raidId,
+        dungeon: currentRaidStats.raidStats.dungeon,
+      })),
+    ],
+  });
+};
+
+doTheThing();
 
 // raidIds.forEach(async (raidId) => {
 //   const currentRaidUserIds = Object.keys(

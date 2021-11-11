@@ -25,6 +25,8 @@ model Contributors {
     additions       Int
     RaidStats       RaidStats? @relation(fields: [raidStatsRaidId], references: [raidId])
     raidStatsRaidId String?
+    Files           Files?     @relation(fields: [filesUrl], references: [url])
+    filesUrl        String?
 }
 
 model RaidStats {
@@ -32,7 +34,7 @@ model RaidStats {
     status       Status
     dungeon      String
     title        String
-    duration     Int // diff createdAt & completedAt
+    duration     Int? // diff createdAt & completedAt
     contributors Contributors[]
     changedFiles Int
     createdAt    DateTime
@@ -40,6 +42,16 @@ model RaidStats {
     deletions    Int
     additions    Int
     commits      Int
+    files        Files[]
+}
+
+model Files {
+    url             String         @id @unique
+    fileName        String
+    deletions       Int
+    contributors    Contributors[]
+    RaidStats       RaidStats?     @relation(fields: [raidStatsRaidId], references: [raidId])
+    raidStatsRaidId String?
 }
 
 model Account {
