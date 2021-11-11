@@ -3185,23 +3185,37 @@ const prisma = new PrismaClient();
 
 const raidIds = Object.keys(firestoreRaidStatsDump['raid-stats']);
 
-raidIds.forEach(async (raidId) => {
-  const currentRaidUserIds = Object.keys(
-    firestoreRaidStatsDump['raid-stats'][raidId].contributors
+const prismaReadyData = raidIds.map((raidId) => {
+  const raidStats = firestoreRaidStatsDump['raid-stats'][raidId];
+
+  const currentRaidUserIds = Object.keys(raidStats.contributors);
+
+  const currentRaidUsers = currentRaidUserIds.map(
+    (userId) => raidStats.contributors[userId]
   );
-  await prisma.raidStats.create({
-    data: {
-      raidId,
-      ...Object.values(firestoreRaidStatsDump['raid-stats'])[raidId],
-      contributors: {
-        create: Object.values(firestoreRaidStatsDump['raid-stats']).map(
-          (raid) =>
-            currentRaidUserIds.map((userId) => ({
-              userId,
-              ...Object.values(raid.contributors[userId]),
-            }))
-        ),
-      },
-    },
-  });
+
+  return { raidStats, currentRaidUserIds, currentRaidUsers };
 });
+
+console.log('we good?', prismaReadyData);
+
+// raidIds.forEach(async (raidId) => {
+//   const currentRaidUserIds = Object.keys(
+//     firestoreRaidStatsDump['raid-stats'][raidId].contributors
+//   );
+//   await prisma.raidStats.create({
+//     data: {
+//       raidId,
+//       ...Object.values(firestoreRaidStatsDump['raid-stats'])[raidId],
+//       contributors: {
+//         create: Object.values(firestoreRaidStatsDump['raid-stats']).map(
+//           (raid) =>
+//             currentRaidUserIds.map((userId) => ({
+//               userId,
+//               ...Object.values(raid.contributors[userId]),
+//             }))
+//         ),
+//       },
+//     },
+//   });
+// });
