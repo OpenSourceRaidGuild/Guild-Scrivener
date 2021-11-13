@@ -17,8 +17,8 @@ enum Status {
 }
 
 model Contributors {
-    user            String     @unique
-    userId          Int        @id @unique
+    user            String
+    userId          Int        @id
     commits         Int
     avatarUrl       String
     deletions       Int

@@ -3201,7 +3201,7 @@ type RaidStats = Omit<
   >,
   'duration'
 > & {
-  contributors: { [key: string]: FSContributor };
+  contributors: { [key: number]: FSContributor };
   changedFiles: any;
   duration?: number;
 };
@@ -3214,14 +3214,13 @@ const prismaReadyData = raidIds.map((raidId) => {
 
   const currentRaidUserIds = Object.keys(raidStats.contributors);
 
-  const currentRaidUsers = currentRaidUserIds.map(
-    (userId) => raidStats.contributors[userId]
-  );
+  const currentRaidUsers = currentRaidUserIds.map((userId) => ({
+    ...raidStats.contributors[parseInt(userId)],
+    userId: parseInt(userId),
+  }));
 
   return { raidId, raidStats, currentRaidUserIds, currentRaidUsers };
 });
-
-console.log('we good?', prismaReadyData);
 
 const migrateFirestoreToPlanetScale = async () => {
   await prisma.raidStats.createMany({
@@ -3238,27 +3237,20 @@ const migrateFirestoreToPlanetScale = async () => {
       duration: currentRaidStats.raidStats.duration,
     })),
   });
+  const contributorsPromise = prismaReadyData.map((currentRaid) =>
+    prisma.contributors.createMany({
+      data: currentRaid.currentRaidUsers.map((user) => ({
+        userId: user.userId,
+        user: user.user,
+        additions: user.additions,
+        avatarUrl: user.avatarUrl,
+        deletions: user.deletions,
+        commits: user.commits,
+        raidStatsRaidId: currentRaid.raidId,
+      })),
+    })
+  );
+  await Promise.all(contributorsPromise);
 };
 
 migrateFirestoreToPlanetScale();
-
-// raidIds.forEach(async (raidId) => {
-//   const currentRaidUserIds = Object.keys(
-//     firestoreRaidStatsDump['raid-stats'][raidId].contributors
-//   );
-//   await prisma.raidStats.create({
-//     data: {
-//       raidId,
-//       ...Object.values(firestoreRaidStatsDump['raid-stats'])[raidId],
-//       contributors: {
-//         create: Object.values(firestoreRaidStatsDump['raid-stats']).map(
-//           (raid) =>
-//             currentRaidUserIds.map((userId) => ({
-//               userId,
-//               ...Object.values(raid.contributors[userId]),
-//             }))
-//         ),
-//       },
-//     },
-//   });
-// });
