@@ -1,3 +1,29 @@
+-- DropIndex
+DROP INDEX `Contributors_userId_key` ON `Contributors`;
+
+-- DropIndex
+DROP INDEX `Contributors_user_key` ON `Contributors`;
+
+-- DropIndex
+DROP INDEX `RaidStats_raidId_key` ON `RaidStats`;
+
+-- AlterTable
+ALTER TABLE `Contributors` ADD COLUMN `filesUrl` VARCHAR(191) NULL;
+
+-- AlterTable
+ALTER TABLE `RaidStats` MODIFY `duration` INTEGER NULL,
+    MODIFY `completedAt` DATETIME(3) NULL;
+
+-- CreateTable
+CREATE TABLE `Files` (
+    `url` VARCHAR(191) NOT NULL,
+    `fileName` VARCHAR(191) NOT NULL,
+    `deletions` INTEGER NOT NULL,
+    `raidStatsRaidId` VARCHAR(191) NULL,
+
+    PRIMARY KEY (`url`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- CreateTable
 CREATE TABLE `Account` (
     `id` VARCHAR(191) NOT NULL,

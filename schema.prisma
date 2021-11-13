@@ -30,7 +30,7 @@ model Contributors {
 }
 
 model RaidStats {
-    raidId       String         @id @unique
+    raidId       String         @id
     status       Status
     dungeon      String
     title        String
@@ -46,7 +46,7 @@ model RaidStats {
 }
 
 model Files {
-    url             String         @id @unique
+    url             String         @id
     fileName        String
     deletions       Int
     contributors    Contributors[]
