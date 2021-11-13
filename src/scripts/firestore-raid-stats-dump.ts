@@ -3202,6 +3202,8 @@ type RaidStats = Omit<
   'duration'
 > & {
   contributors: { [key: string]: FSContributor };
+  changedFiles: any;
+  duration?: number;
 };
 
 const typesafeStats: { [key: string]: RaidStats } = allRaidStats;
@@ -3221,18 +3223,24 @@ const prismaReadyData = raidIds.map((raidId) => {
 
 console.log('we good?', prismaReadyData);
 
-const doTheThing = async () => {
+const migrateFirestoreToPlanetScale = async () => {
   await prisma.raidStats.createMany({
-    data: [
-      prismaReadyData.map((currentRaidStats) => ({
-        raidId: currentRaidStats.raidId,
-        dungeon: currentRaidStats.raidStats.dungeon,
-      })),
-    ],
+    data: prismaReadyData.map((currentRaidStats) => ({
+      raidId: currentRaidStats.raidId,
+      dungeon: currentRaidStats.raidStats.dungeon,
+      title: currentRaidStats.raidStats.title,
+      status: 'ACTIVE' as 'ACTIVE',
+      createdAt: new Date(currentRaidStats.raidStats.createdAt),
+      additions: currentRaidStats.raidStats.additions,
+      deletions: currentRaidStats.raidStats.deletions,
+      commits: currentRaidStats.raidStats.commits,
+      changedFiles: currentRaidStats.raidStats.changedFiles,
+      duration: currentRaidStats.raidStats.duration,
+    })),
   });
 };
 
-doTheThing();
+migrateFirestoreToPlanetScale();
 
 // raidIds.forEach(async (raidId) => {
 //   const currentRaidUserIds = Object.keys(

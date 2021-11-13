@@ -38,7 +38,7 @@ model RaidStats {
     contributors Contributors[]
     changedFiles Int
     createdAt    DateTime
-    completedAt  DateTime
+    completedAt  DateTime?
     deletions    Int
     additions    Int
     commits      Int
@@ -54,6 +54,7 @@ model Files {
     raidStatsRaidId String?
 }
 
+// Auth Form Stuff
 model Account {
     id                 String  @id @default(cuid())
     userId             String
