@@ -17,14 +17,15 @@ enum Status {
 }
 
 model Contributors {
+    id              String     @id @default(cuid())
     user            String
-    userId          Int        @id
+    userId          Int
     commits         Int
     avatarUrl       String
     deletions       Int
     additions       Int
     RaidStats       RaidStats? @relation(fields: [raidStatsRaidId], references: [raidId])
-    raidStatsRaidId String?
+    raidStatsRaidId String
     Files           Files?     @relation(fields: [filesUrl], references: [url])
     filesUrl        String?
 }
@@ -35,7 +36,6 @@ model RaidStats {
     dungeon      String
     title        String
     duration     Int? // diff createdAt & completedAt
-    contributors Contributors[]
     changedFiles Int
     createdAt    DateTime
     completedAt  DateTime?
@@ -43,6 +43,7 @@ model RaidStats {
     additions    Int
     commits      Int
     files        Files[]
+    contributors Contributors[]
 }
 
 model Files {

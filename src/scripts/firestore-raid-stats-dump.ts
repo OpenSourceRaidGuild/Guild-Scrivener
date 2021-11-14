@@ -1374,18 +1374,6 @@ const firestoreRaidStatsDump = {
       deletions: 1087,
       dungeon: 'hinok/react-router-last-location',
     },
-    TO5OgDV8zyc956ikmqSI: {
-      commits: 0,
-      dungeon: 'nextauthjs/next-auth',
-      title: '[PLEASE RENAME ME]',
-      additions: 0,
-      files: {},
-      deletions: 0,
-      contributors: {},
-      createdAt: 1632870289345,
-      status: 'active',
-      changedFiles: 0,
-    },
     YDe4NMWUXwinjWMBmtHj: {
       files: {
         'examples/example10a-async-post-render-cleanup.html': {
@@ -3237,20 +3225,25 @@ const migrateFirestoreToPlanetScale = async () => {
       duration: currentRaidStats.raidStats.duration,
     })),
   });
-  const contributorsPromise = prismaReadyData.map((currentRaid) =>
-    prisma.contributors.createMany({
-      data: currentRaid.currentRaidUsers.map((user) => ({
-        userId: user.userId,
-        user: user.user,
-        additions: user.additions,
-        avatarUrl: user.avatarUrl,
-        deletions: user.deletions,
-        commits: user.commits,
-        raidStatsRaidId: currentRaid.raidId,
-      })),
-    })
-  );
-  await Promise.all(contributorsPromise);
+  await prisma.contributors.createMany({
+    data: prismaReadyData.flatMap((currentRaid) =>
+      currentRaid.currentRaidUsers.map((user) => ({
+        userId: user.userId ?? 0,
+        user: user.user ?? '',
+        additions: user.additions ?? 0,
+        avatarUrl: user.avatarUrl ?? '',
+        deletions: user.deletions ?? 0,
+        commits: user.commits ?? 0,
+        raidStatsRaidId: currentRaid.raidId ?? '',
+      }))
+    ),
+  });
 };
 
-migrateFirestoreToPlanetScale();
+migrateFirestoreToPlanetScale()
+  .catch((e) => {
+    throw e;
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
