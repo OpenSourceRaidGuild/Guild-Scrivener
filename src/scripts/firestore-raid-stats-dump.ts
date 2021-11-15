@@ -3206,7 +3206,7 @@ const prismaReadyData = raidIds.map((raidId) => {
     ...raidStats.contributors[parseInt(userId)],
     userId: parseInt(userId),
   }));
-
+  console.log(currentRaidUsers, 'CURRENT RAID STATS');
   return { raidId, raidStats, currentRaidUserIds, currentRaidUsers };
 });
 
@@ -3225,19 +3225,19 @@ const migrateFirestoreToPlanetScale = async () => {
       duration: currentRaidStats.raidStats.duration,
     })),
   });
-  await prisma.contributors.createMany({
-    data: prismaReadyData.flatMap((currentRaid) =>
-      currentRaid.currentRaidUsers.map((user) => ({
-        userId: user.userId ?? 0,
-        user: user.user ?? '',
-        additions: user.additions ?? 0,
-        avatarUrl: user.avatarUrl ?? '',
-        deletions: user.deletions ?? 0,
-        commits: user.commits ?? 0,
-        raidStatsRaidId: currentRaid.raidId ?? '',
-      }))
-    ),
-  });
+
+  prismaReadyData.forEach(
+    async (currentRaid) =>
+      await prisma.contributors.upsert({
+        // create: {
+        data: currentRaid.currentRaidUsers.map((user) => ({
+          user: user.user ?? '',
+          userId: user.userId ?? 0,
+          avatarUrl: user.avatarUrl ?? '',
+        })),
+        // },
+      })
+  );
 };
 
 migrateFirestoreToPlanetScale()

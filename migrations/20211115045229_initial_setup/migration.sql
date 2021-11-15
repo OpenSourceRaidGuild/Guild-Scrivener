@@ -1,19 +1,4 @@
 -- CreateTable
-CREATE TABLE `Contributors` (
-    `id` VARCHAR(191) NOT NULL,
-    `user` VARCHAR(191) NOT NULL,
-    `userId` INTEGER NOT NULL,
-    `commits` INTEGER NOT NULL,
-    `avatarUrl` VARCHAR(191) NOT NULL,
-    `deletions` INTEGER NOT NULL,
-    `additions` INTEGER NOT NULL,
-    `raidStatsRaidId` VARCHAR(191) NOT NULL,
-    `filesUrl` VARCHAR(191) NULL,
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
 CREATE TABLE `RaidStats` (
     `raidId` VARCHAR(191) NOT NULL,
     `status` ENUM('ACTIVE', 'INCOMPLETE', 'COMPLETE') NOT NULL,
@@ -27,7 +12,31 @@ CREATE TABLE `RaidStats` (
     `additions` INTEGER NOT NULL,
     `commits` INTEGER NOT NULL,
 
+    UNIQUE INDEX `RaidStats_raidId_key`(`raidId`),
     PRIMARY KEY (`raidId`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `RaidContribution` (
+    `raidId` VARCHAR(191) NOT NULL,
+    `userId` INTEGER NOT NULL,
+    `deletions` INTEGER NOT NULL,
+    `additions` INTEGER NOT NULL,
+    `commits` INTEGER NOT NULL,
+    `filesUrl` VARCHAR(191) NULL,
+
+    UNIQUE INDEX `RaidContribution_userId_key`(`userId`),
+    PRIMARY KEY (`raidId`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Contributors` (
+    `user` VARCHAR(191) NOT NULL,
+    `userId` INTEGER NOT NULL,
+    `avatarUrl` VARCHAR(191) NOT NULL,
+
+    UNIQUE INDEX `Contributors_userId_key`(`userId`),
+    PRIMARY KEY (`userId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -35,9 +44,10 @@ CREATE TABLE `Files` (
     `url` VARCHAR(191) NOT NULL,
     `fileName` VARCHAR(191) NOT NULL,
     `deletions` INTEGER NOT NULL,
-    `raidStatsRaidId` VARCHAR(191) NULL,
+    `raidStatsRaidId` VARCHAR(191) NOT NULL,
 
-    PRIMARY KEY (`url`)
+    UNIQUE INDEX `Files_url_key`(`url`),
+    PRIMARY KEY (`raidStatsRaidId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable

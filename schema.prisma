@@ -16,43 +16,53 @@ enum Status {
     COMPLETE
 }
 
-model Contributors {
-    id              String     @id @default(cuid())
-    user            String
-    userId          Int
-    commits         Int
-    avatarUrl       String
-    deletions       Int
-    additions       Int
-    RaidStats       RaidStats? @relation(fields: [raidStatsRaidId], references: [raidId])
-    raidStatsRaidId String
-    Files           Files?     @relation(fields: [filesUrl], references: [url])
-    filesUrl        String?
-}
-
+// RaidStats created for each raid, many contributors related, many files related
 model RaidStats {
-    raidId       String         @id
-    status       Status
-    dungeon      String
-    title        String
-    duration     Int? // diff createdAt & completedAt
-    changedFiles Int
-    createdAt    DateTime
-    completedAt  DateTime?
-    deletions    Int
-    additions    Int
-    commits      Int
-    files        Files[]
-    contributors Contributors[]
+    raidId           String             @id @unique
+    status           Status
+    dungeon          String
+    title            String
+    duration         Int? // diff createdAt & completedAt
+    changedFiles     Int
+    createdAt        DateTime
+    completedAt      DateTime?
+    deletions        Int
+    additions        Int
+    commits          Int
+    files            Files[]
+    RaidContribution RaidContribution[]
 }
 
+// create normalized model for Contributors & RaidStats
+model RaidContribution {
+    raidId      String       @id
+    userId      Int          @unique
+    contributor Contributors @relation(fields: [userId], references: [userId])
+    raid        RaidStats    @relation(fields: [raidId], references: [raidId], onDelete: Cascade)
+    Files       Files?       @relation(fields: [filesUrl], references: [raidStatsRaidId])
+    deletions   Int
+    additions   Int
+    commits     Int
+    filesUrl    String?
+
+}
+
+// contributor/user only 1 created for each user
+model Contributors {
+    user             String
+    userId           Int                @id @unique
+    avatarUrl        String
+    RaidContribution RaidContribution[]
+}
+
+// Files created for each raid, many RaidStats related, many contributors related
 model Files {
-    url             String         @id
+    url             String             @unique
     fileName        String
     deletions       Int
-    contributors    Contributors[]
-    RaidStats       RaidStats?     @relation(fields: [raidStatsRaidId], references: [raidId])
-    raidStatsRaidId String?
+    RaidStats       RaidStats?         @relation(fields: [raidStatsRaidId], references: [raidId], onDelete: Cascade)
+    raidStatsRaidId String             @id
+    contributors    RaidContribution[]
 }
 
 // Auth Form Stuff
