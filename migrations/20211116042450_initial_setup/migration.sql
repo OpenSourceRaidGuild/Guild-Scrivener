@@ -25,8 +25,7 @@ CREATE TABLE `RaidContribution` (
     `commits` INTEGER NOT NULL,
     `filesUrl` VARCHAR(191) NULL,
 
-    UNIQUE INDEX `RaidContribution_userId_key`(`userId`),
-    PRIMARY KEY (`raidId`)
+    UNIQUE INDEX `RaidContribution_userId_raidId_key`(`userId`, `raidId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable

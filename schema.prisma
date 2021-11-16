@@ -35,16 +35,17 @@ model RaidStats {
 
 // create normalized model for Contributors & RaidStats
 model RaidContribution {
-    raidId      String       @id
-    userId      Int          @unique
-    contributor Contributors @relation(fields: [userId], references: [userId])
-    raid        RaidStats    @relation(fields: [raidId], references: [raidId], onDelete: Cascade)
-    Files       Files?       @relation(fields: [filesUrl], references: [raidStatsRaidId])
+    raidId      String
+    userId      Int
     deletions   Int
     additions   Int
     commits     Int
     filesUrl    String?
+    contributor Contributors @relation(fields: [userId], references: [userId])
+    raid        RaidStats    @relation(fields: [raidId], references: [raidId], onDelete: Cascade)
+    Files       Files?       @relation(fields: [filesUrl], references: [raidStatsRaidId])
 
+    @@unique([userId, raidId])
 }
 
 // contributor/user only 1 created for each user
@@ -57,12 +58,14 @@ model Contributors {
 
 // Files created for each raid, many RaidStats related, many contributors related
 model Files {
-    url             String             @unique
+    url             String
     fileName        String
     deletions       Int
     RaidStats       RaidStats?         @relation(fields: [raidStatsRaidId], references: [raidId], onDelete: Cascade)
-    raidStatsRaidId String             @id
+    raidStatsRaidId String
     contributors    RaidContribution[]
+
+    @@unique([url, raidStatsRaidId])
 }
 
 // Auth Form Stuff

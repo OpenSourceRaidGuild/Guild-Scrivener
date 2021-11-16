@@ -3181,18 +3181,28 @@ type FSContributor = {
   user: string;
   commits: number;
 };
-
-type RaidStats = Omit<
-  Omit<
-    Omit<typeof allRaidStats['4QphZW3j4YZKyF3RM8IA'], 'contributors'>,
-    'changedFiles'
-  >,
-  'duration'
-> & {
-  contributors: { [key: number]: FSContributor };
-  changedFiles: any;
-  duration?: number;
+type File = {
+  url: string;
+  filename: string;
+  contributors: number[];
 };
+
+type RaidStats =
+  | Omit<
+      Omit<
+        Omit<
+          Omit<typeof allRaidStats['PkTuxXu1gPbZkiftOOZ4'], 'contributors'>,
+          'files'
+        >,
+        'changedFiles'
+      >,
+      'duration'
+    > & {
+      contributors: { [key: number]: FSContributor };
+      changedFiles: any;
+      duration?: number;
+      files?: { [key: string]: File };
+    };
 
 const typesafeStats: { [key: string]: RaidStats } = allRaidStats;
 
@@ -3206,11 +3216,11 @@ const prismaReadyData = raidIds.map((raidId) => {
     ...raidStats.contributors[parseInt(userId)],
     userId: parseInt(userId),
   }));
-  console.log(currentRaidUsers, 'CURRENT RAID STATS');
   return { raidId, raidStats, currentRaidUserIds, currentRaidUsers };
 });
 
 const migrateFirestoreToPlanetScale = async () => {
+  // RaidStats Table Data Loading
   await prisma.raidStats.createMany({
     data: prismaReadyData.map((currentRaidStats) => ({
       raidId: currentRaidStats.raidId,
@@ -3225,7 +3235,7 @@ const migrateFirestoreToPlanetScale = async () => {
       duration: currentRaidStats.raidStats.duration,
     })),
   });
-
+  // Contributor Table Data Loading
   prismaReadyData.forEach(
     async (currentRaid) =>
       await prisma.contributors.createMany({
@@ -3237,6 +3247,31 @@ const migrateFirestoreToPlanetScale = async () => {
         skipDuplicates: true,
       })
   );
+  // RaidContribution Table Data Loading & Relation to Contributor
+  prismaReadyData.forEach(
+    async (currentRaid) =>
+      await prisma.raidContribution.createMany({
+        data: currentRaid.currentRaidUsers.map((user) => ({
+          userId: user.userId ?? 0,
+          raidId: currentRaid.raidId,
+          commits: user.commits ?? 0,
+          additions: user.additions ?? 0,
+          deletions: user.deletions ?? 0,
+        })),
+      })
+  );
+  // File Table Data Loading & Relation to RaidStats & Contributor
+  // prismaReadyData.forEach(
+  //   async (currentRaid) =>
+  //     await prisma.files.createMany({
+  //       data: currentRaid.raidStats?.files?.map((file: any) => ({
+  //         url: file.url ?? '',
+  //         fileName: file.fileName,
+  //         deletions: file.deletions,
+  //         raidStatsRaidId: currentRaid.raidId,
+  //       })),
+  //     })
+  // );
 };
 
 migrateFirestoreToPlanetScale()
