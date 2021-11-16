@@ -35,8 +35,7 @@ CREATE TABLE `Contributors` (
     `userId` INTEGER NOT NULL,
     `avatarUrl` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `Contributors_userId_key`(`userId`),
-    PRIMARY KEY (`userId`)
+    UNIQUE INDEX `Contributors_userId_key`(`userId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable

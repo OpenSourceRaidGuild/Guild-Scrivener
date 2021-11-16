@@ -3228,14 +3228,13 @@ const migrateFirestoreToPlanetScale = async () => {
 
   prismaReadyData.forEach(
     async (currentRaid) =>
-      await prisma.contributors.upsert({
-        // create: {
+      await prisma.contributors.createMany({
         data: currentRaid.currentRaidUsers.map((user) => ({
           user: user.user ?? '',
           userId: user.userId ?? 0,
           avatarUrl: user.avatarUrl ?? '',
         })),
-        // },
+        skipDuplicates: true,
       })
   );
 };

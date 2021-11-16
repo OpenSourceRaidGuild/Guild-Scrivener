@@ -50,7 +50,7 @@ model RaidContribution {
 // contributor/user only 1 created for each user
 model Contributors {
     user             String
-    userId           Int                @id @unique
+    userId           Int                @unique
     avatarUrl        String
     RaidContribution RaidContribution[]
 }
