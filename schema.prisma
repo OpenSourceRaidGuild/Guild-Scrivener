@@ -60,7 +60,6 @@ model Contributors {
 model Files {
     url             String
     fileName        String
-    deletions       Int
     RaidStats       RaidStats?         @relation(fields: [raidStatsRaidId], references: [raidId], onDelete: Cascade)
     raidStatsRaidId String
     contributors    RaidContribution[]
