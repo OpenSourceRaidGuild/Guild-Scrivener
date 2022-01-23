@@ -41,11 +41,9 @@ CREATE TABLE `Contributors` (
 CREATE TABLE `Files` (
     `url` VARCHAR(191) NOT NULL,
     `fileName` VARCHAR(191) NOT NULL,
-    `deletions` INTEGER NOT NULL,
     `raidStatsRaidId` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `Files_url_key`(`url`),
-    PRIMARY KEY (`raidStatsRaidId`)
+    UNIQUE INDEX `Files_url_raidStatsRaidId_key`(`url`, `raidStatsRaidId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
