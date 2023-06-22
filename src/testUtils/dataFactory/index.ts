@@ -1,8 +1,8 @@
 import * as faker from 'faker';
 import { EmitterWebhookEvent } from '@octokit/webhooks';
 import { RestEndpointMethodTypes } from '@octokit/rest';
-import { Repository } from '@octokit/webhooks-definitions/schema';
 import { RaidStats } from '../../raids/types/raidStats';
+import { Repository } from '@octokit/webhooks-types';
 
 type GetRepositoryValues = {
   ownerName?: string;
@@ -16,13 +16,13 @@ const getRepositoryValues = ({ ownerName, repoName }: GetRepositoryValues) => {
       .fake('{{hacker.noun}}-{{hacker.verb}}')
       .replace(/\s/g, '-')
       .toLowerCase();
-  const repositoryId = faker.random.number({ min: 1, max: 200 });
+  const repositoryId = faker.datatype.number({ min: 1, max: 200 });
   const owner = ownerName ?? faker.internet.userName().toLowerCase();
-  const ownerId = faker.random.number({ min: 1, max: 200 });
+  const ownerId = faker.datatype.number({ min: 1, max: 200 });
   const repoNameWithOwner = `${owner}/${repository}`;
 
   const sender = faker.internet.userName();
-  const senderId = faker.random.number({ min: 1, max: 200 });
+  const senderId = faker.datatype.number({ min: 1, max: 200 });
 
   return {
     repository,
@@ -233,6 +233,7 @@ const buildRepositoryPayload = ({
     open_issues: 0,
     watchers: 0,
     default_branch: 'main',
+    is_template: false,
   };
 };
 
@@ -258,9 +259,9 @@ export const buildRepository = ({
       .fake('{{hacker.noun}}-{{hacker.verb}}')
       .replace(' ', '-')
       .toLowerCase();
-  const repositoryId = faker.random.number({ min: 1, max: 200 });
+  const repositoryId = faker.datatype.number({ min: 1, max: 200 });
   const owner = ownerName ?? faker.internet.userName().toLowerCase();
-  const ownerId = faker.random.number({ min: 1, max: 200 });
+  const ownerId = faker.datatype.number({ min: 1, max: 200 });
   const repoNameWithOwner = `${owner}/${repository}`;
 
   const parentRepository =
@@ -269,10 +270,10 @@ export const buildRepository = ({
       .fake('{{hacker.noun}}-{{hacker.verb}}')
       .replace(' ', '-')
       .toLowerCase();
-  const parentRepositoryId = faker.random.number({ min: 1, max: 200 });
+  const parentRepositoryId = faker.datatype.number({ min: 1, max: 200 });
   const parentOwner =
     parentOwnerName ?? faker.internet.userName().toLowerCase();
-  const parentOwnerId = faker.random.number({ min: 1, max: 200 });
+  const parentOwnerId = faker.datatype.number({ min: 1, max: 200 });
   const parentRepoNameWithOwner = `${parentOwner}/${parentRepository}`;
 
   const repositoryData: RestEndpointMethodTypes['repos']['get']['response']['data'] = {
@@ -550,14 +551,14 @@ export const buildPushEvent = ({
       .fake('{{hacker.noun}}-{{hacker.verb}}')
       .replace(' ', '-')
       .toLowerCase();
-  const repositoryId = faker.random.number({ min: 1, max: 200 });
+  const repositoryId = faker.datatype.number({ min: 1, max: 200 });
   const owner = ownerName ?? faker.internet.userName().toLowerCase();
-  const ownerId = faker.random.number({ min: 1, max: 200 });
+  const ownerId = faker.datatype.number({ min: 1, max: 200 });
   const repoNameWithOwner = `${owner}/${repository}`;
 
   const sender = faker.internet.userName();
   const senderEmail = faker.internet.exampleEmail();
-  const senderId = faker.random.number({ min: 1, max: 200 });
+  const senderId = faker.datatype.number({ min: 1, max: 200 });
 
   const beforeSha = faker.git.commitSha();
   const afterSha = faker.git.commitSha();
@@ -575,6 +576,7 @@ export const buildPushEvent = ({
         name: repository,
         full_name: repoNameWithOwner,
         private: false,
+        is_template: false,
         owner: {
           name: owner,
           email: faker.internet.exampleEmail(),
@@ -727,7 +729,7 @@ export const buildPushEvent = ({
   const commitsData: Commit[] = [];
   for (
     let i = 0;
-    i < (commits ?? faker.random.number({ min: 1, max: 10 }));
+    i < (commits ?? faker.datatype.number({ min: 1, max: 10 }));
     ++i
   ) {
     const user: CommitUser = {
@@ -749,13 +751,13 @@ export const buildPushEvent = ({
       url: `https://github.com/${repoNameWithOwner}/commit/${commitId}`,
       author: user,
       committer: user,
-      added: new Array(faker.random.number(5)).map((_) =>
+      added: new Array(faker.datatype.number(5)).map((_) =>
         faker.system.filePath()
       ),
-      removed: new Array(faker.random.number(5)).map((_) =>
+      removed: new Array(faker.datatype.number(5)).map((_) =>
         faker.system.filePath()
       ),
-      modified: new Array(faker.random.number(5)).map((_) =>
+      modified: new Array(faker.datatype.number(5)).map((_) =>
         faker.system.filePath()
       ),
     });
@@ -792,7 +794,7 @@ export const buildRaidStats = ({
   title: title ?? faker.random.words(),
   createdAt: createdAt ?? faker.date.recent(3).setHours(0, 0, 0, 0),
   files: {},
-  discordMessageId: faker.random.number({ min: 1, max: 10000000 }).toString(),
+  discordMessageId: faker.datatype.number({ min: 1, max: 10000000 }).toString(),
 });
 
 type BuildCommitProps = {
@@ -824,8 +826,8 @@ export const buildCommit = ({
   const repoNameWithOwner = `${owner}/${repository}`;
   const commitId = faker.git.commitSha();
   const treeId = faker.git.commitSha();
-  const totalAdditions = additions ?? faker.random.number(1000);
-  const totalDeletions = deletions ?? faker.random.number(1000);
+  const totalAdditions = additions ?? faker.datatype.number(1000);
+  const totalDeletions = deletions ?? faker.datatype.number(1000);
   const withAuthor = hasAuthor ?? true;
   const authorName = faker.fake('{{name.firstName}} {{name.lastName}}');
   const authorNames = authorName.split(' ');
@@ -872,7 +874,7 @@ export const buildCommit = ({
   const getCommitFiles = () => {
     const fileChanges = distribute(
       totalAdditions + totalDeletions,
-      changedFiles ?? faker.random.number(10)
+      changedFiles ?? faker.datatype.number(10)
     );
 
     return fileChanges.map((total) => {

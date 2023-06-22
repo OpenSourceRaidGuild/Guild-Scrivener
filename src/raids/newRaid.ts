@@ -1,7 +1,5 @@
-import chalk from 'chalk';
 import dotenv from 'dotenv';
 import { octokit } from '../utils/octokit';
-import { db as firestore } from '../utils/firebase';
 import { EmitterWebhookEvent } from '@octokit/webhooks';
 import { RaidStats } from './types/raidStats';
 
@@ -62,9 +60,11 @@ async function createNewRaid({
     /*
      * Step - Create new Raid
      */
-    await (firestore.collection(
-      'raid-stats'
-    ) as FirebaseFirestore.CollectionReference<RaidStats>)
+    await (
+      firestore.collection(
+        'raid-stats'
+      ) as FirebaseFirestore.CollectionReference<RaidStats>
+    )
       .add({
         additions: 0,
         changedFiles: 0,
