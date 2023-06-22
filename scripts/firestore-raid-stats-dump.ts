@@ -397,12 +397,12 @@ const firestoreRaidStatsDump = {
           filename: 'src/components/periodic-table/PeriodicTable.tsx',
         },
         'src/components/periodic-table-page/element-info/ElementInfo.test.tsx':
-          {
-            contributors: [60733989],
-            url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/8595507b9665a20513309be3e98a759eee35610f/src/components/periodic-table-page/element-info/ElementInfo.test.tsx',
-            filename:
-              'src/components/periodic-table-page/element-info/ElementInfo.test.tsx',
-          },
+        {
+          contributors: [60733989],
+          url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/8595507b9665a20513309be3e98a759eee35610f/src/components/periodic-table-page/element-info/ElementInfo.test.tsx',
+          filename:
+            'src/components/periodic-table-page/element-info/ElementInfo.test.tsx',
+        },
         'jest/babel-preset-vite/babel-plugin-syntax-vite-meta-glob.js': {
           filename:
             'jest/babel-preset-vite/babel-plugin-syntax-vite-meta-glob.js',
@@ -427,12 +427,12 @@ const firestoreRaidStatsDump = {
           contributors: [27247160, 23029903],
         },
         'src/components/periodic-table-test/settings/PeriodicTableTestSettings.test.tsx':
-          {
-            filename:
-              'src/components/periodic-table-test/settings/PeriodicTableTestSettings.test.tsx',
-            url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/ccd270ff1725afb8588434f0df4a29d0194e985d/src/components/periodic-table-test/settings/PeriodicTableTestSettings.test.tsx',
-            contributors: [544386],
-          },
+        {
+          filename:
+            'src/components/periodic-table-test/settings/PeriodicTableTestSettings.test.tsx',
+          url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/ccd270ff1725afb8588434f0df4a29d0194e985d/src/components/periodic-table-test/settings/PeriodicTableTestSettings.test.tsx',
+          contributors: [544386],
+        },
         'src/components/not-found/NotFound.scss': {
           filename: 'src/components/not-found/NotFound.scss',
           contributors: [49603590],
@@ -542,12 +542,12 @@ const firestoreRaidStatsDump = {
           url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/4f610fae5081d63b0edd076b2960b9bf94f24099/vite.config.ts',
         },
         'src/components/shared/list-item-swipe-action/ListItemSwipeAction.test.tsx':
-          {
-            contributors: [15978090],
-            filename:
-              'src/components/shared/list-item-swipe-action/ListItemSwipeAction.test.tsx',
-            url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/933a757b82b1c972c4c3d2979a9fc4aed770578e/src/components/shared/list-item-swipe-action/ListItemSwipeAction.test.tsx',
-          },
+        {
+          contributors: [15978090],
+          filename:
+            'src/components/shared/list-item-swipe-action/ListItemSwipeAction.test.tsx',
+          url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/933a757b82b1c972c4c3d2979a9fc4aed770578e/src/components/shared/list-item-swipe-action/ListItemSwipeAction.test.tsx',
+        },
         'codecov.yml': {
           url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/69fed1f04261e993a8c3e5e35a092c9311773621/codecov.yml',
           filename: 'codecov.yml',
@@ -706,12 +706,12 @@ const firestoreRaidStatsDump = {
           filename: 'src/components/shared/modal/Modal.tsx',
         },
         'src/components/questions-test/question-card/question-card-answer/QuestionCardAnswer.tsx':
-          {
-            filename:
-              'src/components/questions-test/question-card/question-card-answer/QuestionCardAnswer.tsx',
-            url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/6054b9f424cff0d7587f87221a4d22c95b0d959e/src/components/questions-test/question-card/question-card-answer/QuestionCardAnswer.tsx',
-            contributors: [23029903, 56167866, 6759612],
-          },
+        {
+          filename:
+            'src/components/questions-test/question-card/question-card-answer/QuestionCardAnswer.tsx',
+          url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/6054b9f424cff0d7587f87221a4d22c95b0d959e/src/components/questions-test/question-card/question-card-answer/QuestionCardAnswer.tsx',
+          contributors: [23029903, 56167866, 6759612],
+        },
         'src/Theme.ts': {
           contributors: [23029903],
           filename: 'src/Theme.ts',
@@ -753,12 +753,12 @@ const firestoreRaidStatsDump = {
           contributors: [15978090, 23029903],
         },
         'src/components/periodic-table-test/settings/PeriodicTableTestSettings.tsx':
-          {
-            contributors: [56167866, 23029903, 6759612],
-            url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/923d035ae1243b6b6f17600a13f9dd67544c331d/src/components/periodic-table-test/settings/PeriodicTableTestSettings.tsx',
-            filename:
-              'src/components/periodic-table-test/settings/PeriodicTableTestSettings.tsx',
-          },
+        {
+          contributors: [56167866, 23029903, 6759612],
+          url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/923d035ae1243b6b6f17600a13f9dd67544c331d/src/components/periodic-table-test/settings/PeriodicTableTestSettings.tsx',
+          filename:
+            'src/components/periodic-table-test/settings/PeriodicTableTestSettings.tsx',
+        },
         'src/ElementManager.ts': {
           url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/a8b0309883ad81cd1892fd9a856e6729a0a921cd/src/ElementManager.ts',
           filename: 'src/ElementManager.ts',
@@ -796,12 +796,12 @@ const firestoreRaidStatsDump = {
           url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/923d035ae1243b6b6f17600a13f9dd67544c331d/src/components/main-menu/menu-entry/MenuEntry.tsx',
         },
         'src/components/periodic-table-test/hooks/usePeriodicTableTestSettings.ts':
-          {
-            url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/62ffda208fbf1e1ac1a772e8b6d4076dcbb49747/src/components/periodic-table-test/hooks/usePeriodicTableTestSettings.ts',
-            filename:
-              'src/components/periodic-table-test/hooks/usePeriodicTableTestSettings.ts',
-            contributors: [23029903],
-          },
+        {
+          url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/62ffda208fbf1e1ac1a772e8b6d4076dcbb49747/src/components/periodic-table-test/hooks/usePeriodicTableTestSettings.ts',
+          filename:
+            'src/components/periodic-table-test/hooks/usePeriodicTableTestSettings.ts',
+          contributors: [23029903],
+        },
         'src/components/shared/selector-modal/SelectorModal.test.tsx': {
           url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/d0196da408af65721d86909295494de41ac421ee/src/components/shared/selector-modal/SelectorModal.test.tsx',
           contributors: [23029903],
@@ -831,12 +831,12 @@ const firestoreRaidStatsDump = {
           filename: 'src/setupTests.ts',
         },
         'src/components/periodic-table-test/settings/PeriodicTableTestSettings.test.tsx':
-          {
-            contributors: [23029903],
-            filename:
-              'src/components/periodic-table-test/settings/PeriodicTableTestSettings.test.tsx',
-            url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/6eb01dc2a1bfdbb91f355491806f737270eced5e/src/components/periodic-table-test/settings/PeriodicTableTestSettings.test.tsx',
-          },
+        {
+          contributors: [23029903],
+          filename:
+            'src/components/periodic-table-test/settings/PeriodicTableTestSettings.test.tsx',
+          url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/6eb01dc2a1bfdbb91f355491806f737270eced5e/src/components/periodic-table-test/settings/PeriodicTableTestSettings.test.tsx',
+        },
         'src/components/main-menu/MainMenu.tsx': {
           filename: 'src/components/main-menu/MainMenu.tsx',
           url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/a8b0309883ad81cd1892fd9a856e6729a0a921cd/src/components/main-menu/MainMenu.tsx',
@@ -910,12 +910,12 @@ const firestoreRaidStatsDump = {
           filename: 'src/components/valences-test/ValencesTest.test.tsx',
         },
         'src/components/shared/list-item-swipe-action/ListItemSwipeAction.tsx':
-          {
-            url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/ed8fbf17f9a91511e3367ef48a468d82b10ba0bc/src/components/shared/list-item-swipe-action/ListItemSwipeAction.tsx',
-            contributors: [56167866, 23029903],
-            filename:
-              'src/components/shared/list-item-swipe-action/ListItemSwipeAction.tsx',
-          },
+        {
+          url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/ed8fbf17f9a91511e3367ef48a468d82b10ba0bc/src/components/shared/list-item-swipe-action/ListItemSwipeAction.tsx',
+          contributors: [56167866, 23029903],
+          filename:
+            'src/components/shared/list-item-swipe-action/ListItemSwipeAction.tsx',
+        },
         'src/components/shared/checkbox/Checkbox.test.tsx': {
           filename: 'src/components/shared/checkbox/Checkbox.test.tsx',
           url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/next/src/components/shared/checkbox/Checkbox.test.tsx',
@@ -954,12 +954,12 @@ const firestoreRaidStatsDump = {
           contributors: [6759612],
         },
         'src/components/periodic-table-page/element-info/ElementInfo.test.tsx':
-          {
-            contributors: [56167866, 23029903, 6759612],
-            url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/923d035ae1243b6b6f17600a13f9dd67544c331d/src/components/periodic-table-page/element-info/ElementInfo.test.tsx',
-            filename:
-              'src/components/periodic-table-page/element-info/ElementInfo.test.tsx',
-          },
+        {
+          contributors: [56167866, 23029903, 6759612],
+          url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/923d035ae1243b6b6f17600a13f9dd67544c331d/src/components/periodic-table-page/element-info/ElementInfo.test.tsx',
+          filename:
+            'src/components/periodic-table-page/element-info/ElementInfo.test.tsx',
+        },
         'src/components/periodic-table/PeriodicTable.tsx': {
           filename: 'src/components/periodic-table/PeriodicTable.tsx',
           url: 'https://github.com/OpenSourceRaidGuild/atom-pwa/blob/951e74c3c102b9277be8da7784d8e6f43edb8ace/src/components/periodic-table/PeriodicTable.tsx',
@@ -1490,12 +1490,12 @@ const firestoreRaidStatsDump = {
           filename: '@types/plugins/slick.cellrangedecorator.d.ts',
         },
         '@types/cypress/integration/example-composite-editor-modal-dialog.spec.d.ts':
-          {
-            url: 'https://github.com/OpenSourceRaidGuild/SlickGrid/blob/15e2b24c0a993c263f6ad2dfb46123c08f4d16aa/@types/cypress/integration/example-composite-editor-modal-dialog.spec.d.ts',
-            contributors: [56167866],
-            filename:
-              '@types/cypress/integration/example-composite-editor-modal-dialog.spec.d.ts',
-          },
+        {
+          url: 'https://github.com/OpenSourceRaidGuild/SlickGrid/blob/15e2b24c0a993c263f6ad2dfb46123c08f4d16aa/@types/cypress/integration/example-composite-editor-modal-dialog.spec.d.ts',
+          contributors: [56167866],
+          filename:
+            '@types/cypress/integration/example-composite-editor-modal-dialog.spec.d.ts',
+        },
         'tests/test-4-rows-paging.html': {
           url: 'https://github.com/OpenSourceRaidGuild/SlickGrid/blob/23cd6bc9d37e1f317e9c5627a867370669abb6e8/tests/test-4-rows-paging.html',
           contributors: [27247160],
@@ -1623,12 +1623,12 @@ const firestoreRaidStatsDump = {
           contributors: [56167866, 7198302],
         },
         '@scripts/cypress/integration/example-composite-editor-modal-dialog.spec.js':
-          {
-            url: 'https://github.com/OpenSourceRaidGuild/SlickGrid/blob/15e2b24c0a993c263f6ad2dfb46123c08f4d16aa/@scripts/cypress/integration/example-composite-editor-modal-dialog.spec.js',
-            contributors: [56167866],
-            filename:
-              '@scripts/cypress/integration/example-composite-editor-modal-dialog.spec.js',
-          },
+        {
+          url: 'https://github.com/OpenSourceRaidGuild/SlickGrid/blob/15e2b24c0a993c263f6ad2dfb46123c08f4d16aa/@scripts/cypress/integration/example-composite-editor-modal-dialog.spec.js',
+          contributors: [56167866],
+          filename:
+            '@scripts/cypress/integration/example-composite-editor-modal-dialog.spec.js',
+        },
         'cypress/support/index.ts': {
           filename: 'cypress/support/index.ts',
           contributors: [56167866],
@@ -1742,12 +1742,12 @@ const firestoreRaidStatsDump = {
           contributors: [56167866],
         },
         '@scripts/cypress/integration/example-row-detail-selection-and-move.spec.js':
-          {
-            filename:
-              '@scripts/cypress/integration/example-row-detail-selection-and-move.spec.js',
-            contributors: [56167866],
-            url: 'https://github.com/OpenSourceRaidGuild/SlickGrid/blob/15e2b24c0a993c263f6ad2dfb46123c08f4d16aa/@scripts/cypress/integration/example-row-detail-selection-and-move.spec.js',
-          },
+        {
+          filename:
+            '@scripts/cypress/integration/example-row-detail-selection-and-move.spec.js',
+          contributors: [56167866],
+          url: 'https://github.com/OpenSourceRaidGuild/SlickGrid/blob/15e2b24c0a993c263f6ad2dfb46123c08f4d16aa/@scripts/cypress/integration/example-row-detail-selection-and-move.spec.js',
+        },
         'examples/example-explicit-initialization.html': {
           url: 'https://github.com/OpenSourceRaidGuild/SlickGrid/blob/23cd6bc9d37e1f317e9c5627a867370669abb6e8/examples/example-explicit-initialization.html',
           filename: 'examples/example-explicit-initialization.html',
@@ -1837,12 +1837,12 @@ const firestoreRaidStatsDump = {
           filename: 'examples/example4-model.html',
         },
         '@types/cypress/integration/example-frozen-columns-and-column-group.spec.d.ts':
-          {
-            url: 'https://github.com/OpenSourceRaidGuild/SlickGrid/blob/15e2b24c0a993c263f6ad2dfb46123c08f4d16aa/@types/cypress/integration/example-frozen-columns-and-column-group.spec.d.ts',
-            contributors: [56167866],
-            filename:
-              '@types/cypress/integration/example-frozen-columns-and-column-group.spec.d.ts',
-          },
+        {
+          url: 'https://github.com/OpenSourceRaidGuild/SlickGrid/blob/15e2b24c0a993c263f6ad2dfb46123c08f4d16aa/@types/cypress/integration/example-frozen-columns-and-column-group.spec.d.ts',
+          contributors: [56167866],
+          filename:
+            '@types/cypress/integration/example-frozen-columns-and-column-group.spec.d.ts',
+        },
         'examples/example-frozen-rows.html': {
           contributors: [27247160],
           filename: 'examples/example-frozen-rows.html',
@@ -1874,12 +1874,12 @@ const firestoreRaidStatsDump = {
           contributors: [27247160],
         },
         '@types/cypress/integration/example-row-detail-selection-and-move.spec.d.ts':
-          {
-            url: 'https://github.com/OpenSourceRaidGuild/SlickGrid/blob/15e2b24c0a993c263f6ad2dfb46123c08f4d16aa/@types/cypress/integration/example-row-detail-selection-and-move.spec.d.ts',
-            filename:
-              '@types/cypress/integration/example-row-detail-selection-and-move.spec.d.ts',
-            contributors: [56167866],
-          },
+        {
+          url: 'https://github.com/OpenSourceRaidGuild/SlickGrid/blob/15e2b24c0a993c263f6ad2dfb46123c08f4d16aa/@types/cypress/integration/example-row-detail-selection-and-move.spec.d.ts',
+          filename:
+            '@types/cypress/integration/example-row-detail-selection-and-move.spec.d.ts',
+          contributors: [56167866],
+        },
         '@types/lib/firebugx.d.ts': {
           contributors: [10127707],
           filename: '@types/lib/firebugx.d.ts',
@@ -2068,12 +2068,12 @@ const firestoreRaidStatsDump = {
           url: 'https://github.com/OpenSourceRaidGuild/SlickGrid/blob/aa3dbe5564f9f804ab8191963b48667558bc080d/cypress/support/commands.ts',
         },
         '@scripts/cypress/integration/example-frozen-columns-and-column-group.spec.js':
-          {
-            url: 'https://github.com/OpenSourceRaidGuild/SlickGrid/blob/15e2b24c0a993c263f6ad2dfb46123c08f4d16aa/@scripts/cypress/integration/example-frozen-columns-and-column-group.spec.js',
-            filename:
-              '@scripts/cypress/integration/example-frozen-columns-and-column-group.spec.js',
-            contributors: [56167866],
-          },
+        {
+          url: 'https://github.com/OpenSourceRaidGuild/SlickGrid/blob/15e2b24c0a993c263f6ad2dfb46123c08f4d16aa/@scripts/cypress/integration/example-frozen-columns-and-column-group.spec.js',
+          filename:
+            '@scripts/cypress/integration/example-frozen-columns-and-column-group.spec.js',
+          contributors: [56167866],
+        },
         '@scripts/cypress/support/commands.js': {
           filename: '@scripts/cypress/support/commands.js',
           contributors: [56167866],
@@ -3181,28 +3181,25 @@ type FSContributor = {
   user: string;
   commits: number;
 };
+
 type RaidFiles = {
   url: string;
   filename: string;
   contributors: number[];
 };
 
-type RaidStats =
-  | Omit<
-      Omit<
-        Omit<
-          Omit<typeof allRaidStats['PkTuxXu1gPbZkiftOOZ4'], 'contributors'>,
-          'files'
-        >,
-        'changedFiles'
-      >,
-      'duration'
-    > & {
-      contributors: { [key: number]: FSContributor };
-      changedFiles: any;
-      duration?: number;
-      files?: { [key: string]: RaidFiles };
-    };
+type RaidStats = {
+  duration: number;
+  files?: { [key: string]: RaidFiles };
+  deletions: number;
+  title: string;
+  additions: number;
+  contributors: { [key: string]: FSContributor };
+  changedFiles: number;
+  dungeon: string;
+  createdAt: number;
+  commits: number;
+}
 
 const typesafeStats: { [key: string]: RaidStats } = allRaidStats;
 
@@ -3216,23 +3213,22 @@ const prismaReadyData = raidIds.map((raidId) => {
       [key: string]: RaidFiles;
     });
 
-  // turn files into array of objects per RaidStats
   const currentRaidFiles = Object.keys(files).map((filename) => ({
     url: files[filename].url,
     filename,
     contributors: files[filename].contributors,
   }));
-  const raidStatsModifiedFiles = { ...raidStats, files: currentRaidFiles };
 
-  const currentRaidUserIds = Object.keys(raidStats.contributors);
+  const currentRaidUserIds = Object.keys(raidStats?.contributors ?? {});
 
   const currentRaidUsers = currentRaidUserIds.map((userId) => ({
-    ...raidStats.contributors[parseInt(userId)],
+    ...raidStats.contributors[parseInt(userId)] ?? {},
     userId: parseInt(userId),
   }));
+
   return {
     raidId,
-    raidStats: raidStatsModifiedFiles,
+    raidStats: { ...raidStats, files: currentRaidFiles },
     currentRaidUserIds,
     currentRaidUsers,
     currentRaidFiles,
@@ -3246,7 +3242,7 @@ const migrateFirestoreToPlanetScale = async () => {
       raidId: currentRaidStats.raidId,
       dungeon: currentRaidStats.raidStats.dungeon,
       title: currentRaidStats.raidStats.title,
-      status: 'ACTIVE' as 'ACTIVE',
+      status: 'ACTIVE',
       createdAt: new Date(currentRaidStats.raidStats.createdAt),
       additions: currentRaidStats.raidStats.additions,
       deletions: currentRaidStats.raidStats.deletions,
@@ -3255,43 +3251,49 @@ const migrateFirestoreToPlanetScale = async () => {
       duration: currentRaidStats.raidStats.duration,
     })),
   });
+
   // Contributor Table Data Loading
-  prismaReadyData.forEach(
-    async (currentRaid) =>
-      await prisma.contributors.createMany({
-        data: currentRaid.currentRaidUsers.map((user) => ({
+  await prisma.contributors.createMany({
+    data: prismaReadyData
+      .map((currentRaid) =>
+        currentRaid.currentRaidUsers.map((user) => ({
           user: user.user ?? '',
           userId: user.userId ?? 0,
           avatarUrl: user.avatarUrl ?? '',
-        })),
-        skipDuplicates: true,
-      })
-  );
+        }))
+      )
+      .flat(),
+    skipDuplicates: true,
+  });
+
   // RaidContribution Table Data Loading & Relation to Contributor
-  prismaReadyData.forEach(
-    async (currentRaid) =>
-      await prisma.raidContribution.createMany({
-        data: currentRaid.currentRaidUsers.map((user) => ({
+  await prisma.raidContribution.createMany({
+    data: prismaReadyData
+      .map((currentRaid) =>
+        currentRaid.currentRaidUsers.map((user) => ({
           userId: user.userId ?? 0,
           raidId: currentRaid.raidId,
           commits: user.commits ?? 0,
           additions: user.additions ?? 0,
           deletions: user.deletions ?? 0,
-        })),
-      })
-  );
+        }))
+      )
+      .flat(),
+  });
+
   // File Table Data Loading & Relation to RaidStats & Contributor
-  prismaReadyData.forEach(
-    async (currentRaid) =>
-      await prisma.files.createMany({
-        data: currentRaid.raidStats.files.map((file) => ({
+  await prisma.files.createMany({
+    data: prismaReadyData
+      .map((currentRaid) =>
+        currentRaid.currentRaidFiles.map((file) => ({
           url: file.url,
           fileName: file.filename,
-          contributors: file.contributors,
+          contributors: file.contributors ?? [],
           raidStatsRaidId: currentRaid.raidId,
-        })),
-      })
-  );
+        }))
+      )
+      .flat(),
+  });
 };
 
 migrateFirestoreToPlanetScale()

@@ -12,8 +12,7 @@ CREATE TABLE `RaidStats` (
     `additions` INTEGER NOT NULL,
     `commits` INTEGER NOT NULL,
 
-    UNIQUE INDEX `RaidStats_raidId_key`(`raidId`),
-    PRIMARY KEY (`raidId`)
+    UNIQUE INDEX `RaidStats_raidId_key`(`raidId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -25,7 +24,7 @@ CREATE TABLE `RaidContribution` (
     `commits` INTEGER NOT NULL,
     `filesUrl` VARCHAR(191) NULL,
 
-    UNIQUE INDEX `RaidContribution_userId_raidId_key`(`userId`, `raidId`)
+    UNIQUE INDEX `RaidContribution_raidId_key`(`raidId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -43,7 +42,7 @@ CREATE TABLE `Files` (
     `fileName` VARCHAR(191) NOT NULL,
     `raidStatsRaidId` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `Files_url_raidStatsRaidId_key`(`url`, `raidStatsRaidId`)
+    UNIQUE INDEX `Files_url_key`(`url`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable

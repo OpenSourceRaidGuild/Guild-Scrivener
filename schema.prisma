@@ -1,13 +1,12 @@
 generator client {
     provider        = "prisma-client-js"
-    previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
     provider             = "mysql"
     url                  = env("DATABASE_URL")
     shadowDatabaseUrl    = env("SHADOW_DATABASE_URL")
-    referentialIntegrity = "prisma"
+    relationMode = "prisma"
 }
 
 enum Status {
@@ -18,7 +17,7 @@ enum Status {
 
 // RaidStats created for each raid, many contributors related, many files related
 model RaidStats {
-    raidId           String             @id @unique
+    raidId           String             @unique
     status           Status
     dungeon          String
     title            String
@@ -35,7 +34,7 @@ model RaidStats {
 
 // create normalized model for Contributors & RaidStats
 model RaidContribution {
-    raidId      String
+    raidId      String       @unique
     userId      Int
     deletions   Int
     additions   Int
@@ -43,9 +42,9 @@ model RaidContribution {
     filesUrl    String?
     contributor Contributors @relation(fields: [userId], references: [userId])
     raid        RaidStats    @relation(fields: [raidId], references: [raidId], onDelete: Cascade)
-    Files       Files?       @relation(fields: [filesUrl], references: [raidStatsRaidId])
+    // Files       Files?       @relation(fields: [filesUrl], references: [raidStatsRaidId])
 
-    @@unique([userId, raidId])
+    @@index([userId])
 }
 
 // contributor/user only 1 created for each user
@@ -58,13 +57,13 @@ model Contributors {
 
 // Files created for each raid, many RaidStats related, many contributors related
 model Files {
-    url             String
+    url             String     @unique
     fileName        String
-    RaidStats       RaidStats?         @relation(fields: [raidStatsRaidId], references: [raidId], onDelete: Cascade)
+    RaidStats       RaidStats? @relation(fields: [raidStatsRaidId], references: [raidId], onDelete: Cascade)
     raidStatsRaidId String
-    contributors    RaidContribution[]
+    // contributors    RaidContribution[]
 
-    @@unique([url, raidStatsRaidId])
+    @@index([raidStatsRaidId])
 }
 
 // Auth Form Stuff
@@ -87,6 +86,7 @@ model Account {
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
+    @@index([userId])
 }
 
 model Session {
@@ -95,6 +95,8 @@ model Session {
     userId       String
     expires      DateTime
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
 }
 
 model User {
